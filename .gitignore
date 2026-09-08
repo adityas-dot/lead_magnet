@@ -1,0 +1,26 @@
+# Environments
+.env
+.env*.local
+*.env
+*.env.*
+backend/.env
+frontend/.env.local
+
+# Dependencies
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Next.js build
+frontend/.next/
+frontend/out/
+
+# Strapi build & cache
+backend/.tmp/
+backend/.strapi/
+backend/build/
+backend/dist/
+
+# OS files
+.DS_Store
+Thumbs.db
