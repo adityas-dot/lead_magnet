@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_shared_footer_contacts",
+  "info": {
+    "displayName": "FooterContact"
+  },
+  "options": {},
+  "attributes": {
+    "location": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "Address": {
+      "type": "text"
+    },
+    "email": {
+      "type": "email"
+    }
+  },
+  "config": {}
+}

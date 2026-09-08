@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_shared_form_options",
+  "info": {
+    "displayName": "FormOption",
+    "description": "Form option with label and value"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string"
+    },
+    "value": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

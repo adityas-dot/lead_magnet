@@ -1,0 +1,112 @@
+{
+  "collectionName": "components_sections_quote_forms",
+  "info": {
+    "displayName": "QuoteForm"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "stepLabel": {
+      "type": "string"
+    },
+    "shopifyQuestion": {
+      "type": "string"
+    },
+    "yesLabel": {
+      "type": "string"
+    },
+    "noLabel": {
+      "type": "string"
+    },
+    "shopifyLinkLabel": {
+      "type": "string"
+    },
+    "shopifyLinkPlaceholder": {
+      "type": "string"
+    },
+    "continueLabel": {
+      "type": "string"
+    },
+    "step2Title": {
+      "type": "string"
+    },
+    "step2Description": {
+      "type": "text"
+    },
+    "step2Label": {
+      "type": "string"
+    },
+    "budgetLabel": {
+      "type": "string"
+    },
+    "budgetRanges": {
+      "type": "component",
+      "component": "shared.budget-range",
+      "repeatable": true
+    },
+    "issuesLabel": {
+      "type": "string"
+    },
+    "issueOptions": {
+      "type": "component",
+      "component": "shared.form-option",
+      "repeatable": true
+    },
+    "otherIssuesLabel": {
+      "type": "string"
+    },
+    "otherIssuesPlaceholder": {
+      "type": "string"
+    },
+    "budgetTypeLabel": {
+      "type": "string"
+    },
+    "budgetTypeOptions": {
+      "type": "component",
+      "component": "shared.form-option",
+      "repeatable": true
+    },
+    "estimateButtonLabel": {
+      "type": "string"
+    },
+    "resultTitle": {
+      "type": "string"
+    },
+    "resultDescription": {
+      "type": "text"
+    },
+    "step3Label": {
+      "type": "string"
+    },
+    "estimateLabel": {
+      "type": "string"
+    },
+    "basedOnLabel": {
+      "type": "string"
+    },
+    "phoneLabel": {
+      "type": "string"
+    },
+    "phonePlaceholder": {
+      "type": "string"
+    },
+    "emailLabel": {
+      "type": "string"
+    },
+    "emailPlaceholder": {
+      "type": "string"
+    },
+    "bookCallButtonLabel": {
+      "type": "string"
+    },
+    "disclaimer": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

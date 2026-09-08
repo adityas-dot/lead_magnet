@@ -1,0 +1,141 @@
+"use client";
+
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+type FaqItem = {
+    id: number;
+    question: string;
+    answer: string;
+};
+
+type Faqdata = {
+    heading: string;
+    items: FaqItem[];
+    mobileItems?: FaqItem[];
+};
+
+export default function FAQ({
+    data,
+}: {
+    data: Faqdata;
+}) {
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
+    const [openMobileIndex, setOpenMobileIndex] = useState<number | null>(null);
+
+    const hasMobileItems = Boolean(data?.mobileItems && data.mobileItems.length > 0);
+    const desktopItems = data?.items || [];
+    const mobileItems = hasMobileItems ? data.mobileItems! : desktopItems;
+
+    return (
+        <section className="px-6 pt-5 pb-8 sm:py-16 lg:py-24 lg:px-[60px] xl:px-[80px]">
+            <div className="w-full mx-auto max-w-[1720px]">
+                <div>
+                    <h1 className="font-nohemi text-[clamp(24px,4.2vw,34px)] leading-tight">
+                        {data.heading}
+                    </h1>
+                </div>
+
+                {/* Desktop FAQ Items */}
+                <div className={`mt-2 sm:mt-10 ${hasMobileItems ? "hidden md:block" : "block"}`}>
+                    {desktopItems.map((item, index) => {
+                        const isOpen = openIndex === index;
+
+                        return (
+                            <div
+                                key={item.id}
+                                className="border-b border-[#000000]"
+                            >
+                                <button
+                                    type="button"
+                                    onClick={() => setOpenIndex(isOpen ? null : index)}
+                                    className="flex w-full items-center justify-between py-3.5 sm:py-6 text-left cursor-pointer"
+                                >
+                                    <span className="font-nohemi text-[18px] lg:text-[20px] font-medium text-[#000000] pr-4">
+                                        {item.question}
+                                    </span>
+
+                                    <span
+                                        className={`inline-block text-[36px] leading-none select-none transition-transform duration-300 ease-in-out text-black font-light shrink-0 ${isOpen ? "rotate-45" : "rotate-0"
+                                            }`}
+                                    >
+                                        +
+                                    </span>
+                                </button>
+
+                                <AnimatePresence initial={false}>
+                                    {isOpen && (
+                                        <motion.div
+                                            initial={{ height: 0, opacity: 0 }}
+                                            animate={{ height: "auto", opacity: 1 }}
+                                            exit={{ height: 0, opacity: 0 }}
+                                            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                                            className="overflow-hidden"
+                                        >
+                                            <div className="pb-6 pr-12">
+                                                <p className="max-w-[700px] font-satoshi text-[16px] lg:text-[18px] text-[#000000] leading-[1.6]">
+                                                    {item.answer}
+                                                </p>
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {/* Mobile FAQ Items (displayed on small screens) */}
+                {hasMobileItems && (
+                    <div className="mt-1 sm:mt-6 block md:hidden">
+                        {mobileItems.map((item, index) => {
+                            const isOpen = openMobileIndex === index;
+
+                            return (
+                                <div
+                                    key={item.id}
+                                    className="border-b border-[#000000]"
+                                >
+                                    <button
+                                        type="button"
+                                        onClick={() => setOpenMobileIndex(isOpen ? null : index)}
+                                        className="flex w-full items-center justify-between py-3.5 sm:py-5 text-left cursor-pointer"
+                                    >
+                                        <span className="font-satoshi text-[clamp(14px,4.2vw,18px)] font-medium text-[#000000] pr-4 leading-[1.35]">
+                                            {item.question}
+                                        </span>
+
+                                        <span
+                                            className={`inline-block text-[30px] leading-none select-none transition-transform duration-300 ease-in-out text-black font-light shrink-0 ${isOpen ? "rotate-45" : "rotate-0"
+                                                }`}
+                                        >
+                                            +
+                                        </span>
+                                    </button>
+
+                                    <AnimatePresence initial={false}>
+                                        {isOpen && (
+                                            <motion.div
+                                                initial={{ height: 0, opacity: 0 }}
+                                                animate={{ height: "auto", opacity: 1 }}
+                                                exit={{ height: 0, opacity: 0 }}
+                                                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                                                className="overflow-hidden"
+                                            >
+                                                <div className="pb-5 pr-6">
+                                                    <p className="font-satoshi text-[14.5px] text-[#000000] leading-[1.6]">
+                                                        {item.answer}
+                                                    </p>
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+            </div>
+        </section>
+    );
+}

@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_shared_process_services",
+  "info": {
+    "displayName": "ProcessService"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

@@ -1,0 +1,32 @@
+{
+  "collectionName": "components_sections_engagement_fits",
+  "info": {
+    "displayName": "engagement-fit"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "suitableHeading": {
+      "type": "string"
+    },
+    "suitablePoints": {
+      "type": "component",
+      "component": "shared.fit-point",
+      "repeatable": true
+    },
+    "notSuitableHeading": {
+      "type": "string"
+    },
+    "notSuitablePoints": {
+      "type": "component",
+      "component": "shared.fit-point",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

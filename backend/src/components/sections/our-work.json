@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_sections_our_works",
+  "info": {
+    "displayName": "OurWork"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "MobileDescription": {
+      "type": "text"
+    },
+    "projects": {
+      "type": "component",
+      "component": "sections.our-work-project",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

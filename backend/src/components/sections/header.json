@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_sections_headers",
+  "info": {
+    "displayName": "Header",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "logoText": {
+      "type": "string",
+      "default": "Thumbstack."
+    },
+    "quickLinks": {
+      "type": "component",
+      "component": "shared.footer-link",
+      "repeatable": true
+    }
+  }
+}

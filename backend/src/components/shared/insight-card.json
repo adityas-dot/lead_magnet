@@ -1,0 +1,29 @@
+{
+  "collectionName": "components_shared_insight_cards",
+  "info": {
+    "displayName": "InsightCard"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "mobileDescription": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

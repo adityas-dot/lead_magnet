@@ -1,0 +1,34 @@
+{
+  "collectionName": "components_sections_final_ctas",
+  "info": {
+    "displayName": "FinalCTA"
+  },
+  "options": {},
+  "attributes": {
+    "badge": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "logos": {
+      "type": "component",
+      "component": "shared.final-cta-logo",
+      "repeatable": true
+    },
+    "primaryCta": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": false
+    },
+    "secondaryCta": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}

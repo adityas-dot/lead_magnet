@@ -1,0 +1,34 @@
+{
+  "collectionName": "components_sections_heroes",
+  "info": {
+    "displayName": "Hero"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "text"
+    },
+    "description": {
+      "type": "text"
+    },
+    "primaryCta": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": false
+    },
+    "brandsHeading": {
+      "type": "string"
+    },
+    "brands": {
+      "type": "component",
+      "component": "shared.brand",
+      "repeatable": true
+    },
+    "quoteForm": {
+      "type": "component",
+      "component": "sections.quote-form",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

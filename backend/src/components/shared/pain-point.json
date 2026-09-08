@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_shared_pain_points",
+  "info": {
+    "displayName": "PainPoint"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

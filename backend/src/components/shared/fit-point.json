@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_shared_fit_points",
+  "info": {
+    "displayName": "fit-point"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

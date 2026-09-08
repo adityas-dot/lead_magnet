@@ -1,0 +1,323 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+export type HeaderLink = {
+    id: number;
+    label: string;
+    href: string;
+};
+
+export type HeaderData = {
+    logoText?: string;
+    quickLinks?: HeaderLink[];
+};
+
+export type FooterContact = {
+    id: number;
+    location: string;
+    phone: string;
+    email: string;
+    Address?: string;
+};
+
+export type SocialLink = {
+    id: number;
+    platform: string;
+    href: string;
+};
+
+export type FooterData = {
+    contactHeading?: string;
+    quickLinksHeading?: string;
+    quickLinks?: HeaderLink[];
+    socialLinks?: SocialLink[];
+    contacts?: FooterContact[];
+};
+
+const socialIcons: Record<string, string> = {
+    Instagram: "/images/insta_logo.svg",
+    YouTube: "/images/youtube_logo.svg",
+    Facebook: "/images/facebook.svg",
+    LinkedIn: "/images/linkedin-icon.svg",
+};
+
+export default function Header({
+    data,
+    footerData,
+}: {
+    data?: HeaderData;
+    footerData?: FooterData;
+}) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [isLight, setIsLight] = useState(false);
+
+    // Prevent body scroll when menu is open
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [isOpen]);
+
+    // Handle Escape key
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setIsOpen(false);
+            }
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, []);
+
+    // Detect whether header is over a light or dark section as user scrolls
+    useEffect(() => {
+        const checkTheme = () => {
+            if (typeof window === "undefined") return;
+            const headerY = 44;
+
+            // 1. Explicit light element under header (e.g. quote form on mobile)
+            const lightElements = document.querySelectorAll("[data-theme='light']");
+            for (let i = 0; i < lightElements.length; i++) {
+                const rect = lightElements[i].getBoundingClientRect();
+                if (rect.top <= headerY && rect.bottom > headerY) {
+                    setIsLight(true);
+                    return;
+                }
+            }
+
+            // 2. Explicit dark section under header (Hero, OurProcess, Footer)
+            const darkElements = document.querySelectorAll("[data-theme='dark']");
+            for (let i = 0; i < darkElements.length; i++) {
+                const rect = darkElements[i].getBoundingClientRect();
+                if (rect.top <= headerY && rect.bottom > headerY) {
+                    setIsLight(false);
+                    return;
+                }
+            }
+
+            // 3. Fallback: If scrolled past initial top and not over any dark section, it's light
+            const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+            setIsLight(scrollY > 80);
+        };
+
+        checkTheme();
+        window.addEventListener("scroll", checkTheme, { passive: true });
+        window.addEventListener("resize", checkTheme);
+
+        // Continuous interval to guarantee sync with Lenis smooth scroll
+        const intervalId = setInterval(checkTheme, 100);
+
+        return () => {
+            window.removeEventListener("scroll", checkTheme);
+            window.removeEventListener("resize", checkTheme);
+            clearInterval(intervalId);
+        };
+    }, []);
+
+    const navLinks = footerData?.quickLinks || data?.quickLinks || [];
+    const contacts = footerData?.contacts || [];
+    const socialLinks = footerData?.socialLinks || [];
+    const brandName = data?.logoText || "Thumbstack.";
+
+    const lineColor = isOpen
+        ? "bg-white"
+        : isLight
+        ? "bg-[#2442EB]"
+        : "bg-white";
+
+    return (
+        <>
+            {/* Main Edge-to-edge Header Bar (stays on top of overlay) */}
+            <header className="fixed top-0 left-0 right-0 z-[110] flex justify-between items-center h-[72px] sm:h-[88px] px-6 lg:px-[60px] xl:px-[80px] pointer-events-none">
+                <a
+                    href="/"
+                    onClick={() => setIsOpen(false)}
+                    className={`font-nohemi font-medium text-[20px] sm:text-[24px] tracking-[-0.02em] leading-none pointer-events-auto select-none transition-colors duration-300 ${
+                        isOpen
+                            ? "text-white"
+                            : isLight
+                            ? "text-[#0F1D07]"
+                            : "text-white"
+                    }`}
+                >
+                    {isOpen ? (
+                        <>
+                            Thumbstack<span className="text-[#38E29D]">.</span>
+                        </>
+                    ) : (
+                        brandName
+                    )}
+                </a>
+
+                {/* Circular teal button that morphs into blue lines on scroll and bare cross when open */}
+                <button
+                    type="button"
+                    onClick={() => setIsOpen((prev) => !prev)}
+                    aria-label={isOpen ? "Close menu" : "Open menu"}
+                    className={`group flex w-[48px] h-[48px] sm:w-[56px] sm:h-[56px] rounded-full items-center justify-center transition-all duration-300 ease-out pointer-events-auto cursor-pointer active:scale-95 ${
+                        isOpen
+                            ? "bg-transparent text-white hover:text-[#38E29D]"
+                            : "bg-[#87A8A4] hover:bg-[#72928E] shadow-sm"
+                    }`}
+                >
+                    <div className="relative w-6 h-5 flex items-center justify-center">
+                        <span
+                            className={`absolute w-6 h-[2px] ${lineColor} rounded-full transition-all duration-300 ease-in-out origin-center ${
+                                isOpen
+                                    ? "rotate-45 translate-y-0 translate-x-0"
+                                    : "-translate-y-[7px] group-hover:translate-x-[3.5px]"
+                            }`}
+                        />
+                        <span
+                            className={`absolute w-6 h-[2px] ${lineColor} rounded-full transition-all duration-300 ease-in-out origin-center ${
+                                isOpen
+                                    ? "opacity-0 scale-x-0 translate-x-0"
+                                    : "opacity-100 scale-x-100 group-hover:-translate-x-[3.5px]"
+                            }`}
+                        />
+                        <span
+                            className={`absolute w-6 h-[2px] ${lineColor} rounded-full transition-all duration-300 ease-in-out origin-center ${
+                                isOpen
+                                    ? "-rotate-45 translate-y-0 translate-x-0"
+                                    : "translate-y-[7px] group-hover:translate-x-[3.5px]"
+                            }`}
+                        />
+                    </div>
+                </button>
+            </header>
+
+            {/* Fullscreen Hamburger Overlay Menu (Slides in from right to left) */}
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        data-lenis-prevent="true"
+                        data-lenis-prevent-wheel="true"
+                        data-lenis-prevent-touch="true"
+                        onTouchMove={(e) => e.stopPropagation()}
+                        onWheel={(e) => e.stopPropagation()}
+                        initial={{ x: "100%" }}
+                        animate={{ x: 0 }}
+                        exit={{ x: "100%" }}
+                        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                        className="fixed inset-0 z-[100] bg-[#13230D] text-white overflow-y-auto overscroll-contain pointer-events-auto touch-pan-y"
+                        style={{ WebkitOverflowScrolling: "touch" }}
+                    >
+                        <div className="min-h-full flex flex-col justify-between pt-[72px] sm:pt-[88px] pb-6 px-6 sm:px-10 lg:px-[60px] xl:px-[80px]">
+                            {/* Middle Content Area */}
+                            <div className="w-full max-w-[1500px] mx-auto flex-1 pt-6 sm:pt-10 lg:pt-12 pb-8 grid grid-cols-1 lg:grid-cols-12 gap-0 lg:gap-16 items-start">
+                                {/* Left Column: Big Navigation Links */}
+                                <nav className="lg:col-span-7 flex flex-col gap-3.5 sm:gap-5 lg:gap-7 lg:pl-[138px]">
+                                    {navLinks.map((link) => (
+                                        <a
+                                            key={link.id}
+                                            href={link.href}
+                                            onClick={() => setIsOpen(false)}
+                                            className="group relative block overflow-hidden font-nohemi text-[26px] sm:text-[36px] lg:text-[60px] font-normal tracking-[-0.02em] leading-[1.2] text-white w-fit cursor-pointer select-none"
+                                        >
+                                            {/* Primary word: goes up on hover, comes back down from top on unhover */}
+                                            <span className="block transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] lg:group-hover:-translate-y-full">
+                                                {link.label}
+                                            </span>
+
+                                            {/* Secondary word: comes from bottom on hover, leaves to bottom on unhover */}
+                                            <span
+                                                aria-hidden="true"
+                                                className="absolute inset-0 block transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] translate-y-full lg:group-hover:translate-y-0 text-[#38E29D]"
+                                            >
+                                                {link.label}
+                                            </span>
+                                        </a>
+                                    ))}
+                                </nav>
+
+                                {/* Divider Line on Mobile between Nav Links and Contact */}
+                                <div className="w-full border-t border-white/10 my-7 sm:my-8 lg:hidden" />
+
+                                {/* Right Column: Contact Details */}
+                                <div className="lg:col-span-5 flex flex-col justify-start lg:pt-3">
+                                    <h3 className="font-satoshi font-bold text-[16px] sm:text-[18px] text-white mb-5 sm:mb-6 tracking-wide">
+                                        {footerData?.contactHeading || "Contact"}
+                                    </h3>
+
+                                    <div className="space-y-4 sm:space-y-6">
+                                        {contacts.map((contact) => (
+                                            <div key={contact.id} className="space-y-1">
+                                                <p className="font-satoshi font-medium text-[14px] sm:text-[15px] text-white">
+                                                    {contact.location}
+                                                </p>
+                                                {contact.phone && (
+                                                    <a
+                                                        href={`tel:${contact.phone}`}
+                                                        className="block font-satoshi text-[14px] sm:text-[15px] text-white underline underline-offset-4 decoration-white/40 hover:decoration-[#38E29D] hover:text-[#38E29D] transition-colors"
+                                                    >
+                                                        {contact.phone}
+                                                    </a>
+                                                )}
+                                                {contact.email && (
+                                                    <a
+                                                        href={`mailto:${contact.email}`}
+                                                        className="block font-satoshi text-[13.5px] sm:text-[14px] text-[#CBD2C9] underline underline-offset-4 decoration-white/30 hover:text-white transition-colors"
+                                                    >
+                                                        {contact.email}
+                                                    </a>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Blue Pill CTA Button (Desktop only as shown in reference) */}
+                                    <div className="hidden lg:block mt-8 sm:mt-10">
+                                        <a
+                                            href="#quote"
+                                            onClick={() => setIsOpen(false)}
+                                            className="inline-flex items-center gap-2 rounded-full bg-[#3145DD] hover:bg-[#2537c7] text-white px-7 py-3.5 font-satoshi text-[15px] font-medium transition-all shadow-md active:scale-95 w-fit"
+                                        >
+                                            <span>Talk to us</span>
+                                            <span className="text-[17px] leading-none">→</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Bottom Bar: Social Links (Aligned right on mobile as per reference) */}
+                            <div className="shrink-0 pt-6 pb-2 flex items-center justify-end lg:justify-center gap-5 sm:gap-6">
+                                {socialLinks.map((social) => {
+                                    const iconSrc = socialIcons[social.platform];
+                                    return (
+                                        <a
+                                            key={social.id}
+                                            href={social.href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-white hover:opacity-80 transition-opacity p-1"
+                                            aria-label={social.platform}
+                                        >
+                                            {iconSrc ? (
+                                                <img
+                                                    src={iconSrc}
+                                                    alt={social.platform}
+                                                    className="h-4.5 w-4.5 sm:h-5 sm:w-5 object-contain filter brightness-100"
+                                                />
+                                            ) : (
+                                                <span className="text-[13px] font-satoshi text-white">
+                                                    {social.platform}
+                                                </span>
+                                            )}
+                                        </a>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
+    );
+}

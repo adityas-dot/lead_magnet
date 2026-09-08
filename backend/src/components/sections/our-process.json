@@ -1,0 +1,78 @@
+{
+  "collectionName": "components_sections_our_processes",
+  "info": {
+    "displayName": "OurProcess"
+  },
+  "options": {},
+  "attributes": {
+    "marqueeItems": {
+      "type": "component",
+      "component": "shared.marquee-item",
+      "repeatable": true
+    },
+    "eyebrow": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "text"
+    },
+    "description": {
+      "type": "text"
+    },
+    "mobileEyebrow": {
+      "type": "string"
+    },
+    "mobileHeading": {
+      "type": "string"
+    },
+    "mobileDescription": {
+      "type": "text"
+    },
+    "cta": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": false
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "cards": {
+      "type": "component",
+      "component": "shared.process-card",
+      "repeatable": true
+    },
+    "video": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "service": {
+      "type": "component",
+      "component": "shared.services",
+      "repeatable": true
+    },
+    "mobilePrimaryCta": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": false
+    },
+    "mobileSecondaryCta": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}

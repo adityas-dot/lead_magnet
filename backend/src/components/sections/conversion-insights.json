@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_sections_conversion_insights",
+  "info": {
+    "displayName": "ConversionInsights"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "MobileHeading": {
+      "type": "string"
+    },
+    "MobileDescription": {
+      "type": "text"
+    },
+    "cards": {
+      "type": "component",
+      "component": "shared.insight-card",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

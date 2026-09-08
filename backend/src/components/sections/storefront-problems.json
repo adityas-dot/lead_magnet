@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_sections_storefront_problems",
+  "info": {
+    "displayName": "StorefrontProblems"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "items": {
+      "type": "component",
+      "component": "shared.pain-point",
+      "repeatable": true
+    },
+    "summary": {
+      "type": "string"
+    },
+    "submitLabel": {
+      "type": "string"
+    },
+    "submitHref": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

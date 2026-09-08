@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_sections_work_showcases",
+  "info": {
+    "displayName": "WorkShowcase"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "MobileDescription": {
+      "type": "text"
+    },
+    "items": {
+      "type": "component",
+      "component": "shared.showcase-item",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_shared_marquee_items",
+  "info": {
+    "displayName": "MarqueeItem"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_shared_final_cta_logos",
+  "info": {
+    "displayName": "FinalCTALogo"
+  },
+  "options": {},
+  "attributes": {
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  },
+  "config": {}
+}
