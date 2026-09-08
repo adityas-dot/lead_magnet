@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Thumbstack — Lead Magnet
+
+![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)
+![React](https://img.shields.io/badge/React-19-blue?style=flat-square&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38bdf8?style=flat-square&logo=tailwind-css)
+![Strapi v5](https://img.shields.io/badge/Strapi-v5-4945ff?style=flat-square&logo=strapi)
+![Cloudinary](https://img.shields.io/badge/Cloudinary-Media_CDN-3448c5?style=flat-square&logo=cloudinary)
+![Vercel](https://img.shields.io/badge/Vercel-Deployment-black?style=flat-square&logo=vercel)
+
+A modern, full-stack Lead Magnet landing page featuring an interactive multi-step quote estimator, dynamic content powered by Strapi v5 headless CMS, and Cloudinary media delivery.
+
+---
+
+## Key Features
+
+- **Interactive Shopify Quote Estimator:** Multi-step lead capture form with instant estimate calculations.
+- **Dynamic Content:** Landing page sections fully manageable via Strapi v5 CMS.
+- **Cloudinary CDN Integration:** Persistent media storage with responsive image optimization.
+- **Before/After Showcase:** Interactive comparison sliders with touch/drag support.
+- **Responsive & Animated:** Fluid micro-interactions, marquee sliders, and 1:1 responsive layouts.
+
+---
+
+## Tech Stack
+
+- **Frontend:** Next.js (App Router), TypeScript, Tailwind CSS
+- **Backend:** Strapi v5 (Headless CMS)
+- **Database:** SQLite (Local) / PostgreSQL (Production)
+- **Media CDN:** Cloudinary
+- **Hosting:** Vercel (Frontend) & Render (Backend)
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### 1. Backend (Strapi)
+```bash
+cd backend
+npm install
+npm run develop
+```
+> Admin URL: `http://localhost:1337/admin`
+
+### 2. Frontend (Next.js)
+```bash
+cd frontend
+npm install
+npm run dev
+```
+> App URL: `http://localhost:3000`
+
+---
+
+## Media Migration (Cloudinary)
+
+To migrate local media files directly to Cloudinary and update database URLs:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd backend
+npm run migrate:cloudinary
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+This project is licensed under the MIT License.
