@@ -24,3 +24,7 @@ backend/dist/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Agent files
+AGENTS.md
+CLAUDE.md

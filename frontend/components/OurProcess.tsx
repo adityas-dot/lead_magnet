@@ -177,12 +177,12 @@ export default function OurProcess({
                         </div>
 
                         <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-6">
-                            <div className="col-span-2 lg:col-start-1 lg:col-span-2 lg:row-start-1 h-[410px] overflow-hidden rounded-lg bg-white">
+                            <div className="col-span-2 lg:col-start-1 lg:col-span-2 lg:row-start-1 h-[410px] overflow-hidden rounded-lg bg-white flex items-center justify-center">
                                 {data.image?.url && (
                                     <img
                                         src={getMediaUrl(data.image.url)}
-                                        alt=""
-                                        className="h-full w-full object-cover"
+                                        alt={data.heading || "Our Process"}
+                                        className="h-full w-full object-contain scale-[1.06] rounded-lg"
                                     />
                                 )}
                             </div>
