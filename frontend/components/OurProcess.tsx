@@ -63,7 +63,7 @@ type OurProcessData = {
     mobileSecondaryCta?: CtaLink;
 };
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "https://lead-magnet-strapi.onrender.com";
 const DURATION = 35;
 
 function getMediaUrl(url?: string): string {

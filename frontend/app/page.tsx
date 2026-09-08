@@ -14,6 +14,14 @@ import Footer from "@/components/Footer";
 export default async function Home() {
   const data = await getLandingPage();
 
+  if (!data) {
+    return (
+      <main className="min-h-screen bg-[#37386B] text-white flex items-center justify-center font-sans">
+        <p>Loading landing page content...</p>
+      </main>
+    );
+  }
+
   return (
     <main>
       <Header data={data.header} footerData={data.footer} />
