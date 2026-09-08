@@ -11,6 +11,7 @@
     "develop": "strapi develop",
     "start": "strapi start",
     "strapi": "strapi",
+    "migrate:cloudinary": "node scripts/migrate-to-cloudinary.js",
     "upgrade": "npx @strapi/upgrade latest",
     "upgrade:dry": "npx @strapi/upgrade latest --dry"
   },
@@ -18,7 +19,9 @@
     "@strapi/database": "5.52.2",
     "@strapi/plugin-cloud": "5.52.2",
     "@strapi/plugin-users-permissions": "5.52.2",
+    "@strapi/provider-upload-cloudinary": "5.52.2",
     "@strapi/strapi": "5.52.2",
+    "cloudinary": "^2.5.1",
     "better-sqlite3": "12.8.0",
     "pg": "^8.13.3",
     "react": "^18.0.0",

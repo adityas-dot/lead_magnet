@@ -1,4 +1,12 @@
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "https://lead-magnet-strapi.onrender.com";
+export const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "https://lead-magnet-strapi.onrender.com";
+
+export function getMediaUrl(url?: string | null): string {
+    if (!url) return "";
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+        return url;
+    }
+    return `${STRAPI_URL}${url.startsWith("/") ? url : `/${url}`}`;
+}
 
 export async function getLandingPage() {
     try {

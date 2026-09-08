@@ -169,7 +169,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                             {trackBrands.map((brand, idx) => (
                                                 <img
                                                     key={`brand-track1-${idx}`}
-                                                    src={`${STRAPI_URL}${brand.logo?.url}`}
+                                                    src={brand.logo?.url?.startsWith('http') ? brand.logo.url : `${STRAPI_URL}${brand.logo?.url}`}
                                                     alt={brand.name || "Brand logo"}
                                                     className={`${getBrandSize(brand)} w-auto object-contain transition-all duration-300 opacity-90 hover:opacity-100 shrink-0`}
                                                     style={{ filter: 'brightness(0) invert(1)' }}
@@ -180,7 +180,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                             {trackBrands.map((brand, idx) => (
                                                 <img
                                                     key={`brand-track2-${idx}`}
-                                                    src={`${STRAPI_URL}${brand.logo?.url}`}
+                                                    src={brand.logo?.url?.startsWith('http') ? brand.logo.url : `${STRAPI_URL}${brand.logo?.url}`}
                                                     alt={brand.name || "Brand logo"}
                                                     className={`${getBrandSize(brand)} w-auto object-contain transition-all duration-300 opacity-90 hover:opacity-100 shrink-0`}
                                                     style={{ filter: 'brightness(0) invert(1)' }}

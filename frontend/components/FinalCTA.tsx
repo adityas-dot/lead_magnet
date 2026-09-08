@@ -81,7 +81,7 @@ export default function FinalCTA({
                                             {currentLogo?.logo?.url && (
                                                 <motion.img
                                                     key={currentLogo.id || currentIndex}
-                                                    src={`${STRAPI_URL}${currentLogo.logo.url}`}
+                                                    src={currentLogo.logo.url.startsWith("http") ? currentLogo.logo.url : `${STRAPI_URL}${currentLogo.logo.url}`}
                                                     alt=""
                                                     initial={{ opacity: 0 }}
                                                     animate={{ opacity: 1 }}
