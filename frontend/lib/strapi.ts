@@ -16,7 +16,10 @@ export async function getLandingPage() {
 
         const json = await response.json();
         return json.data;
-    } catch (err) {
+    } catch (err: unknown) {
+        if (err && typeof err === "object" && "digest" in err && (err as { digest: string }).digest === "DYNAMIC_SERVER_USAGE") {
+            throw err;
+        }
         console.error("Error fetching landing page:", err);
         return null;
     }
