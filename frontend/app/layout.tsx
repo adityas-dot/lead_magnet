@@ -38,7 +38,7 @@ const delight = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Thumbstack - Shopify Lead Magnet",
+  title: "Thumbstack - Lead Magnet",
   description: "Turn More of Your Traffic Into Customers.",
 };
 
