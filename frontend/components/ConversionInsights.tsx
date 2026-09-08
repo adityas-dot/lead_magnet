@@ -1,3 +1,5 @@
+import { getMediaUrl } from "@/lib/strapi";
+
 type InsightCard = {
     id: number;
     title: string;
@@ -20,8 +22,6 @@ type ConversionInsightsData = {
     cards: InsightCard[];
 };
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "https://lead-magnet-strapi.onrender.com";
-
 export default function ConversionInsights({
     data,
 }: {
@@ -33,8 +33,6 @@ export default function ConversionInsights({
     return (
         <section className="w-full bg-white px-6 pt-10 pb-20 lg:px-[60px] xl:px-[80px] lg:pt-[30px] lg:pb-[90px]">
             <div className="mx-auto max-w-[1720px] w-full">
-
-                {/* Heading */}
                 <div className="w-full max-w-[1200px]">
                     {mobileHeading ? (
                         <>
@@ -67,15 +65,9 @@ export default function ConversionInsights({
                     )}
                 </div>
 
-                {/* Cards */}
                 <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8">
                     {data.cards.map((card, index) => {
-                        const imageUrl = card.image?.url
-                            ? card.image.url.startsWith("http")
-                                ? card.image.url
-                                : `${STRAPI_URL}${card.image.url}`
-                            : null;
-
+                        const imageUrl = getMediaUrl(card.image?.url);
                         const isDark = index === 0;
                         const bgColors = ["bg-[#023E45]", "bg-[#B4BCFE]", "bg-[#C4E0C1]"];
                         const bgColor = bgColors[index % bgColors.length];
@@ -88,7 +80,6 @@ export default function ConversionInsights({
                                 key={card.id}
                                 className={`overflow-hidden rounded-[24px] ${bgColor} ${textColor} flex flex-col h-full min-h-[380px]`}
                             >
-                                {/* Image */}
                                 {imageUrl && (
                                     <div className="px-8 pt-10 pb-4 w-full h-[180px] flex justify-start items-start">
                                         <img
@@ -99,7 +90,6 @@ export default function ConversionInsights({
                                     </div>
                                 )}
 
-                                {/* Content */}
                                 <div className="p-8 pt-4 flex-grow flex flex-col">
                                     <h3 className="font-nohemi text-[clamp(20px,1.8vw,24px)] font-light leading-[1.2] tracking-[-0.02em] mb-4">
                                         {card.title}

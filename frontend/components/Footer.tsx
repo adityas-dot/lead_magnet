@@ -1,3 +1,5 @@
+import { getMediaUrl, SOCIAL_ICONS } from "@/lib/strapi";
+
 type CTA = {
     label: string;
     href: string;
@@ -40,26 +42,16 @@ type SocialLink = {
     href: string;
 };
 
-
-
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "https://lead-magnet-strapi.onrender.com";
-
 export default function Footer({
     data,
 }: {
     data: FooterData;
 }) {
-
-    const socialIcons: Record<string, string> = {
-        Instagram: "/images/insta_logo.svg",
-        YouTube: "/images/youtube_logo.svg",
-        Facebook: "/images/facebook.svg",
-        LinkedIn: "/images/linkedin-icon.svg",
-    };
     return (
         <section data-theme="dark" className="w-full py-20 bg-[#3145DD] overflow-hidden">
             <div className="mx-auto w-full max-w-[1880px] px-6 lg:px-[60px] xl:px-[80px]">
                 <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
+                    {/* Brand info and social links */}
                     <div className="col-span-2 flex flex-col">
                         <div className="flex items-center gap-2">
                             <h1 className="font-delight text-[clamp(45px,4.2vw,80px)] font-medium leading-none text-white">
@@ -68,11 +60,7 @@ export default function Footer({
 
                             {data.logo && (
                                 <img
-                                    src={
-                                        data.logo.url.startsWith("/")
-                                            ? `${STRAPI_URL}${data.logo.url}`
-                                            : data.logo.url
-                                    }
+                                    src={getMediaUrl(data.logo.url)}
                                     alt="Logo"
                                     className="h-[64px] w-[64px] animate-spin-pause"
                                 />
@@ -96,7 +84,7 @@ export default function Footer({
                                     className="font-satoshi text-white"
                                 >
                                     <img
-                                        src={socialIcons[social.platform]}
+                                        src={SOCIAL_ICONS[social.platform]}
                                         alt={social.platform}
                                         className="h-6 w-6"
                                     />
@@ -126,6 +114,7 @@ export default function Footer({
                         </div>
                     </div>
 
+                    {/* Contact information */}
                     <div className="col-span-1">
                         <h2 className="font-satoshi text-[18px] font-bold text-white">
                             {data.contactHeading}
@@ -159,6 +148,7 @@ export default function Footer({
                         </div>
                     </div>
 
+                    {/* Quick navigation links */}
                     <div className="col-span-1 lg:pl-12">
                         <h2 className="font-satoshi font-bold text-white">
                             {data.quickLinksHeading}
@@ -179,6 +169,7 @@ export default function Footer({
 
                 </div>
             </div>
+            {/* Marquee CTA ticker */}
             <div className="mt-20 overflow-hidden">
                 <div className="flex w-max animate-marquee">
                     {[1, 2, 3, 4].map((item) => (

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { SOCIAL_ICONS } from "@/lib/strapi";
 
 export type HeaderLink = {
     id: number;
@@ -34,13 +35,6 @@ export type FooterData = {
     quickLinks?: HeaderLink[];
     socialLinks?: SocialLink[];
     contacts?: FooterContact[];
-};
-
-const socialIcons: Record<string, string> = {
-    Instagram: "/images/insta_logo.svg",
-    YouTube: "/images/youtube_logo.svg",
-    Facebook: "/images/facebook.svg",
-    LinkedIn: "/images/linkedin-icon.svg",
 };
 
 export default function Header({
@@ -286,10 +280,9 @@ export default function Header({
                                 </div>
                             </div>
 
-                            {/* Bottom Bar: Social Links (Aligned right on mobile as per reference) */}
                             <div className="shrink-0 pt-6 pb-2 flex items-center justify-end lg:justify-center gap-5 sm:gap-6">
                                 {socialLinks.map((social) => {
-                                    const iconSrc = socialIcons[social.platform];
+                                    const iconSrc = SOCIAL_ICONS[social.platform];
                                     return (
                                         <a
                                             key={social.id}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { getMediaUrl } from "@/lib/strapi";
 
 type OurWorkImage = {
     url: string;
@@ -19,15 +20,6 @@ type OurWorkData = {
     MobileDescription?: string;
     projects: OurWorkProject[];
 };
-
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "https://lead-magnet-strapi.onrender.com";
-
-function getMediaUrl(media?: OurWorkImage | OurWorkImage[] | null): string | null {
-    if (!media) return null;
-    const item = Array.isArray(media) ? media[0] : media;
-    if (!item?.url) return null;
-    return item.url.startsWith("http") ? item.url : `${STRAPI_URL}${item.url}`;
-}
 
 function getMediaAlt(media?: OurWorkImage | OurWorkImage[] | null, fallback: string = ""): string {
     if (!media) return fallback;
@@ -67,7 +59,6 @@ export default function OurWork({ data }: { data: OurWorkData }) {
     return (
         <section className="w-full py-10 sm:py-20 overflow-hidden">
             <div className="mx-auto flex w-full max-w-[1880px] flex-col px-6 lg:px-[60px] xl:px-[80px]">
-                {/* Header Row */}
                 <div className="flex w-full justify-between items-end gap-6">
                     <div className="max-w-[900px]">
                         <h2 className="font-nohemi text-[clamp(32px,4.2vw,52px)] font-medium leading-[1.15] text-[#000000]">
@@ -88,7 +79,7 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                         </p>
                     </div>
 
-                    {/* Desktop Arrows */}
+                    {/* Desktop project navigation */}
                     <div className="hidden md:flex gap-3 shrink-0 mb-1">
                         <button
                             onClick={previousProject}
@@ -128,7 +119,7 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                     </div>
                 </div>
 
-                {/* Small Screen Controls: Back - Tracker - Next */}
+                {/* Mobile project navigation */}
                 {hasMultipleProjects && (
                     <div className="flex md:hidden items-center justify-between w-full mt-6 pt-1">
                         <button
@@ -196,7 +187,7 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                 )}
             </div>
 
-            {/* Banner Image Container */}
+            {/* Responsive project banner */}
             <div className="mt-6 sm:mt-12 w-full overflow-hidden">
                 {bannerUrl || mobileUrl ? (
                     <picture key={currentProject} className="w-full">

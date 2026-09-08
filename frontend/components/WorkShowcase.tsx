@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { getMediaUrl } from "@/lib/strapi";
 
 type ShowcaseItem = {
     id: number;
@@ -26,13 +27,6 @@ type WorkShowcaseData = {
     mobileDescription?: string;
     items: ShowcaseItem[];
 };
-
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "https://lead-magnet-strapi.onrender.com";
-
-function getMediaUrl(url?: string): string {
-    if (!url) return "";
-    return url.startsWith("http") ? url : `${STRAPI_URL}${url}`;
-}
 
 export default function WorkShowcase({
     data,
@@ -112,7 +106,6 @@ export default function WorkShowcase({
                         </p>
                     )}
 
-                    {/* Filter Pills (Horizontal scroll on mobile as in reference image) */}
                     <div className="mt-8 flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-1 md:flex-wrap">
                         {data.items.map((item) => (
                             <button
@@ -131,7 +124,6 @@ export default function WorkShowcase({
                     </div>
                 </div>
 
-                {/* BEFORE / AFTER COMPARISON */}
                 {activeItem && (activeItem.beforeImage || activeItem.mobileBeforeImage) && (activeItem.afterImage || activeItem.mobileAfterImage) && (
                     <div
                         ref={containerRef}
@@ -155,7 +147,6 @@ export default function WorkShowcase({
                         }}
                         className="relative mt-8 sm:mt-12 aspect-[9/18.5] sm:aspect-[9/16] md:aspect-[16/9] w-full max-w-[440px] md:max-w-none mx-auto overflow-hidden rounded-[24px] md:rounded-lg touch-none select-none cursor-pointer bg-white shadow-sm border border-black/5"
                     >
-                        {/* AFTER IMAGE (Bottom on mobile / Right on desktop) */}
                         {activeItem.mobileAfterImage?.url && (
                             <img
                                 src={getMediaUrl(activeItem.mobileAfterImage.url)}
@@ -173,7 +164,6 @@ export default function WorkShowcase({
                             />
                         )}
 
-                        {/* BEFORE IMAGE (Top on mobile / Left on desktop) */}
                         {activeItem.mobileBeforeImage?.url && (
                             <img
                                 src={getMediaUrl(activeItem.mobileBeforeImage.url)}
@@ -199,8 +189,7 @@ export default function WorkShowcase({
                             />
                         )}
 
-                        {/* DIVIDER & HANDLE */}
-                        {/* MOBILE: HORIZONTAL DIVIDER (TOP / BOTTOM SPLIT) */}
+                        {/* Divider & Handle */}
                         <div
                             className="md:hidden absolute left-0 right-0 h-[2px] -translate-y-1/2 bg-black z-20 pointer-events-none"
                             style={{ top: `${position}%` }}
@@ -233,7 +222,6 @@ export default function WorkShowcase({
                             </div>
                         </div>
 
-                        {/* DESKTOP: VERTICAL DIVIDER (LEFT / RIGHT SPLIT) */}
                         <div
                             className="hidden md:block absolute top-0 bottom-0 w-[2px] -translate-x-1/2 bg-black z-20 pointer-events-none"
                             style={{ left: `${position}%` }}
@@ -268,7 +256,6 @@ export default function WorkShowcase({
                     </div>
                 )}
 
-                {/* IF THERE IS ONLY AN AFTER IMAGE */}
                 {activeItem?.afterImage && !activeItem.beforeImage && !activeItem.mobileBeforeImage && (
                     <div className="mt-8 sm:mt-12 overflow-hidden rounded-[20px] sm:rounded-[24px] md:rounded-lg">
                         <img

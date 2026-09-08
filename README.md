@@ -5,10 +5,11 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38bdf8?style=flat-square&logo=tailwind-css)
 ![Strapi v5](https://img.shields.io/badge/Strapi-v5-4945ff?style=flat-square&logo=strapi)
+![Neon](https://img.shields.io/badge/Neon-Serverless_Postgres-00e599?style=flat-square&logo=postgresql&logoColor=white)
 ![Cloudinary](https://img.shields.io/badge/Cloudinary-Media_CDN-3448c5?style=flat-square&logo=cloudinary)
 ![Vercel](https://img.shields.io/badge/Vercel-Deployment-black?style=flat-square&logo=vercel)
 
-A modern, full-stack Lead Magnet landing page featuring an interactive multi-step quote estimator, dynamic content powered by Strapi v5 headless CMS, and Cloudinary media delivery.
+A modern, full-stack Lead Magnet landing page featuring an interactive multi-step quote estimator, dynamic content powered by Strapi v5 headless CMS with Neon PostgreSQL, and Cloudinary media delivery.
 
 ---
 
@@ -26,7 +27,7 @@ A modern, full-stack Lead Magnet landing page featuring an interactive multi-ste
 
 - **Frontend:** Next.js (App Router), TypeScript, Tailwind CSS
 - **Backend:** Strapi v5 (Headless CMS)
-- **Database:** SQLite (Local) / PostgreSQL (Production)
+- **Database:** SQLite (Local) / Neon Serverless PostgreSQL (Production)
 - **Media CDN:** Cloudinary
 - **Hosting:** Vercel (Frontend) & Render (Backend)
 

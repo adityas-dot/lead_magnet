@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { getMediaUrl } from "@/lib/strapi";
 
 type MarqueeItem = {
     id: number;
@@ -63,13 +64,7 @@ type OurProcessData = {
     mobileSecondaryCta?: CtaLink;
 };
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "https://lead-magnet-strapi.onrender.com";
 const DURATION = 35;
-
-function getMediaUrl(url?: string): string {
-    if (!url) return "";
-    return url.startsWith("http") ? url : `${STRAPI_URL}${url}`;
-}
 
 export default function OurProcess({
     data,
@@ -154,9 +149,7 @@ export default function OurProcess({
             {/* Main Content Area */}
             <div className="w-full bg-[#0F1D07] px-6 py-14 sm:px-8 lg:px-16 lg:py-24 text-white">
                 <div className="mx-auto max-w-[1300px] w-full">
-                    {/* ==================================================== */}
-                    {/* DESKTOP VIEW (hidden on mobile, visible on md and up) */}
-                    {/* ==================================================== */}
+                    {/* Desktop View */}
                     <div className="hidden md:block">
                         <div className="flex flex-row items-center justify-between items-start mb-14 gap-6">
                             <div>
@@ -183,9 +176,7 @@ export default function OurProcess({
                             )}
                         </div>
 
-                        {/* Desktop Cards Grid */}
                         <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-6">
-                            {/* Image */}
                             <div className="col-span-2 lg:col-start-1 lg:col-span-2 lg:row-start-1 h-[410px] overflow-hidden rounded-lg bg-white">
                                 {data.image?.url && (
                                     <img
@@ -196,27 +187,22 @@ export default function OurProcess({
                                 )}
                             </div>
 
-                            {/* Strategise */}
                             {data.cards?.[0] && (
                                 <ProcessCard card={data.cards[0]} className="lg:col-start-3 lg:row-start-1" />
                             )}
 
-                            {/* Design */}
                             {data.cards?.[1] && (
                                 <ProcessCard card={data.cards[1]} className="lg:col-start-4 lg:row-start-1" />
                             )}
 
-                            {/* Build */}
                             {data.cards?.[2] && (
                                 <ProcessCard card={data.cards[2]} className="lg:col-start-1 lg:row-start-2" />
                             )}
 
-                            {/* Grow */}
                             {data.cards?.[3] && (
                                 <ProcessCard card={data.cards[3]} className="lg:col-start-4 lg:row-start-2" />
                             )}
 
-                            {/* Video */}
                             <div className="col-span-2 lg:col-start-2 lg:col-span-2 lg:row-start-2 h-[410px] overflow-hidden rounded-lg bg-black">
                                 {data.video?.url && (
                                     <video
@@ -232,9 +218,7 @@ export default function OurProcess({
                         </div>
                     </div>
 
-                    {/* ==================================================== */}
-                    {/* MOBILE VIEW (matches exact design from screenshot)  */}
-                    {/* ==================================================== */}
+                    {/* Mobile View */}
                     <div className="block md:hidden">
                         {/* Header Area */}
                         <div>

@@ -32,8 +32,6 @@ export default function StorefrontProblems({
     return (
         <section className="w-full bg-white px-6 pt-15 pb-10 text-[#0D2108] lg:px-[60px] xl:px-[80px] lg:pt-[90px] lg:pb-[30px]">
             <div className="mx-auto max-w-[1720px] w-full">
-
-                {/* Heading */}
                 <div className="w-full">
                     <h2 className="font-delight text-[clamp(30px,4.2vw,56px)] font-medium leading-[1.2] tracking-[-0.01em] lg:whitespace-nowrap text-[#0F1D07]">
                         {data.heading}
@@ -44,7 +42,7 @@ export default function StorefrontProblems({
                     </p>
                 </div>
 
-                {/* Problem Cards */}
+                {/* Interactive problem selection cards */}
                 <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                     {data.items.map((item) => {
                         const isSelected = selectedIds.includes(item.id);
@@ -76,7 +74,6 @@ export default function StorefrontProblems({
                                     </p>
                                 </div>
 
-                                {/* Plus / Checkmark button */}
                                 <div
                                     className={`absolute right-3.5 top-3.5 flex h-6 w-6 items-center justify-center rounded-[5px] transition-colors duration-200 ${isSelected ? "bg-[#3145DD]" : "bg-white"
                                         }`}
@@ -117,7 +114,7 @@ export default function StorefrontProblems({
                     })}
                 </div>
 
-                {/* Bottom bar */}
+                {/* Bottom summary and action bar */}
                 <div className="mt-8 flex flex-col items-center justify-between gap-5 rounded-[8px] bg-[#F7F7F7] px-5 py-3 sm:flex-row">
                     <p className="font-satoshi text-[clamp(11px,4.2vw,16px)] font-bold">
                         {data.summary}

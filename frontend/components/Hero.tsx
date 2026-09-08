@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { getMediaUrl } from "@/lib/strapi";
 
 type Brand = {
     id: number;
@@ -74,8 +75,6 @@ type HeroData = {
     quoteForm?: QuoteForm | QuoteForm[];
 };
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "https://lead-magnet-strapi.onrender.com";
-
 export default function Hero({ data }: { data: HeroData }) {
     const form = Array.isArray(data.quoteForm) ? data.quoteForm[0] : data.quoteForm;
 
@@ -124,7 +123,7 @@ export default function Hero({ data }: { data: HeroData }) {
             <div className="flex-grow flex items-start xl:items-center pt-[100px] pb-0 xl:pb-12 px-6 lg:px-[60px] xl:px-[80px]">
                 <div className="max-w-[1720px] mx-auto w-full grid grid-cols-1 xl:grid-cols-[1fr_620px] gap-8 xl:gap-16 items-start">
 
-                    {/* Left Column - Content */}
+                    {/* Left Column: Hero copy and client brands */}
                     <div className="max-w-full flex flex-col justify-between self-stretch">
                         <div>
                             <h1 className="font-nohemi font-normal text-white text-[clamp(32px,4.2vw,80px)] tracking-[-0.01em] mb-6 leading-[1.7] sm:leading-[1.3] xl:leading-[82px]">
@@ -150,6 +149,7 @@ export default function Hero({ data }: { data: HeroData }) {
                             </a>
                         </div>
 
+                        {/* Client logo marquee */}
                         <div className="mt-20 lg:mt-28 xl:mt-auto pt-8">
                             {data.brandsHeading && (
                                 <p className="font-satoshi font-normal text-[#F6F6F6] text-[clamp(16px,1.4vw,20px)] mb-4 lg:mb-5 max-w-[864px] leading-[1.3] lg:leading-[33.6px] tracking-[-0.48px]">
@@ -169,7 +169,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                             {trackBrands.map((brand, idx) => (
                                                 <img
                                                     key={`brand-track1-${idx}`}
-                                                    src={brand.logo?.url?.startsWith('http') ? brand.logo.url : `${STRAPI_URL}${brand.logo?.url}`}
+                                                    src={getMediaUrl(brand.logo?.url)}
                                                     alt={brand.name || "Brand logo"}
                                                     className={`${getBrandSize(brand)} w-auto object-contain transition-all duration-300 opacity-90 hover:opacity-100 shrink-0`}
                                                     style={{ filter: 'brightness(0) invert(1)' }}
@@ -180,7 +180,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                             {trackBrands.map((brand, idx) => (
                                                 <img
                                                     key={`brand-track2-${idx}`}
-                                                    src={brand.logo?.url?.startsWith('http') ? brand.logo.url : `${STRAPI_URL}${brand.logo?.url}`}
+                                                    src={getMediaUrl(brand.logo?.url)}
                                                     alt={brand.name || "Brand logo"}
                                                     className={`${getBrandSize(brand)} w-auto object-contain transition-all duration-300 opacity-90 hover:opacity-100 shrink-0`}
                                                     style={{ filter: 'brightness(0) invert(1)' }}
@@ -193,9 +193,8 @@ export default function Hero({ data }: { data: HeroData }) {
                         </div>
                     </div>
 
-                    {/* Right Column - Form Card */}
+                    {/* Interactive Shopify Quote Estimator */}
                     <div data-theme="light" className="-mx-6 sm:-mx-8 lg:-mx-[60px] xl:mx-0 w-[calc(100%+48px)] sm:w-[calc(100%+64px)] lg:w-[calc(100%+120px)] xl:w-full bg-[#F9F9F9] text-black px-6 py-8 sm:p-8 lg:p-[48px] pb-10 sm:pb-12 xl:pb-[48px] shadow-2xl relative mt-8 xl:mt-0 rounded-t-[20px] rounded-b-none xl:rounded-none transition-all duration-300">
-                        {/* Header Text */}
                         <h2 className="font-nohemi text-[clamp(26px,2.5vw,36px)] font-normal text-[#1A1A1A] mb-2 leading-tight">
                             {step === 1 && form?.title}
                             {step === 2 && form?.step2Title}
@@ -207,9 +206,8 @@ export default function Hero({ data }: { data: HeroData }) {
                             {step === 3 && form?.resultDescription}
                         </p>
 
-                        {/* Progress Tabs */}
+                        {/* Step progress tabs */}
                         <div className="flex items-center gap-4 mb-6 select-none">
-                            {/* Tab 1: Store Info */}
                             <div
                                 onClick={() => setStep(1)}
                                 className={`flex-1 ${step > 1 ? "cursor-pointer group" : ""}`}
@@ -220,7 +218,6 @@ export default function Hero({ data }: { data: HeroData }) {
                                 <div className={`h-[3px] w-full rounded-full transition-colors duration-300 ${step >= 1 ? "bg-[#1A1A1A]" : "bg-[#E0E0E0]"}`}></div>
                             </div>
 
-                            {/* Tab 2: Budget Range */}
                             <div
                                 onClick={() => (step > 2 ? setStep(2) : null)}
                                 className={`flex-1 ${step > 2 ? "cursor-pointer group" : ""}`}
@@ -231,7 +228,6 @@ export default function Hero({ data }: { data: HeroData }) {
                                 <div className={`h-[3px] w-full rounded-full transition-colors duration-300 ${step >= 2 ? "bg-[#1A1A1A]" : "bg-[#E0E0E0]"}`}></div>
                             </div>
 
-                            {/* Tab 3: Your Estimate */}
                             <div className="flex-1">
                                 <p className={`font-satoshi text-[14px] font-medium mb-2 ${step === 3 ? "text-[#3441D4]" : "text-transparent"}`}>
                                     {form?.step3Label}
@@ -240,10 +236,9 @@ export default function Hero({ data }: { data: HeroData }) {
                             </div>
                         </div>
 
-                        {/* STEP 1 CONTENT */}
+                        {/* Step 1: Store status & URL */}
                         {step === 1 && (
                             <div className="space-y-4">
-                                {/* Radio Options */}
                                 <div>
                                     <label className="font-nohemi block text-[17px] font-normal text-[#1A1A1A] mb-2">
                                         {form?.shopifyQuestion}
@@ -274,7 +269,6 @@ export default function Hero({ data }: { data: HeroData }) {
                                     </div>
                                 </div>
 
-                                {/* Input Field */}
                                 <div>
                                     <label className="font-nohemi block text-[17px] font-normal text-[#1A1A1A] mb-2">
                                         {form?.shopifyLinkLabel}
@@ -288,7 +282,6 @@ export default function Hero({ data }: { data: HeroData }) {
                                     />
                                 </div>
 
-                                {/* Submit Button */}
                                 <button
                                     type="button"
                                     onClick={() => setStep(2)}
@@ -302,10 +295,9 @@ export default function Hero({ data }: { data: HeroData }) {
                             </div>
                         )}
 
-                        {/* STEP 2 CONTENT */}
+                        {/* Step 2: Issues & budget selection */}
                         {step === 2 && (
                             <div className="space-y-4">
-                                {/* What needs improvement ? */}
                                 <div>
                                     <label className="font-nohemi block text-[17px] font-normal text-[#1A1A1A] mb-2">
                                         {form?.issuesLabel}
@@ -331,7 +323,6 @@ export default function Hero({ data }: { data: HeroData }) {
                                     </div>
                                 </div>
 
-                                {/* Select your budget range */}
                                 <div>
                                     <label className="font-nohemi block text-[17px] font-normal text-[#1A1A1A] mb-2">
                                         {form?.budgetLabel}
@@ -357,7 +348,6 @@ export default function Hero({ data }: { data: HeroData }) {
                                     </div>
                                 </div>
 
-                                {/* Other issues (optional) */}
                                 <div>
                                     <label className="font-nohemi block text-[17px] font-normal text-[#1A1A1A] mb-2">
                                         {form?.otherIssuesLabel}
@@ -371,7 +361,6 @@ export default function Hero({ data }: { data: HeroData }) {
                                     />
                                 </div>
 
-                                {/* Get My Estimate Button */}
                                 <button
                                     type="button"
                                     onClick={() => setStep(3)}
@@ -385,10 +374,9 @@ export default function Hero({ data }: { data: HeroData }) {
                             </div>
                         )}
 
-                        {/* STEP 3 CONTENT */}
+                        {/* Step 3: Estimate breakdown & lead capture */}
                         {step === 3 && (
                             <div className="space-y-4">
-                                {/* Your Estimated Budget */}
                                 <div>
                                     <h3 className="font-nohemi text-[17px] font-normal text-[#1A1A1A]">
                                         {form?.estimateLabel}
@@ -404,7 +392,6 @@ export default function Hero({ data }: { data: HeroData }) {
                                         </button>
                                     </p>
 
-                                    {/* Pricing Tiers Breakdown */}
                                     <div className="mt-3 space-y-2">
                                         {budgetList.map((tier) => {
                                             const isChosen = selectedBudget === tier.value;
@@ -437,7 +424,6 @@ export default function Hero({ data }: { data: HeroData }) {
                                     </div>
                                 </div>
 
-                                {/* Phone & Email Inputs */}
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                                     <div>
                                         <label className="font-nohemi block text-[17px] font-normal text-[#1A1A1A] mb-2">
@@ -465,7 +451,6 @@ export default function Hero({ data }: { data: HeroData }) {
                                     </div>
                                 </div>
 
-                                {/* Book My Free Call Button */}
                                 {isSubmitted ? (
                                     <div className="p-4 rounded-xl bg-[#EBF7F2] text-[#1E7448] text-center font-satoshi text-[14px] mt-4">
                                         ✓ Thank you! We&apos;ve received your request and will review your store.
@@ -483,7 +468,6 @@ export default function Hero({ data }: { data: HeroData }) {
                                     </button>
                                 )}
 
-                                {/* Disclaimer */}
                                 <p className="text-center font-satoshi text-[12px] text-[#777777] pt-1">
                                     {form?.disclaimer}
                                 </p>

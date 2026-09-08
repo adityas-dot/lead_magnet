@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { getMediaUrl } from "@/lib/strapi";
 
 type FinalCtaLogo = {
     id: number;
@@ -24,8 +25,6 @@ type FinalCtaData = {
         href: string;
     };
 };
-
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "https://lead-magnet-strapi.onrender.com";
 
 export default function FinalCTA({
     data,
@@ -81,7 +80,7 @@ export default function FinalCTA({
                                             {currentLogo?.logo?.url && (
                                                 <motion.img
                                                     key={currentLogo.id || currentIndex}
-                                                    src={currentLogo.logo.url.startsWith("http") ? currentLogo.logo.url : `${STRAPI_URL}${currentLogo.logo.url}`}
+                                                    src={getMediaUrl(currentLogo.logo.url)}
                                                     alt=""
                                                     initial={{ opacity: 0 }}
                                                     animate={{ opacity: 1 }}
@@ -105,7 +104,6 @@ export default function FinalCTA({
                     </p>
 
                     <div className="w-full mt-7 flex flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
-                        {/* Primary CTA */}
                         <a
                             href={data.primaryCta.href}
                             className="w-full sm:w-auto inline-flex items-center justify-center whitespace-nowrap rounded-full bg-black px-6 py-3 font-inter text-[14px] font-medium text-white transition-opacity hover:opacity-80"
@@ -114,7 +112,6 @@ export default function FinalCTA({
                             <span className="ml-2">→</span>
                         </a>
 
-                        {/* Secondary CTA */}
                         <a
                             href={data.secondaryCta.href}
                             className="w-full sm:w-auto inline-flex items-center justify-center whitespace-nowrap rounded-full border border-[#D0D5DD] bg-white px-6 py-3 font-inter text-[14px] font-medium text-black transition-colors hover:border-black"

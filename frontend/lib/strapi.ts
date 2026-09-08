@@ -1,13 +1,41 @@
+/** Base URL for Strapi CMS API */
 export const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "https://lead-magnet-strapi.onrender.com";
 
-export function getMediaUrl(url?: string | null): string {
-    if (!url) return "";
-    if (url.startsWith("http://") || url.startsWith("https://")) {
-        return url;
+/** Centralized SVG icon paths for social media platforms */
+export const SOCIAL_ICONS: Record<string, string> = {
+    Instagram: "/images/insta_logo.svg",
+    YouTube: "/images/youtube_logo.svg",
+    Facebook: "/images/facebook.svg",
+    LinkedIn: "/images/linkedin-icon.svg",
+};
+
+/**
+ * Normalizes media input (string, object, or array) into a fully qualified Cloudinary or Strapi URL.
+ */
+export function getMediaUrl(
+    media?: string | { url?: string | null } | Array<{ url?: string | null }> | null
+): string {
+    if (!media) return "";
+    let rawUrl: string | undefined | null;
+
+    if (typeof media === "string") {
+        rawUrl = media;
+    } else if (Array.isArray(media)) {
+        rawUrl = media[0]?.url;
+    } else {
+        rawUrl = media?.url;
     }
-    return `${STRAPI_URL}${url.startsWith("/") ? url : `/${url}`}`;
+
+    if (!rawUrl) return "";
+    if (rawUrl.startsWith("http://") || rawUrl.startsWith("https://")) {
+        return rawUrl;
+    }
+    return `${STRAPI_URL}${rawUrl.startsWith("/") ? rawUrl : `/${rawUrl}`}`;
 }
 
+/**
+ * Fetches landing page content with all populated relation blocks.
+ */
 export async function getLandingPage() {
     try {
         const response = await fetch(
