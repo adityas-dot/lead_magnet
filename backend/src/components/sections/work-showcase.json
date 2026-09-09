@@ -18,6 +18,9 @@
       "type": "component",
       "component": "shared.showcase-item",
       "repeatable": true
+    },
+    "Before": {
+      "type": "string"
     }
   },
   "config": {}

@@ -229,6 +229,7 @@ export interface SectionsWorkShowcase extends Struct.ComponentSchema {
     displayName: 'WorkShowcase';
   };
   attributes: {
+    Before: Schema.Attribute.String;
     description: Schema.Attribute.Text;
     heading: Schema.Attribute.String;
     items: Schema.Attribute.Component<'shared.showcase-item', true>;

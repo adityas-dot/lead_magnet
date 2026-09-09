@@ -120,15 +120,15 @@ export default function Hero({ data }: { data: HeroData }) {
 
     return (
         <section data-theme="dark" className="relative min-h-0 xl:min-h-screen bg-[#37386B] text-white flex flex-col font-sans overflow-x-hidden">
-            <div className="flex-grow flex items-start xl:items-center pt-[100px] pb-0 xl:pb-12 px-6 lg:px-[60px] xl:px-[80px]">
-                <div className="max-w-[1720px] mx-auto w-full grid grid-cols-1 xl:grid-cols-[1fr_620px] gap-8 xl:gap-16 items-start">
+            <div className="flex-grow flex items-start xl:items-center pt-[100px] pb-0 xl:pb-12 px-6 lg:px-[40px] xl:px-[48px] 2xl:px-[80px]">
+                <div className="max-w-[1720px] mx-auto w-full grid grid-cols-1 xl:grid-cols-[1fr_490px] 2xl:grid-cols-[1fr_620px] gap-8 xl:gap-8 2xl:gap-16 items-start">
 
                     {/* Left Column: Hero copy and client brands */}
-                    <div className="max-w-full flex flex-col justify-between self-stretch">
+                    <div className="max-w-full flex flex-col justify-between self-stretch min-w-0">
                         <div>
-                            <h1 className="font-nohemi font-normal text-white text-[clamp(32px,4.2vw,80px)] tracking-[-0.01em] mb-6 leading-[1.7] sm:leading-[1.3] xl:leading-[82px]">
+                            <h1 className="font-nohemi font-normal text-white text-[clamp(32px,3.8vw,80px)] tracking-[-0.01em] mb-6 leading-[1.7] sm:leading-[1.3] xl:leading-[1.15] 2xl:leading-[82px]">
                                 {formattedHeading.split("\n").map((line, idx) => (
-                                    <span key={idx} className="block whitespace-normal sm:whitespace-nowrap">
+                                    <span key={idx} className="block whitespace-normal 2xl:whitespace-nowrap">
                                         {line}
                                     </span>
                                 ))}
@@ -194,7 +194,7 @@ export default function Hero({ data }: { data: HeroData }) {
                     </div>
 
                     {/* Interactive Shopify Quote Estimator */}
-                    <div id="quote" data-theme="light" className="-mx-6 sm:-mx-8 lg:-mx-[60px] xl:mx-0 w-[calc(100%+48px)] sm:w-[calc(100%+64px)] lg:w-[calc(100%+120px)] xl:w-full bg-[#F9F9F9] text-black px-6 py-8 sm:p-8 lg:p-[48px] pb-10 sm:pb-12 xl:pb-[48px] shadow-2xl relative mt-8 xl:mt-0 rounded-t-[20px] rounded-b-none xl:rounded-none transition-all duration-300 scroll-mt-24">
+                    <div id="quote" data-theme="light" className="-mx-6 sm:-mx-8 lg:-mx-[60px] xl:mx-0 w-[calc(100%+48px)] sm:w-[calc(100%+64px)] lg:w-[calc(100%+120px)] xl:w-full bg-[#F9F9F9] text-black px-6 py-8 sm:p-8 lg:p-[40px] xl:p-8 2xl:p-[48px] pb-10 sm:pb-12 xl:pb-8 2xl:pb-[48px] shadow-2xl relative mt-8 xl:mt-0 rounded-t-[20px] rounded-b-none xl:rounded-none transition-all duration-300 scroll-mt-24">
                         <h2 className="font-nohemi text-[clamp(26px,2.5vw,36px)] font-normal text-[#1A1A1A] mb-2 leading-tight">
                             {step === 1 && form?.title}
                             {step === 2 && form?.step2Title}
@@ -285,7 +285,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                 <button
                                     type="button"
                                     onClick={() => setStep(2)}
-                                    className="font-satoshi w-full bg-[#2B44E7] hover:bg-[#2037CA] text-white font-medium py-2 sm:py-2.5 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 mt-[200px] sm:mt-[230px] lg:mt-[110px] xl:mt-[120px] text-[15px] sm:text-[16px] shadow-none cursor-pointer"
+                                    className="font-satoshi w-full bg-[#2B44E7] hover:bg-[#2037CA] text-white font-medium py-2 sm:py-2.5 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 mt-[200px] sm:mt-[230px] lg:mt-[110px] xl:mt-[90px] 2xl:mt-[120px] text-[15px] sm:text-[16px] shadow-none cursor-pointer"
                                 >
                                     {form?.continueLabel}
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

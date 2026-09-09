@@ -25,6 +25,8 @@ type WorkShowcaseData = {
     description: string;
     MobileDescription?: string;
     mobileDescription?: string;
+    Before?: string;
+    before?: string;
     items: ShowcaseItem[];
 };
 
@@ -41,6 +43,7 @@ export default function WorkShowcase({
 
     const activeItem = data.items.find((item) => item.id === selectedItem);
     const mobileDesc = data.MobileDescription || data.mobileDescription;
+    const beforeText = data.Before || data.before || "Before";
 
     useEffect(() => {
         const checkMobile = () => {
@@ -164,29 +167,42 @@ export default function WorkShowcase({
                             />
                         )}
 
-                        {activeItem.mobileBeforeImage?.url && (
-                            <img
-                                src={getMediaUrl(activeItem.mobileBeforeImage.url)}
-                                alt="Before"
-                                className="md:hidden absolute inset-0 h-full w-full object-cover object-top pointer-events-none"
-                                draggable={false}
-                                style={{
-                                    clipPath: `inset(0 0 ${100 - position}% 0)`,
-                                }}
-                            />
-                        )}
-                        {activeItem.beforeImage?.url && (
-                            <img
-                                src={getMediaUrl(activeItem.beforeImage.url)}
-                                alt="Before"
-                                className={`${activeItem.mobileBeforeImage?.url ? "hidden md:block" : ""} absolute inset-0 h-full w-full object-cover object-top pointer-events-none`}
-                                draggable={false}
+                        {/* Before Layer (clipped by slider position) */}
+                        {(activeItem.beforeImage || activeItem.mobileBeforeImage) && (
+                            <div
+                                className="absolute inset-0 pointer-events-none z-10"
                                 style={{
                                     clipPath: isMobile
                                         ? `inset(0 0 ${100 - position}% 0)`
                                         : `inset(0 ${100 - position}% 0 0)`,
                                 }}
-                            />
+                            >
+                                {activeItem.mobileBeforeImage?.url && (
+                                    <img
+                                        src={getMediaUrl(activeItem.mobileBeforeImage.url)}
+                                        alt="Before"
+                                        className="md:hidden absolute inset-0 h-full w-full object-cover object-top pointer-events-none"
+                                        draggable={false}
+                                    />
+                                )}
+                                {activeItem.beforeImage?.url && (
+                                    <img
+                                        src={getMediaUrl(activeItem.beforeImage.url)}
+                                        alt="Before"
+                                        className={`${activeItem.mobileBeforeImage?.url ? "hidden md:block" : ""} absolute inset-0 h-full w-full object-cover object-top pointer-events-none`}
+                                        draggable={false}
+                                    />
+                                )}
+
+                                {/* "Before" Badge */}
+                                {beforeText && (
+                                    <div className="absolute top-3 left-3 sm:top-5 sm:left-5 md:top-6 md:left-8 select-none pointer-events-none">
+                                        <span className="inline-flex items-center justify-center px-4 sm:px-6 py-1.5 sm:py-2 rounded-full bg-white/80 backdrop-blur-md text-black font-satoshi text-[14px] sm:text-[18px] md:text-[22px] font-normal tracking-tight shadow-sm border border-black/10">
+                                            {beforeText}
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
                         )}
 
                         {/* Divider & Handle */}
