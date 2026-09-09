@@ -70,7 +70,7 @@ export default function EngagementFit({
                                         <img
                                             src="/images/tick.svg"
                                             alt=""
-                                            className="w-4 h-4 shrink-0 mt-0.5"
+                                            className="w-4 h-4 shrink-0 mt-0.5 lg:mt-3"
                                         />
                                         <span className="font-satoshi text-[14px] font-normal text-[#111111] leading-[1.4] lg:text-[13px] xl:text-[13.5px] 2xl:text-[14px] lg:text-[#1A1A1A] lg:leading-[1.35] xl:leading-[1.4]">
                                             {point.text}
@@ -91,7 +91,7 @@ export default function EngagementFit({
                                         <img
                                             src="/images/tick.svg"
                                             alt=""
-                                            className="w-4 h-4 shrink-0 mt-0.5"
+                                            className="w-4 h-4 shrink-0 mt-0.5 lg:mt-3"
                                         />
                                         <span className="font-satoshi text-[14px] font-normal text-[#111111] leading-[1.4] lg:text-[13px] xl:text-[13.5px] 2xl:text-[14px] lg:text-[#1A1A1A] lg:leading-[1.35] xl:leading-[1.4]">
                                             {point.text}
