@@ -285,7 +285,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                 <button
                                     type="button"
                                     onClick={() => setStep(2)}
-                                    className="font-satoshi w-full bg-[#2B44E7] hover:bg-[#2037CA] text-white font-medium py-2 sm:py-2.5 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 mt-[200px] sm:mt-[230px] xl:mt-[200px] text-[15px] sm:text-[16px] shadow-none cursor-pointer"
+                                    className="font-satoshi w-full bg-[#2B44E7] hover:bg-[#2037CA] text-white font-medium py-2 sm:py-2.5 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 mt-[200px] sm:mt-[230px] lg:mt-[110px] xl:mt-[120px] text-[15px] sm:text-[16px] shadow-none cursor-pointer"
                                 >
                                     {form?.continueLabel}
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

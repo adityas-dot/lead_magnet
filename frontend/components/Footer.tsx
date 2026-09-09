@@ -44,7 +44,15 @@ export default function Footer({
 }: {
     data: FooterData;
 }) {
-    const newsletter = data.Newsletter || data.newsletter;
+    const newsletterLabel =
+        (typeof data?.Newsletter === "object" && data?.Newsletter?.label) ||
+        (typeof data?.newsletter === "object" && data?.newsletter?.label) ||
+        "Sign up to our newsletter";
+
+    const newsletterHref =
+        (typeof data?.Newsletter === "object" && data?.Newsletter?.href) ||
+        (typeof data?.newsletter === "object" && data?.newsletter?.href) ||
+        "#news";
 
     return (
         <section id="contact" data-theme="dark" className="w-full pt-16 pb-24 sm:pt-20 sm:pb-28 md:py-24 bg-[#3145DD] overflow-hidden">
@@ -103,22 +111,18 @@ export default function Footer({
 
                         {/* Desktop-only Privacy & Terms placement */}
                         <div className="hidden lg:flex items-center gap-8 mt-auto pt-14 text-[13px] font-satoshi text-white/90">
-                            {data.privacyLink && (
-                                <a
-                                    href={data.privacyLink.href}
-                                    className="hover:underline underline-offset-4 transition-all"
-                                >
-                                    {data.privacyLink.label}
-                                </a>
-                            )}
-                            {data.termsLink && (
-                                <a
-                                    href={data.termsLink.href}
-                                    className="hover:underline underline-offset-4 transition-all"
-                                >
-                                    {data.termsLink.label}
-                                </a>
-                            )}
+                            <a
+                                href={data?.privacyLink?.href || "#"}
+                                className="hover:underline underline-offset-4 transition-all"
+                            >
+                                {data?.privacyLink?.label || "Privacy Policies"}
+                            </a>
+                            <a
+                                href={data?.termsLink?.href || "#"}
+                                className="hover:underline underline-offset-4 transition-all"
+                            >
+                                {data?.termsLink?.label || "Terms and Conditions"}
+                            </a>
                         </div>
                     </div>
 
@@ -185,53 +189,47 @@ export default function Footer({
                         </div>
 
                         {/* Newsletter CTA Button (Mobile only) */}
-                        {newsletter && (
-                            <div className="mt-16 sm:mt-12 w-full lg:hidden">
-                                <a
-                                    href={newsletter.href || "#news"}
-                                    className="group flex w-full items-center justify-between rounded-full bg-white px-6 sm:px-7 py-3.5 sm:py-4 text-[#1A1A1A] shadow-md transition-all hover:bg-white/95 active:scale-[0.99]"
+                        <div className="mt-14 sm:mt-12 w-full lg:hidden">
+                            <a
+                                href={newsletterHref}
+                                className="group flex w-full items-center justify-between rounded-full bg-white px-6 sm:px-7 py-3.5 sm:py-4 text-[#1A1A1A] shadow-md transition-all hover:bg-white/95 active:scale-[0.99]"
+                            >
+                                <span className="font-satoshi text-[13.5px] sm:text-[14.5px] font-medium text-[#1A1A1A] tracking-tight">
+                                    {newsletterLabel}
+                                </span>
+                                <svg
+                                    width="15"
+                                    height="15"
+                                    viewBox="0 0 15 15"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#3145DD] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                                 >
-                                    <span className="font-satoshi text-[13.5px] sm:text-[14.5px] font-medium text-[#1A1A1A] tracking-tight">
-                                        {newsletter.label || "Sign up to our newsletter"}
-                                    </span>
-                                    <svg
-                                        width="15"
-                                        height="15"
-                                        viewBox="0 0 15 15"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#3145DD] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                                    >
-                                        <path
-                                            d="M2 13L13 2M13 2H4M13 2V11"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                </a>
-                            </div>
-                        )}
+                                    <path
+                                        d="M2 13L13 2M13 2H4M13 2V11"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                            </a>
+                        </div>
 
                         {/* Mobile-only Privacy & Terms placement (below Newsletter button) */}
                         <div className="flex lg:hidden items-center gap-6 mt-6 text-[12px] font-satoshi text-white/90">
-                            {data.privacyLink && (
-                                <a
-                                    href={data.privacyLink.href}
-                                    className="hover:underline underline-offset-4 transition-all"
-                                >
-                                    {data.privacyLink.label}
-                                </a>
-                            )}
-                            {data.termsLink && (
-                                <a
-                                    href={data.termsLink.href}
-                                    className="hover:underline underline-offset-4 transition-all"
-                                >
-                                    {data.termsLink.label}
-                                </a>
-                            )}
+                            <a
+                                href={data?.privacyLink?.href || "#"}
+                                className="hover:underline underline-offset-4 transition-all"
+                            >
+                                {data?.privacyLink?.label || "Privacy Policies"}
+                            </a>
+                            <a
+                                href={data?.termsLink?.href || "#"}
+                                className="hover:underline underline-offset-4 transition-all"
+                            >
+                                {data?.termsLink?.label || "Terms and Conditions"}
+                            </a>
                         </div>
                     </div>
                 </div>
