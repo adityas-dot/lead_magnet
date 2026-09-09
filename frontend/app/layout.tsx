@@ -39,7 +39,7 @@ const delight = localFont({
 
 export const metadata: Metadata = {
   title: "Thumbstack - Lead Magnet",
-  description: "Turn More of Your Traffic Into Customers.",
+  description: "Design-first tech studio building high-converting Shopify stores, mobile apps, and digital experiences.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

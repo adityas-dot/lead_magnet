@@ -128,7 +128,7 @@ export default function Header({
 
     return (
         <>
-            {/* Main Edge-to-edge Header Bar (stays on top of overlay) */}
+            {/* Header bar */}
             <header className="fixed top-0 left-0 right-0 z-[110] flex justify-between items-center h-[72px] sm:h-[88px] px-6 lg:px-[60px] xl:px-[80px] pointer-events-none">
                 <a
                     href="/"
@@ -141,7 +141,7 @@ export default function Header({
                             : "text-white"
                     }`}
                 >
-                    {isOpen ? (
+                    {brandName === "Thumbstack." ? (
                         <>
                             Thumbstack<span className="text-[#38E29D]">.</span>
                         </>
@@ -150,7 +150,7 @@ export default function Header({
                     )}
                 </a>
 
-                {/* Circular teal button that morphs into blue lines on scroll and bare cross when open */}
+                {/* Menu toggle button */}
                 <button
                     type="button"
                     onClick={() => setIsOpen((prev) => !prev)}
@@ -158,36 +158,38 @@ export default function Header({
                     className={`group flex w-[48px] h-[48px] sm:w-[56px] sm:h-[56px] rounded-full items-center justify-center transition-all duration-300 ease-out pointer-events-auto cursor-pointer active:scale-95 ${
                         isOpen
                             ? "bg-transparent text-white hover:text-[#38E29D]"
+                            : isLight
+                            ? "bg-[#D4F8EE] hover:bg-[#C2F3E5] shadow-sm"
                             : "bg-[#87A8A4] hover:bg-[#72928E] shadow-sm"
                     }`}
                 >
                     <div className="relative w-6 h-5 flex items-center justify-center">
                         <span
-                            className={`absolute w-6 h-[2px] ${lineColor} rounded-full transition-all duration-300 ease-in-out origin-center ${
+                            className={`absolute left-0 w-6 h-[2px] ${lineColor} rounded-full transition-all duration-300 ease-in-out origin-center ${
                                 isOpen
                                     ? "rotate-45 translate-y-0 translate-x-0"
                                     : "-translate-y-[7px] group-hover:translate-x-[3.5px]"
                             }`}
                         />
                         <span
-                            className={`absolute w-6 h-[2px] ${lineColor} rounded-full transition-all duration-300 ease-in-out origin-center ${
+                            className={`absolute left-0 w-[17px] h-[2px] ${lineColor} rounded-full transition-all duration-300 ease-in-out origin-left ${
                                 isOpen
                                     ? "opacity-0 scale-x-0 translate-x-0"
-                                    : "opacity-100 scale-x-100 group-hover:-translate-x-[3.5px]"
+                                    : "opacity-100 group-hover:-translate-x-[3.5px]"
                             }`}
                         />
                         <span
-                            className={`absolute w-6 h-[2px] ${lineColor} rounded-full transition-all duration-300 ease-in-out origin-center ${
+                            className={`absolute left-0 w-6 h-[2px] ${lineColor} rounded-full transition-all duration-300 ease-in-out origin-center ${
                                 isOpen
                                     ? "-rotate-45 translate-y-0 translate-x-0"
                                     : "translate-y-[7px] group-hover:translate-x-[3.5px]"
-                            }`}
+                                }`}
                         />
                     </div>
                 </button>
             </header>
 
-            {/* Fullscreen Hamburger Overlay Menu (Slides in from right to left) */}
+            {/* Menu overlay */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
@@ -204,9 +206,8 @@ export default function Header({
                         style={{ WebkitOverflowScrolling: "touch" }}
                     >
                         <div className="min-h-full flex flex-col justify-between pt-[72px] sm:pt-[88px] pb-6 px-6 sm:px-10 lg:px-[60px] xl:px-[80px]">
-                            {/* Middle Content Area */}
                             <div className="w-full max-w-[1500px] mx-auto flex-1 pt-6 sm:pt-10 lg:pt-12 pb-8 grid grid-cols-1 lg:grid-cols-12 gap-0 lg:gap-16 items-start">
-                                {/* Left Column: Big Navigation Links */}
+                                {/* Navigation links */}
                                 <nav className="lg:col-span-7 flex flex-col gap-3.5 sm:gap-5 lg:gap-7 lg:pl-[138px]">
                                     {navLinks.map((link) => (
                                         <a
@@ -215,12 +216,10 @@ export default function Header({
                                             onClick={() => setIsOpen(false)}
                                             className="group relative block overflow-hidden font-nohemi text-[26px] sm:text-[36px] lg:text-[60px] font-normal tracking-[-0.02em] leading-[1.2] text-white w-fit cursor-pointer select-none"
                                         >
-                                            {/* Primary word: goes up on hover, comes back down from top on unhover */}
                                             <span className="block transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] lg:group-hover:-translate-y-full">
                                                 {link.label}
                                             </span>
 
-                                            {/* Secondary word: comes from bottom on hover, leaves to bottom on unhover */}
                                             <span
                                                 aria-hidden="true"
                                                 className="absolute inset-0 block transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] translate-y-full lg:group-hover:translate-y-0 text-[#38E29D]"
@@ -231,10 +230,9 @@ export default function Header({
                                     ))}
                                 </nav>
 
-                                {/* Divider Line on Mobile between Nav Links and Contact */}
                                 <div className="w-full border-t border-white/10 my-7 sm:my-8 lg:hidden" />
 
-                                {/* Right Column: Contact Details */}
+                                {/* Contact details */}
                                 <div className="lg:col-span-5 flex flex-col justify-start lg:pt-3">
                                     <h3 className="font-satoshi font-bold text-[16px] sm:text-[18px] text-white mb-5 sm:mb-6 tracking-wide">
                                         {footerData?.contactHeading || "Contact"}
@@ -266,7 +264,7 @@ export default function Header({
                                         ))}
                                     </div>
 
-                                    {/* Blue Pill CTA Button (Desktop only as shown in reference) */}
+                                    {/* CTA */}
                                     <div className="hidden lg:block mt-8 sm:mt-10">
                                         <a
                                             href="#quote"

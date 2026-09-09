@@ -49,10 +49,10 @@ export default function EngagementFit({
                 <div className="flex flex-col lg:flex-row justify-between items-stretch gap-8 lg:gap-8 xl:gap-14 2xl:gap-16">
                     {/* Left Column: Heading & Description */}
                     <div className="flex flex-col justify-between h-full w-full lg:max-w-[380px] xl:max-w-[480px] 2xl:max-w-[520px]">
-                        <h2 className="font-delight text-[clamp(30px,3.6vw,52px)] font-medium leading-[1.15] lg:leading-[1.18] tracking-[-0.01em] text-[#0f1d07] space-y-1.5 lg:space-y-2">
+                        <h2 className="font-delight text-[clamp(30px,3.6vw,52px)] font-medium leading-[1.15] lg:leading-[1.18] tracking-[-0.01em] text-[#0f1d07] space-y-1.5 lg:space-y-2 mb-4 lg:mb-5">
                             {formatHeading(data.heading)}
                         </h2>
-                        <p className="font-satoshi font-medium text-[#4A4A4A] text-[14px] xl:text-[15px] leading-[1.65] xl:leading-[1.75] max-w-[480px] mt-6 lg:mt-0">
+                        <p className="font-satoshi font-medium text-[#4A4A4A] text-[14px] xl:text-[15px] leading-[1.65] xl:leading-[1.75] max-w-[480px]">
                             {data.description}
                         </p>
                     </div>
@@ -70,7 +70,7 @@ export default function EngagementFit({
                                         <img
                                             src="/images/tick.svg"
                                             alt=""
-                                            className="w-4 h-4 shrink-0 mt-0.5"
+                                            className="w-4 h-4 shrink-0 mt-2.5 xl:mt-[11px]"
                                         />
                                         <span className="font-satoshi text-[12.5px] lg:text-[13px] xl:text-[14px] font-normal text-[#1A1A1A] leading-[1.35] xl:leading-[1.4]">
                                             {point.text}
@@ -91,7 +91,7 @@ export default function EngagementFit({
                                         <img
                                             src="/images/tick.svg"
                                             alt=""
-                                            className="w-4 h-4 shrink-0 mt-0.5"
+                                            className="w-4 h-4 shrink-0 mt-2.5 xl:mt-[11px]"
                                         />
                                         <span className="font-satoshi text-[12.5px] lg:text-[13px] xl:text-[14px] font-normal text-[#1A1A1A] leading-[1.35] xl:leading-[1.4]">
                                             {point.text}

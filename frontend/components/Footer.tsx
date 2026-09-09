@@ -1,16 +1,23 @@
 import { getMediaUrl, SOCIAL_ICONS } from "@/lib/strapi";
 
-type CTA = {
-    label: string;
-    href: string;
-};
-
 type FooterContact = {
     id: number;
     location: string;
     phone: string;
     email: string;
     Address: string;
+};
+
+type Link = {
+    id: number;
+    label: string;
+    href: string;
+};
+
+type SocialLink = {
+    id: number;
+    platform: string;
+    href: string;
 };
 
 type FooterData = {
@@ -28,18 +35,8 @@ type FooterData = {
     contacts: FooterContact[];
     privacyLink: Link;
     termsLink: Link;
-};
-
-type Link = {
-    id: number;
-    label: string;
-    href: string;
-};
-
-type SocialLink = {
-    id: number;
-    platform: string;
-    href: string;
+    Newsletter?: Link;
+    newsletter?: Link;
 };
 
 export default function Footer({
@@ -47,41 +44,53 @@ export default function Footer({
 }: {
     data: FooterData;
 }) {
+    const newsletter = data.Newsletter || data.newsletter;
+
     return (
-        <section data-theme="dark" className="w-full py-20 bg-[#3145DD] overflow-hidden">
+        <section id="contact" data-theme="dark" className="w-full pt-16 pb-24 sm:pt-20 sm:pb-28 md:py-24 bg-[#3145DD] overflow-hidden">
             <div className="mx-auto w-full max-w-[1880px] px-6 lg:px-[60px] xl:px-[80px]">
-                <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
-                    {/* Brand info and social links */}
-                    <div className="col-span-2 flex flex-col">
-                        <div className="flex items-center gap-2">
-                            <h1 className="font-delight text-[clamp(45px,4.2vw,80px)] font-medium leading-none text-white">
-                                {data.sayHi}
+                <div className="flex flex-col lg:flex-row lg:justify-between gap-24 sm:gap-28 lg:gap-10 xl:gap-16">
+                    {/* Left Column: Brand info, Heading, Description, Social links */}
+                    <div className="flex flex-col w-full lg:max-w-[480px] xl:max-w-[540px]">
+                        {/* Top row: Say hi! + Logo */}
+                        <div className="flex items-center gap-2.5 sm:gap-3">
+                            <h1 className="font-delight text-[clamp(44px,4.2vw,80px)] font-medium leading-none text-white tracking-tight">
+                                {data.sayHi || "Say hi!"}
                             </h1>
 
                             {data.logo && (
                                 <img
                                     src={getMediaUrl(data.logo.url)}
                                     alt="Logo"
-                                    className="h-[64px] w-[64px] animate-spin-pause"
+                                    className="h-[48px] w-[48px] sm:h-[64px] sm:w-[64px] animate-spin-pause shrink-0"
                                 />
                             )}
                         </div>
 
-                        <h2 className="mt-7 font-satoshi font-medium text-[15px] text-white">
-                            {data.heading}
-                        </h2>
+                        {/* Text descriptions */}
+                        <div className="mt-6 space-y-2 text-white font-satoshi text-[13.5px] sm:text-[12px] leading-[1.65] max-w-[550px]">
+                            {data.heading && (
+                                <p className="font-medium text-white/95">
+                                    {data.heading}
+                                </p>
+                            )}
+                            {data.description && (
+                                <p className="font-normal text-white/90">
+                                    {data.description}
+                                </p>
+                            )}
+                        </div>
 
-                        <p className="mt-2 font-satoshi font-medium text-[15px] text-white">
-                            {data.description}
-                        </p>
-                        <div className="mt-10 flex gap-6">
-                            {data.socialLinks.map((social) => (
+                        {/* Social icons */}
+                        <div className="mt-14 sm:mt-16 flex items-center gap-5 sm:gap-6">
+                            {data.socialLinks?.map((social) => (
                                 <a
                                     key={social.id}
                                     href={social.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="font-satoshi text-white"
+                                    className="text-white hover:opacity-80 transition-opacity"
+                                    aria-label={social.platform}
                                 >
                                     <img
                                         src={SOCIAL_ICONS[social.platform]}
@@ -89,24 +98,23 @@ export default function Footer({
                                         className="h-6 w-6"
                                     />
                                 </a>
-
                             ))}
                         </div>
 
-                        <div className="mt-auto pt-16 flex items-center gap-10">
+                        {/* Desktop-only Privacy & Terms placement */}
+                        <div className="hidden lg:flex items-center gap-8 mt-auto pt-14 text-[13px] font-satoshi text-white/90">
                             {data.privacyLink && (
                                 <a
                                     href={data.privacyLink.href}
-                                    className="font-satoshi text-[13px] font-bold text-white hover:underline underline-offset-4"
+                                    className="hover:underline underline-offset-4 transition-all"
                                 >
                                     {data.privacyLink.label}
                                 </a>
                             )}
-
                             {data.termsLink && (
                                 <a
                                     href={data.termsLink.href}
-                                    className="font-satoshi text-[13px] font-bold text-white hover:underline underline-offset-4"
+                                    className="hover:underline underline-offset-4 transition-all"
                                 >
                                     {data.termsLink.label}
                                 </a>
@@ -114,75 +122,135 @@ export default function Footer({
                         </div>
                     </div>
 
-                    {/* Contact information */}
-                    <div className="col-span-1">
-                        <h2 className="font-satoshi text-[18px] font-bold text-white">
-                            {data.contactHeading}
-                        </h2>
-                        <div className="mt-6 flex flex-col gap-6">
-                            {data.contacts?.map((contact) => (
-                                <div key={contact.id}>
-                                    <p className="font-satoshi text-[15px] font-medium text-white">
-                                        {contact.location}
-                                    </p>
+                    {/* Right Column: Quick links & Contact (2-column layout on mobile & desktop) */}
+                    <div className="flex flex-col w-full lg:max-w-[620px] xl:max-w-[700px]">
+                        <div className="grid grid-cols-2 gap-x-6 sm:gap-x-10 gap-y-8">
+                            {/* Quick Links (First on mobile, Second on big screen) */}
+                            <div className="order-1 lg:order-2 lg:pl-6 xl:pl-10">
+                                <h2 className="font-satoshi text-[15px] sm:text-[17px] lg:text-[18px] font-bold text-white tracking-tight mb-4 sm:mb-5 lg:mb-6">
+                                    {data.quickLinksHeading || "Quick Links"}
+                                </h2>
 
-                                    <a
-                                        href={`tel:${contact.phone}`}
-                                        className="block font-satoshi text-[15px] font-medium text-[#95E7D3] underline underline-offset-4"
-                                    >
-                                        {contact.phone}
-                                    </a>
-
-                                    <p className="mt-4 max-w-[300px] font-satoshi text-[14px] font-medium leading-[1.4] text-white">
-                                        {contact.Address}
-                                    </p>
-
-                                    <a
-                                        href={`mailto:${contact.email}`}
-                                        className="mt-4 block font-satoshi text-[14px] font-medium text-[#FFFFFF]"
-                                    >
-                                        {contact.email}
-                                    </a>
+                                <div className="flex flex-col space-y-3 sm:space-y-3.5 lg:space-y-4">
+                                    {data.quickLinks?.map((link) => (
+                                        <a
+                                            key={link.id}
+                                            href={link.href}
+                                            className="font-satoshi text-[13px] sm:text-[14px] lg:text-[14.5px] font-medium text-white/90 hover:text-[#95E7D3] transition-colors"
+                                        >
+                                            {link.label}
+                                        </a>
+                                    ))}
                                 </div>
-                            ))}
+                            </div>
+
+                            {/* Contact (Second on mobile, First on big screen) */}
+                            <div className="order-2 lg:order-1">
+                                <h2 className="font-satoshi text-[15px] sm:text-[17px] lg:text-[18px] font-bold text-white tracking-tight mb-4 sm:mb-5 lg:mb-6">
+                                    {data.contactHeading || "Contact"}
+                                </h2>
+
+                                <div className="flex flex-col space-y-4 sm:space-y-5 lg:space-y-6">
+                                    {data.contacts?.map((contact) => (
+                                        <div key={contact.id}>
+                                            <p className="font-satoshi text-[13px] sm:text-[14px] lg:text-[15px] font-medium text-white">
+                                                {contact.location}
+                                            </p>
+
+                                            <a
+                                                href={`tel:${contact.phone}`}
+                                                className="block mt-0.5 font-satoshi text-[13px] sm:text-[14px] lg:text-[15px] font-medium text-[#95E7D3] underline underline-offset-4 hover:opacity-90 transition-opacity"
+                                            >
+                                                {contact.phone}
+                                            </a>
+
+                                            {contact.Address && (
+                                                <p className="hidden lg:block mt-4 max-w-[300px] font-satoshi text-[14px] font-medium leading-[1.4] text-white">
+                                                    {contact.Address}
+                                                </p>
+                                            )}
+
+                                            {contact.email && (
+                                                <a
+                                                    href={`mailto:${contact.email}`}
+                                                    className="hidden lg:block mt-4 font-satoshi text-[14px] font-medium text-[#FFFFFF] hover:underline"
+                                                >
+                                                    {contact.email}
+                                                </a>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Quick navigation links */}
-                    <div className="col-span-1 lg:pl-12">
-                        <h2 className="font-satoshi font-bold text-white">
-                            {data.quickLinksHeading}
-                        </h2>
-
-                        <div className="mt-6 flex flex-col gap-5">
-                            {data.quickLinks?.map((link) => (
+                        {/* Newsletter CTA Button (Mobile only) */}
+                        {newsletter && (
+                            <div className="mt-16 sm:mt-12 w-full lg:hidden">
                                 <a
-                                    key={link.id}
-                                    href={link.href}
-                                    className="font-satoshi text-[14px] font-medium text-white hover:text-[#95E7D3] transition-colors"
+                                    href={newsletter.href || "#news"}
+                                    className="group flex w-full items-center justify-between rounded-full bg-white px-6 sm:px-7 py-3.5 sm:py-4 text-[#1A1A1A] shadow-md transition-all hover:bg-white/95 active:scale-[0.99]"
                                 >
-                                    {link.label}
+                                    <span className="font-satoshi text-[13.5px] sm:text-[14.5px] font-medium text-[#1A1A1A] tracking-tight">
+                                        {newsletter.label || "Sign up to our newsletter"}
+                                    </span>
+                                    <svg
+                                        width="15"
+                                        height="15"
+                                        viewBox="0 0 15 15"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#3145DD] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                                    >
+                                        <path
+                                            d="M2 13L13 2M13 2H4M13 2V11"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
                                 </a>
-                            ))}
+                            </div>
+                        )}
+
+                        {/* Mobile-only Privacy & Terms placement (below Newsletter button) */}
+                        <div className="flex lg:hidden items-center gap-6 mt-6 text-[12px] font-satoshi text-white/90">
+                            {data.privacyLink && (
+                                <a
+                                    href={data.privacyLink.href}
+                                    className="hover:underline underline-offset-4 transition-all"
+                                >
+                                    {data.privacyLink.label}
+                                </a>
+                            )}
+                            {data.termsLink && (
+                                <a
+                                    href={data.termsLink.href}
+                                    className="hover:underline underline-offset-4 transition-all"
+                                >
+                                    {data.termsLink.label}
+                                </a>
+                            )}
                         </div>
                     </div>
-
                 </div>
             </div>
-            {/* Marquee CTA ticker */}
-            <div className="mt-20 overflow-hidden">
+
+            {/* Marquee CTA ticker at bottom */}
+            <div className="mt-14 sm:mt-20 overflow-hidden">
                 <div className="flex w-max animate-marquee">
                     {[1, 2, 3, 4].map((item) => (
                         <div
                             key={item}
-                            className="flex shrink-0 items-center gap-12 pr-12"
+                            className="flex shrink-0 items-center gap-8 sm:gap-12 pr-8 sm:pr-12"
                         >
-                            <span className="font-delight text-[clamp(50px,4.2vw,100px)] font-medium text-white">
+                            <span className="font-delight text-[clamp(44px,4.2vw,100px)] font-medium text-white">
                                 {data.marqueeText}
                             </span>
 
-                            <div className="group relative flex h-[140px] w-[140px] shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#7DE7D0]">
-                                <div className="relative h-[54px] w-[54px]">
+                            <div className="group relative flex h-[90px] w-[90px] sm:h-[140px] sm:w-[140px] shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#7DE7D0]">
+                                <div className="relative h-[36px] w-[36px] sm:h-[54px] sm:w-[54px]">
                                     {/* Arrow 1: flies out to top-right on hover */}
                                     <svg
                                         viewBox="0 0 54 54"
@@ -210,7 +278,6 @@ export default function Footer({
                                     </svg>
                                 </div>
                             </div>
-
                         </div>
                     ))}
                 </div>

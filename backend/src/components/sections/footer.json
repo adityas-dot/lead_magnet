@@ -57,6 +57,11 @@
       "type": "component",
       "component": "shared.footer-link",
       "repeatable": false
+    },
+    "Newsletter": {
+      "type": "component",
+      "component": "shared.footer-link",
+      "repeatable": false
     }
   },
   "config": {}

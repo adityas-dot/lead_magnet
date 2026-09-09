@@ -10,6 +10,7 @@ import FinalCTA from "@/components/FinalCTA";
 import OurProcess from "@/components/OurProcess";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
+import StickyCTA from "@/components/StickyCTA";
 
 export const dynamic = "force-dynamic";
 
@@ -65,6 +66,8 @@ export default async function Home() {
       {data.footer && (
         <Footer data={data.footer} />
       )}
+
+      <StickyCTA data={data.stickyCTA} />
     </main>
   );
 }

@@ -119,12 +119,12 @@ export default function OurProcess({
             {/* Top Marquee Banner */}
             <div
                 ref={containerRef}
-                className="w-full overflow-hidden bg-[#4A71A5] py-4 select-none"
+                className="w-full overflow-hidden bg-[#4A71A5] py-2.5 lg:py-4 select-none"
             >
                 <motion.div
                     key={`${scrollDistance}-${DURATION}`}
                     ref={contentRef}
-                    className="flex w-max shrink-0 items-center px-6"
+                    className="flex w-max shrink-0 items-center px-4 lg:px-6"
                     initial={{ x: -scrollDistance }}
                     animate={{ x: 0 }}
                     transition={{
@@ -137,10 +137,21 @@ export default function OurProcess({
                 >
                     {items.map((item, index) => (
                         <div key={`${item.id}-${index}`} className="flex shrink-0 items-center">
-                            <span className="text-white text-[clamp(16px,2vw,27px)] font-nohemi whitespace-nowrap">
-                                {item.text}
-                            </span>
-                            <span className="inline-block h-2 w-2 rounded-full bg-white shrink-0 mx-6" />
+                            {/* Mobile / Tablet */}
+                            <div className="flex lg:hidden items-center">
+                                <span className="text-white text-[13px] font-satoshi font-medium tracking-[0.04em] uppercase leading-none whitespace-nowrap">
+                                    {item.text}
+                                </span>
+                                <span className="inline-block h-[6px] w-[6px] rounded-full bg-white shrink-0 mx-3.5" />
+                            </div>
+
+                            {/* Desktop */}
+                            <div className="hidden lg:flex items-center">
+                                <span className="text-white text-[clamp(16px,2vw,27px)] font-nohemi whitespace-nowrap">
+                                    {item.text}
+                                </span>
+                                <span className="inline-block h-2 w-2 rounded-full bg-white shrink-0 mx-6" />
+                            </div>
                         </div>
                     ))}
                 </motion.div>

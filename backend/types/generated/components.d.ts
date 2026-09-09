@@ -68,6 +68,7 @@ export interface SectionsFooter extends Struct.ComponentSchema {
     heading: Schema.Attribute.String;
     logo: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     marqueeText: Schema.Attribute.String;
+    Newsletter: Schema.Attribute.Component<'shared.footer-link', false>;
     privacyLink: Schema.Attribute.Component<'shared.footer-link', false>;
     quickLinks: Schema.Attribute.Component<'shared.footer-link', true>;
     quickLinksHeading: Schema.Attribute.String;
@@ -192,6 +193,18 @@ export interface SectionsQuoteForm extends Struct.ComponentSchema {
     stepLabel: Schema.Attribute.String;
     title: Schema.Attribute.String;
     yesLabel: Schema.Attribute.String;
+  };
+}
+
+export interface SectionsStickyCta extends Struct.ComponentSchema {
+  collectionName: 'components_sections_sticky_ctas';
+  info: {
+    displayName: 'StickyCTA';
+  };
+  attributes: {
+    primaryCta: Schema.Attribute.Component<'shared.cta', false>;
+    secondaryCta: Schema.Attribute.Component<'shared.cta', false>;
+    text: Schema.Attribute.String;
   };
 }
 
@@ -442,6 +455,7 @@ declare module '@strapi/strapi' {
       'sections.our-work': SectionsOurWork;
       'sections.our-work-project': SectionsOurWorkProject;
       'sections.quote-form': SectionsQuoteForm;
+      'sections.sticky-cta': SectionsStickyCta;
       'sections.storefront-problems': SectionsStorefrontProblems;
       'sections.work-showcase': SectionsWorkShowcase;
       'shared.brand': SharedBrand;

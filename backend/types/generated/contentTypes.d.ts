@@ -513,6 +513,7 @@ export interface ApiLandingPageLandingPage extends Struct.SingleTypeSchema {
     ourProcess: Schema.Attribute.Component<'sections.our-process', false>;
     ourWork: Schema.Attribute.Component<'sections.our-work', false>;
     publishedAt: Schema.Attribute.DateTime;
+    stickyCTA: Schema.Attribute.Component<'sections.sticky-cta', false>;
     storefrontProblems: Schema.Attribute.Component<
       'sections.storefront-problems',
       false

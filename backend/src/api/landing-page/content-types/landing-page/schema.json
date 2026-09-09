@@ -65,6 +65,11 @@
       "type": "component",
       "component": "sections.footer",
       "repeatable": false
+    },
+    "stickyCTA": {
+      "type": "component",
+      "component": "sections.sticky-cta",
+      "repeatable": false
     }
   }
 }
