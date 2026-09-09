@@ -142,26 +142,35 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                             <span>Back</span>
                         </button>
 
-                        {/* Tracker Indicator Dots */}
+                        {/* Tracker Indicator: exactly 3 pills */}
                         <div className="flex items-center gap-1.5">
-                            <div className="flex items-center gap-1.5">
-                                {projects.map((p, idx) => {
-                                    const isCurrent = idx === currentProject;
-                                    return (
-                                        <button
-                                            key={p.id || idx}
-                                            onClick={() => setCurrentProject(idx)}
-                                            type="button"
-                                            aria-label={`Go to slide ${idx + 1}`}
-                                            className={`transition-all duration-300 rounded-full ${
-                                                isCurrent
-                                                    ? "w-7 h-2 bg-[#092008]"
-                                                    : "w-2 h-2 bg-[#092008]/25 hover:bg-[#092008]/50"
-                                            }`}
-                                        />
-                                    );
-                                })}
-                            </div>
+                            {[0, 1, 2].slice(0, Math.min(3, projects.length)).map((dotIdx) => {
+                                const activeIndex = currentProject % Math.min(3, projects.length);
+                                const isCurrent = dotIdx === activeIndex;
+
+                                return (
+                                    <button
+                                        key={dotIdx}
+                                        onClick={() => {
+                                            if (projects.length <= 3) {
+                                                setCurrentProject(dotIdx);
+                                            } else {
+                                                const diff = dotIdx - activeIndex;
+                                                if (diff !== 0) {
+                                                    setCurrentProject((prev) => (prev + diff + projects.length) % projects.length);
+                                                }
+                                            }
+                                        }}
+                                        type="button"
+                                        aria-label={`Indicator ${dotIdx + 1}`}
+                                        className={`transition-all duration-300 ease-out rounded-full cursor-pointer ${
+                                            isCurrent
+                                                ? "w-7 h-1.5 bg-[#2442EB]"
+                                                : "w-2.5 h-1.5 bg-[#2442EB]/25 hover:bg-[#2442EB]/40"
+                                        }`}
+                                    />
+                                );
+                            })}
                         </div>
 
                         <button

@@ -259,14 +259,14 @@ export default function OurProcess({
                                         {pair.map((item) => (
                                             <div
                                                 key={item.id}
-                                                className="w-[calc((100%-12px)/2)] sm:w-[calc((100%-16px)/2)] shrink-0 rounded-[8px] bg-[#263622] p-4 sm:p-4.5 flex flex-col justify-start min-h-[270px] select-none"
+                                                className="w-[calc((100%-12px)/2)] sm:w-[calc((100%-16px)/2)] shrink-0 rounded-[8px] bg-[#2C3825] p-4 sm:p-4.5 flex flex-col justify-start min-h-[270px] select-none"
                                             >
                                                 {item.icon?.url && (
                                                     <div className="h-6 w-6 mb-5 sm:mb-6 flex items-center justify-start">
                                                         <img
                                                             src={getMediaUrl(item.icon.url)}
                                                             alt=""
-                                                            className="h-6 w-6 object-contain"
+                                                            className="h-6 w-6 object-contain brightness-0 invert"
                                                         />
                                                     </div>
                                                 )}
@@ -294,7 +294,7 @@ export default function OurProcess({
                                     >
                                         {pair.map((card) => (
                                             <div key={card.id} className="w-[calc((100%-12px)/2)] sm:w-[calc((100%-16px)/2)] shrink-0">
-                                                <ProcessCard card={card} />
+                                                <ProcessCard card={card} className="!bg-[#2C3825]" />
                                             </div>
                                         ))}
                                     </div>
@@ -371,7 +371,7 @@ function ProcessCard({
                         <img
                             src={getMediaUrl(card.icon.url)}
                             alt=""
-                            className="h-8 w-8 object-contain"
+                            className="h-8 w-8 object-contain brightness-0 invert"
                         />
                     )}
 

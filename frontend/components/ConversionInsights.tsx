@@ -31,7 +31,7 @@ export default function ConversionInsights({
     const mobileDesc = data.MobileDescription || data.mobileDescription;
 
     return (
-        <section className="w-full bg-white px-6 pt-10 pb-20 lg:px-[60px] xl:px-[80px] lg:pt-[30px] lg:pb-[90px]">
+        <section className="w-full bg-white px-5 sm:px-6 pt-10 pb-20 lg:px-[60px] xl:px-[80px] lg:pt-[30px] lg:pb-[90px]">
             <div className="mx-auto max-w-[1720px] w-full">
                 <div className="w-full max-w-[1200px]">
                     {mobileHeading ? (
@@ -69,7 +69,7 @@ export default function ConversionInsights({
                     {data.cards.map((card, index) => {
                         const imageUrl = getMediaUrl(card.image?.url);
                         const isDark = index === 0;
-                        const bgColors = ["bg-[#023E45]", "bg-[#B4BCFE]", "bg-[#C4E0C1]"];
+                        const bgColors = ["bg-[#014051]", "bg-[#B4BCFE]", "bg-[#C4E0C1]"];
                         const bgColor = bgColors[index % bgColors.length];
                         const textColor = isDark ? "text-white" : "text-[#0F1D07]";
                         const descriptionColor = isDark ? "text-white/80" : "text-[#0F1D07]/80";
@@ -78,26 +78,26 @@ export default function ConversionInsights({
                         return (
                             <article
                                 key={card.id}
-                                className={`overflow-hidden rounded-[24px] ${bgColor} ${textColor} flex flex-col h-full min-h-[380px]`}
+                                className={`overflow-hidden rounded-[12px] md:rounded-[24px] ${bgColor} ${textColor} flex flex-col h-[297px] min-[460px]:h-[325px] md:h-full md:min-h-[380px] p-[24px_30px] min-[460px]:p-[26px_32px] md:p-0 justify-between`}
                             >
                                 {imageUrl && (
-                                    <div className="px-8 pt-10 pb-4 w-full h-[180px] flex justify-start items-start">
+                                    <div className="w-full flex justify-start items-start md:px-8 md:pt-10 md:pb-4 md:h-[180px]">
                                         <img
                                             src={imageUrl}
                                             alt={card.image?.alternativeText || card.title}
-                                            className="h-full max-w-full object-contain"
+                                            className="h-[clamp(100px,26vw,140px)] w-auto max-w-full object-contain md:h-full md:w-auto"
                                         />
                                     </div>
                                 )}
 
-                                <div className="p-8 pt-4 flex-grow flex flex-col">
-                                    <h3 className="font-nohemi text-[clamp(20px,1.8vw,24px)] font-light leading-[1.2] tracking-[-0.02em] mb-4">
+                                <div className="flex flex-col justify-end mt-auto md:mt-0 md:p-8 md:pt-4 md:flex-grow">
+                                    <h3 className="font-nohemi text-[20px] min-[460px]:text-[22px] md:text-[clamp(20px,1.8vw,24px)] font-light leading-[1.2] tracking-[-0.02em] mb-2.5 md:mb-4">
                                         {card.title}
                                     </h3>
 
                                     {cardMobileDesc ? (
                                         <>
-                                            <p className={`block md:hidden font-satoshi text-[clamp(13px,3.6vw,14px)] leading-[1.65] font-medium ${descriptionColor}`}>
+                                            <p className={`block md:hidden font-satoshi text-[13.5px] leading-[1.5] font-normal ${descriptionColor}`}>
                                                 {cardMobileDesc}
                                             </p>
                                             <p className={`hidden md:block font-satoshi text-[clamp(13px,1.1vw,14px)] leading-[1.65] font-medium ${descriptionColor}`}>
@@ -105,7 +105,7 @@ export default function ConversionInsights({
                                             </p>
                                         </>
                                     ) : (
-                                        <p className={`font-satoshi text-[clamp(13px,1.1vw,14px)] leading-[1.65] font-medium ${descriptionColor}`}>
+                                        <p className={`font-satoshi text-[13.5px] md:text-[clamp(13px,1.1vw,14px)] leading-[1.5] md:leading-[1.65] font-normal md:font-medium ${descriptionColor}`}>
                                             {card.description}
                                         </p>
                                     )}

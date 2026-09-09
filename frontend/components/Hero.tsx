@@ -243,14 +243,14 @@ export default function Hero({ data }: { data: HeroData }) {
                                     <label className="font-nohemi block text-[17px] font-normal text-[#1A1A1A] mb-2">
                                         {form?.shopifyQuestion}
                                     </label>
-                                    <div className="flex flex-wrap gap-3">
+                                    <div className="flex flex-wrap gap-2.5">
                                         <button
                                             type="button"
                                             onClick={() => setHasStore(true)}
-                                            className={`font-satoshi px-6 py-3 rounded-full border text-[14px] transition-all duration-300 ease-out cursor-pointer ${
+                                            className={`font-satoshi px-5 py-2.5 rounded-full border text-[14px] transition-all duration-300 ease-out cursor-pointer ${
                                                 hasStore === true
-                                                    ? "border-[#3441D4] bg-[#F0F2FF] text-[#3441D4] font-medium"
-                                                    : "border-[#DCDCDC] text-[#555555] bg-white hover:border-gray-400"
+                                                    ? "border-[#2B44E7] bg-[#EEF2FF] text-[#2B44E7] font-medium"
+                                                    : "border-[#CAC4D0] text-[#000000] bg-white hover:border-gray-400"
                                             }`}
                                         >
                                             {form?.yesLabel}
@@ -258,18 +258,18 @@ export default function Hero({ data }: { data: HeroData }) {
                                         <button
                                             type="button"
                                             onClick={() => setHasStore(false)}
-                                            className={`font-satoshi px-6 py-3 rounded-full border text-[14px] transition-all duration-300 ease-out cursor-pointer ${
+                                            className={`font-satoshi px-5 py-2.5 rounded-full border text-[14px] transition-all duration-300 ease-out cursor-pointer ${
                                                 hasStore === false
-                                                    ? "border-[#3441D4] bg-[#F0F2FF] text-[#3441D4] font-medium"
-                                                    : "border-[#DCDCDC] text-[#555555] bg-white hover:border-gray-400"
+                                                    ? "border-[#2B44E7] bg-[#EEF2FF] text-[#2B44E7] font-medium"
+                                                    : "border-[#CAC4D0] text-[#000000] bg-white hover:border-gray-400"
                                             }`}
                                         >
-                                            {form?.noLabel}
+                                            {form?.noLabel?.replace("No, But I want", "No, I want") || form?.noLabel || "No, I want to build one"}
                                         </button>
                                     </div>
                                 </div>
 
-                                <div>
+                                <div className="pt-1">
                                     <label className="font-nohemi block text-[17px] font-normal text-[#1A1A1A] mb-2">
                                         {form?.shopifyLinkLabel}
                                     </label>
@@ -278,14 +278,14 @@ export default function Hero({ data }: { data: HeroData }) {
                                         value={storeUrl}
                                         onChange={(e) => setStoreUrl(e.target.value)}
                                         placeholder={form?.shopifyLinkPlaceholder}
-                                        className="font-satoshi w-full px-6 py-4 rounded-full border border-[#00000033] focus:outline-none focus:ring-2 focus:ring-[#3441D4] text-[clamp(12px,4.2vw,14px)] bg-[#F2F2F2] placeholder-[#555555] transition-all duration-300 ease-out"
+                                        className="font-satoshi w-full px-5 py-2 sm:py-2.5 rounded-full border border-[#CAC4D0] focus:outline-none focus:border-[#2B44E7] focus:ring-1 focus:ring-[#2B44E7] text-[14px] text-[#3C3C3C] bg-[#F7F7F9] placeholder-[#8E8E93] transition-all duration-300 ease-out"
                                     />
                                 </div>
 
                                 <button
                                     type="button"
                                     onClick={() => setStep(2)}
-                                    className="font-satoshi w-full bg-[#3441D4] hover:bg-[#2833B8] text-white font-medium py-4 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 mt-[120px] sm:mt-[140px] xl:mt-[120px] text-[16px] shadow-sm hover:shadow-md cursor-pointer"
+                                    className="font-satoshi w-full bg-[#2B44E7] hover:bg-[#2037CA] text-white font-medium py-2 sm:py-2.5 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 mt-[200px] sm:mt-[230px] xl:mt-[200px] text-[15px] sm:text-[16px] shadow-none cursor-pointer"
                                 >
                                     {form?.continueLabel}
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -302,7 +302,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                     <label className="font-nohemi block text-[17px] font-normal text-[#1A1A1A] mb-2">
                                         {form?.issuesLabel}
                                     </label>
-                                    <div className="flex flex-wrap gap-3">
+                                    <div className="flex flex-wrap gap-2.5">
                                         {issuesList.map((item) => {
                                             const isSelected = selectedIssues.includes(item.label);
                                             return (
@@ -310,10 +310,10 @@ export default function Hero({ data }: { data: HeroData }) {
                                                     key={item.id || item.value}
                                                     type="button"
                                                     onClick={() => toggleIssue(item.label)}
-                                                    className={`font-satoshi px-6 py-3 rounded-full border text-[14px] transition-all duration-300 ease-out cursor-pointer ${
+                                                    className={`font-satoshi px-5 py-2.5 rounded-full border text-[14px] transition-all duration-300 ease-out cursor-pointer ${
                                                         isSelected
-                                                            ? "border-[#3441D4] bg-[#F0F2FF] text-[#3441D4] font-medium"
-                                                            : "border-[#DCDCDC] text-[#555555] bg-white hover:border-gray-400"
+                                                            ? "border-[#2B44E7] bg-[#EEF2FF] text-[#2B44E7] font-medium"
+                                                            : "border-[#CAC4D0] text-[#000000] bg-white hover:border-gray-400"
                                                     }`}
                                                 >
                                                     {item.label}
@@ -327,7 +327,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                     <label className="font-nohemi block text-[17px] font-normal text-[#1A1A1A] mb-2">
                                         {form?.budgetLabel}
                                     </label>
-                                    <div className="flex flex-wrap gap-3">
+                                    <div className="flex flex-wrap gap-2.5">
                                         {budgetList.map((tier) => {
                                             const isSelected = selectedBudget === tier.value;
                                             return (
@@ -335,10 +335,10 @@ export default function Hero({ data }: { data: HeroData }) {
                                                     key={tier.id || tier.value}
                                                     type="button"
                                                     onClick={() => setSelectedBudget(tier.value)}
-                                                    className={`font-satoshi px-6 py-3 rounded-full border text-[14px] transition-all duration-300 ease-out cursor-pointer ${
+                                                    className={`font-satoshi px-5 py-2.5 rounded-full border text-[14px] transition-all duration-300 ease-out cursor-pointer ${
                                                         isSelected
-                                                            ? "border-[#3441D4] bg-[#F0F2FF] text-[#3441D4] font-medium"
-                                                            : "border-[#DCDCDC] text-[#555555] bg-white hover:border-gray-400"
+                                                            ? "border-[#2B44E7] bg-[#EEF2FF] text-[#2B44E7] font-medium"
+                                                            : "border-[#CAC4D0] text-[#000000] bg-white hover:border-gray-400"
                                                     }`}
                                                 >
                                                     {tier.label}
@@ -357,14 +357,14 @@ export default function Hero({ data }: { data: HeroData }) {
                                         value={otherIssues}
                                         onChange={(e) => setOtherIssues(e.target.value)}
                                         placeholder={form?.otherIssuesPlaceholder}
-                                        className="font-satoshi w-full px-6 py-4 rounded-full border border-[#00000033] focus:outline-none focus:ring-2 focus:ring-[#3441D4] text-[clamp(12px,4.2vw,14px)] bg-[#F2F2F2] placeholder-[#555555] transition-all duration-300 ease-out"
+                                        className="font-satoshi w-full px-5 py-2 sm:py-2.5 rounded-full border border-[#CAC4D0] focus:outline-none focus:border-[#2B44E7] focus:ring-1 focus:ring-[#2B44E7] text-[14px] text-[#3C3C3C] bg-[#F7F7F9] placeholder-[#8E8E93] transition-all duration-300 ease-out"
                                     />
                                 </div>
 
                                 <button
                                     type="button"
                                     onClick={() => setStep(3)}
-                                    className="font-satoshi w-full bg-[#3441D4] hover:bg-[#2833B8] text-white font-medium py-4 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 mt-6 text-[16px] shadow-sm hover:shadow-md cursor-pointer"
+                                    className="font-satoshi w-full bg-[#2B44E7] hover:bg-[#2037CA] text-white font-medium py-2 sm:py-2.5 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 mt-6 text-[15px] sm:text-[16px] shadow-none cursor-pointer"
                                 >
                                     {form?.estimateButtonLabel}
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -386,7 +386,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                         <button
                                             type="button"
                                             onClick={() => setStep(2)}
-                                            className="font-satoshi text-[#3441D4] underline hover:opacity-80 transition-opacity inline cursor-pointer font-medium"
+                                            className="font-satoshi text-[#2B44E7] underline hover:opacity-80 transition-opacity inline cursor-pointer font-medium"
                                         >
                                             {selectedIssues.length > 0 ? selectedIssues.join(", ") : "Select issues"}
                                         </button>
@@ -397,11 +397,11 @@ export default function Hero({ data }: { data: HeroData }) {
                                             const isChosen = selectedBudget === tier.value;
                                             return isChosen ? (
                                                 <div key={tier.id || tier.value} className="py-1">
-                                                    <p className="font-satoshi text-[14px] font-medium text-[#3441D4]">
+                                                    <p className="font-satoshi text-[14px] font-medium text-[#2B44E7]">
                                                         {tier.label} (Chosen Plan)
                                                     </p>
                                                     <div className="flex items-center gap-2 mt-0.5">
-                                                        <span className="font-nohemi text-[24px] sm:text-[28px] font-normal text-[#3441D4] tracking-tight">
+                                                        <span className="font-nohemi text-[24px] sm:text-[28px] font-normal text-[#2B44E7] tracking-tight">
                                                             {tier.range}
                                                         </span>
                                                         <svg className="w-6 h-6 text-[#38A169] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -434,7 +434,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                             value={phone}
                                             onChange={(e) => setPhone(e.target.value)}
                                             placeholder={form?.phonePlaceholder}
-                                            className="font-satoshi w-full px-6 py-4 rounded-full border border-[#00000033] focus:outline-none focus:ring-2 focus:ring-[#3441D4] text-[clamp(12px,4.2vw,14px)] bg-[#F2F2F2] placeholder-[#555555] transition-all duration-300 ease-out"
+                                            className="font-satoshi w-full px-5 py-2 sm:py-2.5 rounded-full border border-[#CAC4D0] focus:outline-none focus:border-[#2B44E7] focus:ring-1 focus:ring-[#2B44E7] text-[14px] text-[#3C3C3C] bg-[#F7F7F9] placeholder-[#8E8E93] transition-all duration-300 ease-out"
                                         />
                                     </div>
                                     <div>
@@ -446,7 +446,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             placeholder={form?.emailPlaceholder}
-                                            className="font-satoshi w-full px-6 py-4 rounded-full border border-[#00000033] focus:outline-none focus:ring-2 focus:ring-[#3441D4] text-[clamp(12px,4.2vw,14px)] bg-[#F2F2F2] placeholder-[#555555] transition-all duration-300 ease-out"
+                                            className="font-satoshi w-full px-5 py-2 sm:py-2.5 rounded-full border border-[#CAC4D0] focus:outline-none focus:border-[#2B44E7] focus:ring-1 focus:ring-[#2B44E7] text-[14px] text-[#3C3C3C] bg-[#F7F7F9] placeholder-[#8E8E93] transition-all duration-300 ease-out"
                                         />
                                     </div>
                                 </div>
@@ -459,7 +459,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                     <button
                                         type="button"
                                         onClick={() => setIsSubmitted(true)}
-                                        className="font-satoshi w-full bg-[#3441D4] hover:bg-[#2833B8] text-white font-medium py-4 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 mt-4 text-[16px] shadow-sm hover:shadow-md cursor-pointer"
+                                        className="font-satoshi w-full bg-[#2B44E7] hover:bg-[#2037CA] text-white font-medium py-2 sm:py-2.5 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 mt-4 text-[15px] sm:text-[16px] shadow-none cursor-pointer"
                                     >
                                         {form?.bookCallButtonLabel}
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

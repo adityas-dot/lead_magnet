@@ -28,16 +28,16 @@ export default function FAQ({
     const mobileItems = hasMobileItems ? data.mobileItems! : desktopItems;
 
     return (
-        <section className="px-6 pt-5 pb-8 sm:py-16 lg:py-24 lg:px-[60px] xl:px-[80px]">
+        <section className="px-6 pt-14 pb-20 sm:pb-24 lg:py-24 lg:px-[60px] xl:px-[80px]">
             <div className="w-full mx-auto max-w-[1720px]">
                 <div>
-                    <h1 className="font-nohemi text-[clamp(24px,4.2vw,34px)] leading-tight">
+                    <h1 className="font-nohemi font-medium text-[clamp(34px,5.5vw,56px)] leading-tight">
                         {data.heading}
                     </h1>
                 </div>
 
                 {/* Desktop FAQ Items */}
-                <div className={`mt-2 sm:mt-10 ${hasMobileItems ? "hidden md:block" : "block"}`}>
+                <div className={`mt-1 sm:mt-3 ${hasMobileItems ? "hidden md:block" : "block"}`}>
                     {desktopItems.map((item, index) => {
                         const isOpen = openIndex === index;
 
@@ -87,7 +87,7 @@ export default function FAQ({
 
                 {/* Mobile FAQ Items (displayed on small screens) */}
                 {hasMobileItems && (
-                    <div className="mt-1 sm:mt-6 block md:hidden">
+                    <div className="mt-1 sm:mt-3 block md:hidden">
                         {mobileItems.map((item, index) => {
                             const isOpen = openMobileIndex === index;
 

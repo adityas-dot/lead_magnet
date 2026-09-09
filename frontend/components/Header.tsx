@@ -141,9 +141,9 @@ export default function Header({
                             : "text-white"
                     }`}
                 >
-                    {brandName === "Thumbstack." ? (
+                    {isOpen && brandName.endsWith(".") ? (
                         <>
-                            Thumbstack<span className="text-[#38E29D]">.</span>
+                            {brandName.slice(0, -1)}<span className="text-[#38E29D]">.</span>
                         </>
                     ) : (
                         brandName
