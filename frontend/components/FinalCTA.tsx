@@ -60,11 +60,14 @@ export default function FinalCTA({
     })();
 
     return (
-        <section className="w-full px-6 py-14 sm:py-24 sm:px-8 bg-white">
+        <section
+            className="w-full px-6 py-14 sm:py-24 sm:px-8 bg-[#95e7d30d]"
+            style={{ backgroundColor: "#95E7D30D" }}
+        >
             <div className="w-full mx-auto max-w-[850px]">
                 <div className="flex flex-col items-start sm:items-center text-left sm:text-center">
                     {data.badge && (
-                        <span className="hidden md:block font-satoshi font-medium border rounded-md p-2 pt-1 pb-1 border-[#95E7D3] bg-[#95E7D3] mb-5">
+                        <span className="hidden md:inline-block font-satoshi font-medium border-2 border-[#95E7D3] bg-[#D1F4EC] rounded-[12px] px-4 py-1.5 text-black text-[15px] mb-5">
                             {data.badge}
                         </span>
                     )}

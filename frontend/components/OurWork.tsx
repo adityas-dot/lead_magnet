@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { getMediaUrl } from "@/lib/strapi";
 
 type OurWorkImage = {
@@ -28,33 +28,100 @@ function getMediaAlt(media?: OurWorkImage | OurWorkImage[] | null, fallback: str
 }
 
 export default function OurWork({ data }: { data: OurWorkData }) {
-    const [currentProject, setCurrentProject] = useState(0);
-
     const projects = data?.projects || [];
     const hasMultipleProjects = projects.length > 1;
-    const project = projects[currentProject];
+
+    // Infinite clone slider: [lastProject, ...projects, firstProject]
+    // Index 1 corresponds to projects[0]
+    const [currentIndex, setCurrentIndex] = useState(1);
+    const [withTransition, setWithTransition] = useState(true);
+    const [isAnimating, setIsAnimating] = useState(false);
+
+    const touchStartX = useRef<number | null>(null);
+    const touchDeltaX = useRef<number>(0);
+
+    const slides = hasMultipleProjects
+        ? [projects[projects.length - 1], ...projects, projects[0]]
+        : projects;
 
     const nextProject = () => {
-        if (!hasMultipleProjects) return;
-        setCurrentProject((current) =>
-            current === projects.length - 1 ? 0 : current + 1
-        );
+        if (!hasMultipleProjects || isAnimating) return;
+        setIsAnimating(true);
+        setWithTransition(true);
+        setCurrentIndex((prev) => prev + 1);
     };
 
     const previousProject = () => {
-        if (!hasMultipleProjects) return;
-        setCurrentProject((current) =>
-            current === 0 ? projects.length - 1 : current - 1
-        );
+        if (!hasMultipleProjects || isAnimating) return;
+        setIsAnimating(true);
+        setWithTransition(true);
+        setCurrentIndex((prev) => prev - 1);
     };
 
-    const bannerUrl = getMediaUrl(project?.images);
-    const mobileUrl = getMediaUrl(project?.mobileImages);
-    const altText =
-        getMediaAlt(project?.images) ||
-        getMediaAlt(project?.mobileImages) ||
-        data?.heading ||
-        "Our Work";
+    const goToProject = (dotIdx: number) => {
+        if (!hasMultipleProjects || isAnimating) return;
+        const targetIndex = dotIdx + 1;
+        if (targetIndex === currentIndex) return;
+        setIsAnimating(true);
+        setWithTransition(true);
+        setCurrentIndex(targetIndex);
+    };
+
+    const handleTransitionEnd = () => {
+        if (!hasMultipleProjects) return;
+
+        if (currentIndex === slides.length - 1) {
+            // Reached clone of first item -> reset instantly to real first item (index 1)
+            setWithTransition(false);
+            setCurrentIndex(1);
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    setWithTransition(true);
+                    setIsAnimating(false);
+                });
+            });
+        } else if (currentIndex === 0) {
+            // Reached clone of last item -> reset instantly to real last item
+            setWithTransition(false);
+            setCurrentIndex(projects.length);
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    setWithTransition(true);
+                    setIsAnimating(false);
+                });
+            });
+        } else {
+            setIsAnimating(false);
+        }
+    };
+
+    // Active project index (0..projects.length - 1) for indicators
+    const activeProjectIndex = hasMultipleProjects
+        ? (currentIndex - 1 + projects.length) % projects.length
+        : 0;
+
+    const handleTouchStart = (e: React.TouchEvent) => {
+        touchStartX.current = e.touches[0].clientX;
+        touchDeltaX.current = 0;
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        if (touchStartX.current === null) return;
+        touchDeltaX.current = e.touches[0].clientX - touchStartX.current;
+    };
+
+    const handleTouchEnd = () => {
+        if (touchStartX.current === null) return;
+        if (Math.abs(touchDeltaX.current) > 45) {
+            if (touchDeltaX.current < 0) {
+                nextProject();
+            } else {
+                previousProject();
+            }
+        }
+        touchStartX.current = null;
+        touchDeltaX.current = 0;
+    };
 
     return (
         <section className="w-full py-10 sm:py-20 overflow-hidden">
@@ -85,10 +152,10 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                             onClick={previousProject}
                             type="button"
                             aria-label="Previous project"
-                            disabled={!hasMultipleProjects}
+                            disabled={!hasMultipleProjects || isAnimating}
                             className={`flex h-11 w-11 items-center justify-center rounded-md bg-[#092008] transition-opacity ${
                                 hasMultipleProjects
-                                    ? "hover:opacity-80 cursor-pointer opacity-100"
+                                    ? "hover:opacity-80 cursor-pointer opacity-100 active:scale-95"
                                     : "opacity-40 cursor-not-allowed"
                             }`}
                         >
@@ -103,10 +170,10 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                             onClick={nextProject}
                             type="button"
                             aria-label="Next project"
-                            disabled={!hasMultipleProjects}
+                            disabled={!hasMultipleProjects || isAnimating}
                             className={`flex h-11 w-11 items-center justify-center rounded-md bg-[#092008] transition-opacity ${
                                 hasMultipleProjects
-                                    ? "hover:opacity-80 cursor-pointer opacity-100"
+                                    ? "hover:opacity-80 cursor-pointer opacity-100 active:scale-95"
                                     : "opacity-40 cursor-not-allowed"
                             }`}
                         >
@@ -125,6 +192,7 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                         <button
                             onClick={previousProject}
                             type="button"
+                            disabled={isAnimating}
                             className="flex items-center gap-2 font-satoshi text-[15px] font-medium text-[#000000] hover:opacity-75 transition-opacity cursor-pointer select-none"
                         >
                             <svg
@@ -142,25 +210,15 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                             <span>Back</span>
                         </button>
 
-                        {/* Tracker Indicator: exactly 3 pills */}
+                        {/* Tracker Indicator */}
                         <div className="flex items-center gap-1.5">
                             {[0, 1, 2].slice(0, Math.min(3, projects.length)).map((dotIdx) => {
-                                const activeIndex = currentProject % Math.min(3, projects.length);
-                                const isCurrent = dotIdx === activeIndex;
+                                const isCurrent = dotIdx === (activeProjectIndex % Math.min(3, projects.length));
 
                                 return (
                                     <button
                                         key={dotIdx}
-                                        onClick={() => {
-                                            if (projects.length <= 3) {
-                                                setCurrentProject(dotIdx);
-                                            } else {
-                                                const diff = dotIdx - activeIndex;
-                                                if (diff !== 0) {
-                                                    setCurrentProject((prev) => (prev + diff + projects.length) % projects.length);
-                                                }
-                                            }
-                                        }}
+                                        onClick={() => goToProject(dotIdx)}
                                         type="button"
                                         aria-label={`Indicator ${dotIdx + 1}`}
                                         className={`transition-all duration-300 ease-out rounded-full cursor-pointer ${
@@ -176,6 +234,7 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                         <button
                             onClick={nextProject}
                             type="button"
+                            disabled={isAnimating}
                             className="flex items-center gap-2 font-satoshi text-[15px] font-medium text-[#000000] hover:opacity-75 transition-opacity cursor-pointer select-none"
                         >
                             <span>Next</span>
@@ -196,19 +255,50 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                 )}
             </div>
 
-            {/* Responsive project banner */}
-            <div className="mt-6 sm:mt-12 w-full overflow-hidden">
-                {bannerUrl || mobileUrl ? (
-                    <picture key={currentProject} className="w-full">
-                        {mobileUrl && (
-                            <source media="(max-width: 767px)" srcSet={mobileUrl} />
-                        )}
-                        <img
-                            src={bannerUrl || mobileUrl || ""}
-                            alt={altText}
-                            className="h-auto w-full object-cover block"
-                        />
-                    </picture>
+            {/* Responsive project banner with hardware-accelerated GPU slide */}
+            <div
+                className="mt-6 sm:mt-12 w-full overflow-hidden select-none"
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+            >
+                {slides.length > 0 ? (
+                    <div
+                        className="flex w-full will-change-transform"
+                        style={{
+                            transform: `translate3d(-${hasMultipleProjects ? currentIndex * 100 : 0}%, 0, 0)`,
+                            transition: withTransition
+                                ? "transform 550ms cubic-bezier(0.16, 1, 0.3, 1)"
+                                : "none",
+                        }}
+                        onTransitionEnd={handleTransitionEnd}
+                    >
+                        {slides.map((proj, idx) => {
+                            const bUrl = getMediaUrl(proj?.images);
+                            const mUrl = getMediaUrl(proj?.mobileImages);
+                            const alt =
+                                getMediaAlt(proj?.images) ||
+                                getMediaAlt(proj?.mobileImages) ||
+                                data?.heading ||
+                                "Our Work";
+
+                            return (
+                                <div key={idx} className="w-full shrink-0">
+                                    <picture className="w-full block">
+                                        {mUrl && (
+                                            <source media="(max-width: 767px)" srcSet={mUrl} />
+                                        )}
+                                        <img
+                                            src={bUrl || mUrl || ""}
+                                            alt={alt}
+                                            className="h-auto w-full object-cover block select-none pointer-events-none"
+                                            draggable={false}
+                                        />
+                                    </picture>
+                                </div>
+                            );
+                        })}
+                    </div>
                 ) : (
                     <div className="mx-auto max-w-[1300px] px-8">
                         <div className="flex h-[320px] w-full items-center justify-center rounded-2xl bg-[#F5F5F5] text-gray-400">

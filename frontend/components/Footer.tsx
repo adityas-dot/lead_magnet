@@ -76,7 +76,7 @@ export default function Footer({
                         </div>
 
                         {/* Text descriptions */}
-                        <div className="mt-6 space-y-2 text-white font-satoshi text-[13.5px] sm:text-[12px] leading-[1.65] max-w-[550px]">
+                        <div className="mt-6 space-y-2 text-white font-satoshi text-[13.5px] sm:text-[14px] leading-[1.65] max-w-[550px]">
                             {data.heading && (
                                 <p className="font-medium text-white/95">
                                     {data.heading}

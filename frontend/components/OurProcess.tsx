@@ -158,29 +158,29 @@ export default function OurProcess({
                 <div className="mx-auto max-w-[1300px] w-full">
                     {/* Desktop View */}
                     <div className="hidden md:block">
-                        <div className="flex flex-row items-center justify-between items-start mb-14 gap-6">
-                            <div>
-                                <span className="font-satoshi text-white/70">
-                                    {data.eyebrow}
-                                </span>
+                        <div className="mb-14">
+                            <span className="font-satoshi text-white/70">
+                                {data.eyebrow}
+                            </span>
 
-                                <h2 className="font-delight text-[clamp(24px,4.2vw,36px)] font-medium mt-5 max-w-[500px]">
+                            <div className="flex flex-row items-end justify-between gap-6 mt-5">
+                                <h2 className="font-delight text-[clamp(24px,4.2vw,36px)] font-medium max-w-[500px]">
                                     {data.heading}
                                 </h2>
 
-                                <p className="font-satoshi text-white/90 max-w-[750px] mt-5">
-                                    {data.description}
-                                </p>
+                                {data.cta && (
+                                    <a
+                                        href={data.cta.href || "#"}
+                                        className="shrink-0 rounded-xl font-bold bg-white px-6 py-2.5 font-satoshi text-[14px] text-[#0F1D07] shadow-sm hover:bg-white/90 transition mb-2"
+                                    >
+                                        {data.cta.label}
+                                    </a>
+                                )}
                             </div>
 
-                            {data.cta && (
-                                <a
-                                    href={data.cta.href || "#"}
-                                    className="shrink-0 rounded-xl font-bold bg-white px-6 py-2.5 font-satoshi text-[14px] text-[#0F1D07] shadow-sm hover:bg-white/90 transition"
-                                >
-                                    {data.cta.label}
-                                </a>
-                            )}
+                            <p className="font-satoshi text-white/90 max-w-[750px] mt-5">
+                                {data.description}
+                            </p>
                         </div>
 
                         <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-6">
