@@ -16,9 +16,7 @@ type ProcessService = {
 
 type ProcessCard = {
     id: number;
-    icon?: {
-        url: string;
-    };
+    icon?: any;
     title: string;
     description: string;
     services: ProcessService[];
@@ -32,9 +30,7 @@ type MobileService = {
     id: number;
     title: string;
     description: string;
-    icon?: {
-        url: string;
-    };
+    icon?: any;
 };
 
 type CtaLink = {
@@ -256,30 +252,33 @@ export default function OurProcess({
                                         key={pairIndex}
                                         className="w-[calc(100vw-48px)] sm:w-[calc(100vw-64px)] shrink-0 flex items-stretch gap-3 sm:gap-4 snap-start"
                                     >
-                                        {pair.map((item) => (
-                                            <div
-                                                key={item.id}
-                                                className="w-[calc((100%-12px)/2)] sm:w-[calc((100%-16px)/2)] shrink-0 rounded-[8px] bg-[#2C3825] p-4 sm:p-4.5 flex flex-col justify-start min-h-[270px] select-none"
-                                            >
-                                                {item.icon?.url && (
-                                                    <div className="h-6 w-6 mb-5 sm:mb-6 flex items-center justify-start">
-                                                        <img
-                                                            src={getMediaUrl(item.icon.url)}
-                                                            alt=""
-                                                            className="h-6 w-6 object-contain brightness-0 invert"
-                                                        />
-                                                    </div>
-                                                )}
+                                        {pair.map((item) => {
+                                            const iconUrl = getMediaUrl(item.icon) || (item.icon?.url ? getMediaUrl(item.icon.url) : "");
+                                            return (
+                                                <div
+                                                    key={item.id}
+                                                    className="w-[calc((100%-12px)/2)] sm:w-[calc((100%-16px)/2)] shrink-0 rounded-[8px] bg-[#2C3825] p-4 sm:p-4.5 flex flex-col justify-start min-h-[270px] select-none"
+                                                >
+                                                    {iconUrl && (
+                                                        <div className="h-6 w-6 mb-5 sm:mb-6 flex items-center justify-start">
+                                                            <img
+                                                                src={iconUrl}
+                                                                alt={item.title || ""}
+                                                                className="h-6 w-6 object-contain brightness-0 invert"
+                                                            />
+                                                        </div>
+                                                    )}
 
-                                                <h3 className="font-delight text-[17px] sm:text-[18px] font-medium leading-tight text-white mb-2.5">
-                                                    {item.title}
-                                                </h3>
+                                                    <h3 className="font-delight text-[17px] sm:text-[18px] font-medium leading-tight text-white mb-2.5">
+                                                        {item.title}
+                                                    </h3>
 
-                                                <p className="font-satoshi text-[13px] sm:text-[13.5px] font-normal leading-[1.6] text-[#9EAFA0] flex-1">
-                                                    {item.description}
-                                                </p>
-                                            </div>
-                                        ))}
+                                                    <p className="font-satoshi text-[13px] sm:text-[13.5px] font-normal leading-[1.6] text-[#9EAFA0] flex-1">
+                                                        {item.description}
+                                                    </p>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 ))}
                                 <div className="w-1 shrink-0" aria-hidden="true" />
@@ -340,6 +339,7 @@ function ProcessCard({
     className?: string;
 }) {
     const [isHovered, setIsHovered] = useState(false);
+    const iconUrl = getMediaUrl(card.icon) || (card.icon?.url ? getMediaUrl(card.icon.url) : "");
 
     const ctaText = card.cta?.label?.toLowerCase().includes(card.title.toLowerCase())
         ? card.cta.label
@@ -367,12 +367,14 @@ function ProcessCard({
             >
                 <div>
                     {/* Icon */}
-                    {card.icon?.url && (
-                        <img
-                            src={getMediaUrl(card.icon.url)}
-                            alt=""
-                            className="h-8 w-8 object-contain brightness-0 invert"
-                        />
+                    {iconUrl && (
+                        <div className="h-8 w-8 mb-4 flex items-center justify-start">
+                            <img
+                                src={iconUrl}
+                                alt={card.title || ""}
+                                className="h-8 w-8 object-contain brightness-0 invert"
+                            />
+                        </div>
                     )}
 
                     {/* Title */}

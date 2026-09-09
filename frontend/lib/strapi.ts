@@ -14,7 +14,7 @@ export const SOCIAL_ICONS: Record<string, string> = {
  * Normalizes media input (string, object, or array) into a fully qualified Cloudinary or Strapi URL.
  */
 export function getMediaUrl(
-    media?: string | { url?: string | null } | Array<{ url?: string | null }> | null
+    media?: any
 ): string {
     if (!media) return "";
     let rawUrl: string | undefined | null;
@@ -22,9 +22,19 @@ export function getMediaUrl(
     if (typeof media === "string") {
         rawUrl = media;
     } else if (Array.isArray(media)) {
-        rawUrl = media[0]?.url;
-    } else {
-        rawUrl = media?.url;
+        const first = media[0];
+        rawUrl =
+            first?.url ||
+            first?.data?.attributes?.url ||
+            first?.data?.url ||
+            first?.attributes?.url ||
+            (typeof first === "string" ? first : null);
+    } else if (typeof media === "object") {
+        rawUrl =
+            media?.url ||
+            media?.data?.attributes?.url ||
+            media?.data?.url ||
+            media?.attributes?.url;
     }
 
     if (!rawUrl) return "";
