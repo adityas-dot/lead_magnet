@@ -35,13 +35,15 @@ export default function WorkShowcase({
 }: {
     data: WorkShowcaseData;
 }) {
-    const [selectedItem, setSelectedItem] = useState(data.items[0]?.id);
+    if (!data) return null;
+    const items = data.items || [];
+    const [selectedItem, setSelectedItem] = useState(items[0]?.id);
     const [position, setPosition] = useState(50);
     const [isMobile, setIsMobile] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
 
-    const activeItem = data.items.find((item) => item.id === selectedItem);
+    const activeItem = items.find((item) => item.id === selectedItem);
     const mobileDesc = data.MobileDescription || data.mobileDescription;
     const beforeText = data.Before || data.before || "Before";
 
@@ -91,7 +93,7 @@ export default function WorkShowcase({
         <section className="px-6 py-20 bg-[#f5f5f5] lg:px-[60px] xl:px-[80px]">
             <div className="mx-auto max-w-[1720px] w-full">
                 <div className="w-full">
-                    <h2 className="max-w-[900px] font-delight text-[clamp(28px,4.2vw,50px)] font-medium mb-6">
+                    <h2 className="max-w-[1150px] font-delight text-[clamp(28px,4vw,65px)] font-medium leading-[1.15] tracking-[-0.015em] mb-6">
                         {data.heading}
                     </h2>
                     {mobileDesc ? (

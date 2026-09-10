@@ -12,13 +12,48 @@ const inter = localFont({
 const nohemi = localFont({
   src: [
     {
+      path: "../public/fonts/Nohemi-Thin.woff2",
+      weight: "100",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Nohemi-ExtraLight.woff2",
+      weight: "200",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Nohemi-Light.woff2",
+      weight: "300",
+      style: "normal",
+    },
+    {
       path: "../public/fonts/Nohemi-Regular.woff2",
       weight: "400",
       style: "normal",
     },
     {
-      path: "../public/fonts/Nohemi-Medium.ttf",
+      path: "../public/fonts/Nohemi-Medium.woff2",
       weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Nohemi-SemiBold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Nohemi-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Nohemi-ExtraBold.woff2",
+      weight: "800",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Nohemi-Black.woff2",
+      weight: "900",
       style: "normal",
     },
   ],

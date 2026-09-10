@@ -12,11 +12,6 @@
       "type": "component",
       "component": "shared.faq-item",
       "repeatable": true
-    },
-    "mobileItems": {
-      "type": "component",
-      "component": "shared.faq-item",
-      "repeatable": true
     }
   },
   "config": {}

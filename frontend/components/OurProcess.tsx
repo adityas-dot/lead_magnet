@@ -60,13 +60,14 @@ type OurProcessData = {
     mobileSecondaryCta?: CtaLink;
 };
 
-const DURATION = 35;
+const DURATION = 55;
 
 export default function OurProcess({
     data,
 }: {
     data: OurProcessData;
 }) {
+    if (!data) return null;
     const items = data?.marqueeItems?.length
         ? [...data.marqueeItems, ...data.marqueeItems]
         : [];
@@ -91,21 +92,24 @@ export default function OurProcess({
     const ctaLabel = data.cta?.label || "Explore Our Services";
     const hasArrow = ctaLabel.includes("↗") || ctaLabel.includes("→") || ctaLabel.includes("->");
 
+    // Balanced speed (~45-50px/s): comfortably readable yet active
+    const marqueeDuration = scrollDistance > 0 ? Math.max(40, Math.round(scrollDistance / 45)) : DURATION;
+
     return (
         <section data-theme="dark" className="w-full overflow-hidden">
             {/* Top Marquee Banner */}
             <div
                 ref={containerRef}
-                className="w-full overflow-hidden bg-[#4A71A5] py-2.5 lg:py-4 select-none"
+                className="w-full overflow-hidden bg-[#4A71A5] py-2.5 sm:py-3 lg:py-3.5 select-none"
             >
                 <motion.div
-                    key={`${scrollDistance}-${DURATION}`}
+                    key={`${scrollDistance}-${marqueeDuration}`}
                     ref={contentRef}
                     className="flex w-max shrink-0 items-center px-4 lg:px-6"
                     initial={{ x: -scrollDistance }}
                     animate={{ x: 0 }}
                     transition={{
-                        duration: DURATION,
+                        duration: marqueeDuration,
                         ease: "linear",
                         repeat: Infinity,
                         repeatType: "reverse",
@@ -116,18 +120,18 @@ export default function OurProcess({
                         <div key={`${item.id}-${index}`} className="flex shrink-0 items-center">
                             {/* Mobile / Tablet */}
                             <div className="flex lg:hidden items-center">
-                                <span className="text-white text-[13px] font-satoshi font-medium tracking-[0.04em] uppercase leading-none whitespace-nowrap">
+                                <span className="text-white text-[12px] sm:text-[13px] font-satoshi font-normal font-[400] uppercase tracking-[0.04em] whitespace-nowrap">
                                     {item.text}
                                 </span>
-                                <span className="inline-block h-[6px] w-[6px] rounded-full bg-white shrink-0 mx-3.5" />
+                                <span className="inline-block h-[7px] w-[7px] sm:h-[7.5px] sm:w-[7.5px] rounded-full bg-white shrink-0 mx-3 sm:mx-4" />
                             </div>
 
                             {/* Desktop */}
                             <div className="hidden lg:flex items-center">
-                                <span className="text-white text-[clamp(16px,2vw,27px)] font-nohemi whitespace-nowrap">
+                                <span className="text-white text-[17px] xl:text-[18.5px] font-nohemi font-normal font-[400] whitespace-nowrap">
                                     {item.text}
                                 </span>
-                                <span className="inline-block h-2 w-2 rounded-full bg-white shrink-0 mx-6" />
+                                <span className="inline-block h-[9px] w-[9px] xl:h-[10px] xl:w-[10px] rounded-full bg-white shrink-0 mx-4.5 xl:mx-5.5" />
                             </div>
                         </div>
                     ))}
@@ -169,13 +173,15 @@ export default function OurProcess({
                     {/* Responsive Grid: 2 columns on mobile/tablet, 4 columns on desktop */}
                     <div className="mt-8 sm:mt-10 lg:mt-12 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
                         {/* 1. Image Diagram Card */}
-                        <div className="col-span-2 order-1 lg:order-none lg:col-start-1 lg:col-span-2 lg:row-start-1 h-[210px] sm:h-[300px] lg:h-[410px] overflow-hidden rounded-lg bg-white flex items-center justify-center">
+                        <div className="col-span-2 order-1 lg:order-none lg:col-start-1 lg:col-span-2 lg:row-start-1 w-full aspect-[2896/1614] overflow-hidden rounded-[12px] sm:rounded-2xl bg-white flex items-center justify-center p-3 sm:p-4 md:p-5 lg:p-6 shadow-[0px_4px_20.6px_rgba(0,0,0,0.14)]">
                             {data.image?.url && (
-                                <img
-                                    src={getMediaUrl(data.image.url)}
-                                    alt={data.heading || "Our Process"}
-                                    className="h-full w-full object-contain scale-[1.02] lg:scale-[1.06] rounded-lg"
-                                />
+                                <div className="h-full max-w-full aspect-[2896/1614] overflow-hidden rounded-[10px] sm:rounded-[14px] md:rounded-[18px]">
+                                    <img
+                                        src={getMediaUrl(data.image.url)}
+                                        alt={data.heading || "Our Process"}
+                                        className="w-full h-full object-cover rounded-[10px] sm:rounded-[14px] md:rounded-[18px]"
+                                    />
+                                </div>
                             )}
                         </div>
 
@@ -196,7 +202,7 @@ export default function OurProcess({
                         )}
 
                         {/* 4. Video Showcase Card */}
-                        <div className="col-span-2 order-4 lg:order-none lg:col-start-2 lg:col-span-2 lg:row-start-2 h-[210px] sm:h-[300px] lg:h-[410px] overflow-hidden rounded-lg bg-black flex items-center justify-center">
+                        <div className="order-4 col-span-2 lg:order-none lg:col-start-2 lg:col-span-2 lg:row-start-2 w-full aspect-[2896/1614] relative rounded-[12px] sm:rounded-2xl overflow-hidden shadow-[0px_4px_20.6px_rgba(0,0,0,0.14)] bg-black flex items-center justify-center">
                             {data.video?.url && (
                                 <video
                                     src={getMediaUrl(data.video.url)}
@@ -204,7 +210,7 @@ export default function OurProcess({
                                     muted
                                     loop
                                     playsInline
-                                    className="h-full w-full object-cover rounded-lg"
+                                    className="h-full w-full object-cover rounded-[12px] sm:rounded-2xl"
                                 />
                             )}
                         </div>
@@ -251,7 +257,7 @@ function ProcessCard({
 
     return (
         <div
-            className={`group relative flex h-full min-h-[250px] sm:min-h-[280px] lg:h-[410px] w-full flex-col rounded-lg text-white overflow-hidden cursor-pointer transition-colors duration-300 select-none shadow-sm hover:shadow-xl ${
+            className={`group relative flex h-full min-h-[250px] sm:min-h-[280px] w-full flex-col rounded-[12px] sm:rounded-2xl text-white overflow-hidden cursor-pointer transition-colors duration-300 select-none shadow-[0px_4px_20.6px_rgba(0,0,0,0.14)] hover:shadow-xl ${
                 hasServices && isHovered ? "bg-[#2D4620]" : "bg-[#1A2F11]"
             } ${className}`}
             onMouseEnter={() => setIsHovered(true)}
@@ -279,7 +285,7 @@ function ProcessCard({
                     )}
 
                     {/* Title */}
-                    <h3 className="font-satoshi text-[17px] sm:text-[20px] lg:text-[34px] font-bold leading-tight text-white">
+                    <h3 className="font-satoshi text-[clamp(18px,2.2vw,34px)] font-bold leading-tight text-white">
                         {card.title}
                     </h3>
 

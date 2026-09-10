@@ -20,9 +20,6 @@
     },
     "description": {
       "type": "text"
-    },
-    "mobileDescription": {
-      "type": "text"
     }
   },
   "config": {}

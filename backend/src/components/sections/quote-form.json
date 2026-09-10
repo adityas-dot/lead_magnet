@@ -33,35 +33,42 @@
       "type": "string"
     },
     "step2Title": {
-      "type": "string"
+      "type": "string",
+      "default": "Choose your budget range"
     },
     "step2Description": {
-      "type": "text"
+      "type": "text",
+      "default": "Select what’s not working and your preferred budget."
     },
     "step2Label": {
-      "type": "string"
-    },
-    "budgetLabel": {
-      "type": "string"
-    },
-    "budgetRanges": {
-      "type": "component",
-      "component": "shared.budget-range",
-      "repeatable": true
+      "type": "string",
+      "default": "Budget range"
     },
     "issuesLabel": {
-      "type": "string"
+      "type": "string",
+      "default": "What needs Improvement ?"
     },
     "issueOptions": {
       "type": "component",
       "component": "shared.form-option",
       "repeatable": true
     },
+    "budgetLabel": {
+      "type": "string",
+      "default": "Select your budget range"
+    },
+    "budgetRanges": {
+      "type": "component",
+      "component": "shared.budget-range",
+      "repeatable": true
+    },
     "otherIssuesLabel": {
-      "type": "string"
+      "type": "string",
+      "default": "Other issues (optional)"
     },
     "otherIssuesPlaceholder": {
-      "type": "string"
+      "type": "string",
+      "default": "Any other issues your shopify store is facing"
     },
     "budgetTypeLabel": {
       "type": "string"
@@ -72,7 +79,8 @@
       "repeatable": true
     },
     "estimateButtonLabel": {
-      "type": "string"
+      "type": "string",
+      "default": "Get My Estimate"
     },
     "resultTitle": {
       "type": "string"

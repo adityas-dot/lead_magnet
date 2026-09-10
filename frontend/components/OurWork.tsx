@@ -128,7 +128,7 @@ export default function OurWork({ data }: { data: OurWorkData }) {
             <div className="mx-auto flex w-full max-w-[1880px] flex-col px-6 lg:px-[60px] xl:px-[80px]">
                 <div className="flex w-full justify-between items-end gap-6">
                     <div className="max-w-[900px]">
-                        <h2 className="font-nohemi text-[clamp(32px,4.2vw,52px)] font-medium leading-[1.15] text-[#000000]">
+                        <h2 className="font-nohemi text-[clamp(28px,4vw,65px)] font-normal font-[400] leading-[1.15] tracking-[-0.015em] text-[#000000]">
                             {data.heading}
                         </h2>
 

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getMediaUrl } from "@/lib/strapi";
+import CallbackModal from "./CallbackModal";
 
 type Brand = {
     id: number;
@@ -76,6 +77,7 @@ type HeroData = {
 };
 
 export default function Hero({ data }: { data: HeroData }) {
+    if (!data) return null;
     const form = Array.isArray(data.quoteForm) ? data.quoteForm[0] : data.quoteForm;
 
     const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -87,9 +89,52 @@ export default function Hero({ data }: { data: HeroData }) {
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isCallbackOpen, setIsCallbackOpen] = useState(false);
+
+    useEffect(() => {
+        const handleOpenCallback = () => setIsCallbackOpen(true);
+        window.addEventListener("open-callback-modal", handleOpenCallback);
+        return () => window.removeEventListener("open-callback-modal", handleOpenCallback);
+    }, []);
+
+    const defaultBudgets: BudgetRange[] = [
+        { label: "Essential", range: "₹1,00,000 -₹2,00,000", value: "essential" },
+        { label: "Balanced", range: "₹2,00,000 -₹5,00,000", value: "balanced" },
+        { label: "Premium", range: "₹5,00,000 -₹10,00,000", value: "premium" },
+    ];
 
     const issuesList = form?.issueOptions || [];
-    const budgetList = form?.budgetRanges || [];
+    const budgetList = form?.budgetRanges && form.budgetRanges.length > 0 ? form.budgetRanges : defaultBudgets;
+
+    // Helper to render currency (specifically Indian Rupee ₹) clearly with proper font and alignment
+    // Helper to render currency (specifically Indian Rupee ₹) with Satoshi font
+    const formatCurrency = (text?: string) => {
+        if (!text) return "";
+        const cleanText = text.replace(/\s*-\s*₹?/g, " -₹").replace(/^₹?\s*/, "₹");
+        const parts = cleanText.split(/(₹)/g);
+        if (parts.length === 1) return text;
+        return (
+            <span className="inline-flex items-center self-center">
+                {parts.map((part, idx) => {
+                    if (!part) return null;
+                    if (part === "₹") {
+                        return (
+                            <span
+                                key={idx}
+                                className="font-satoshi font-normal text-[1.12em] inline-block select-none leading-none"
+                                style={{
+                                    verticalAlign: "-0.02em",
+                                }}
+                            >
+                                ₹
+                            </span>
+                        );
+                    }
+                    return <span key={idx} className="self-center">{part}</span>;
+                })}
+            </span>
+        );
+    };
 
     const toggleIssue = (label: string) => {
         setSelectedIssues((prev) =>
@@ -104,10 +149,11 @@ export default function Hero({ data }: { data: HeroData }) {
 
     const getBrandSize = (brand: Brand) => {
         const name = ((brand.name || "") + (brand.logo?.url || "")).toLowerCase();
-        if (name.includes("figo")) return "h-7 sm:h-8 lg:h-8";
-        if (name.includes("westside")) return "h-6 sm:h-7 lg:h-7";
-        if (name.includes("stiff")) return "h-4 sm:h-4 lg:h-[28px] translate-y-[3px]";
-        return "h-5 sm:h-6 lg:h-5";
+        if (name.includes("figo")) return "h-6 sm:h-7 lg:h-7.5";
+        if (name.includes("westside")) return "h-5.5 sm:h-6.5 lg:h-7";
+        if (name.includes("stiff")) return "h-5.5 sm:h-6.5 lg:h-7";
+        if (name.includes("paloma")) return "h-5 sm:h-5.5 lg:h-6";
+        return "h-5 sm:h-5.5 lg:h-6";
     };
 
     const formattedHeading = (() => {
@@ -139,10 +185,21 @@ export default function Hero({ data }: { data: HeroData }) {
                             </p>
 
                             <a
-                                href={data.primaryCta.href}
-                                className="w-full sm:w-auto inline-flex items-center justify-center bg-white text-black px-8 py-4 sm:py-3.5 rounded-full font-satoshi font-medium text-[16px] sm:text-[15px] hover:bg-gray-100 transition-all duration-300 ease-out gap-2.5 shadow-sm hover:shadow-md"
+                                href={data.primaryCta?.href || "#call"}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    const h = (data.primaryCta?.href || "").toLowerCase();
+                                    const l = (data.primaryCta?.label || "").toLowerCase();
+                                    if (h === "#quote" || (h.includes("quote") && !l.includes("call"))) {
+                                        window.dispatchEvent(new CustomEvent("open-quote-modal"));
+                                    } else {
+                                        setIsCallbackOpen(true);
+                                        window.dispatchEvent(new CustomEvent("open-callback-modal"));
+                                    }
+                                }}
+                                className="w-full sm:w-auto inline-flex items-center justify-center bg-white text-black px-8 py-4 sm:py-3.5 rounded-full font-satoshi font-medium text-[16px] sm:text-[15px] hover:bg-gray-100 transition-all duration-300 ease-out gap-2.5 shadow-sm hover:shadow-md cursor-pointer"
                             >
-                                {data.primaryCta.label}
+                                {data.primaryCta?.label || "Book a Free Call"}
                                 <svg className="w-4.5 h-4.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                 </svg>
@@ -152,39 +209,41 @@ export default function Hero({ data }: { data: HeroData }) {
                         {/* Client logo marquee */}
                         <div className="mt-20 lg:mt-28 xl:mt-auto pt-8">
                             {data.brandsHeading && (
-                                <p className="font-satoshi font-normal text-[#F6F6F6] text-[clamp(16px,1.4vw,20px)] mb-4 lg:mb-5 max-w-[864px] leading-[1.3] lg:leading-[33.6px] tracking-[-0.48px]">
+                                <p className="font-satoshi font-normal text-[#F6F6F6] text-[clamp(13px,1.15vw,18px)] mb-3 lg:mb-4 w-full whitespace-nowrap leading-tight tracking-[-0.3px]">
                                     {data.brandsHeading}
                                 </p>
                             )}
                             {brandItems.length > 0 && (
                                 <div
-                                    className="w-full max-w-[720px] overflow-hidden select-none"
+                                    className="w-full max-w-[963px] overflow-hidden select-none"
                                     style={{
-                                        maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
-                                        WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)'
+                                        maskImage: 'linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)',
+                                        WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)'
                                     }}
                                 >
                                     <div className="flex w-max items-center animate-marquee hover:[animation-play-state:paused]">
                                         <div className="flex shrink-0 items-center gap-8 lg:gap-12 pr-8 lg:pr-12">
                                             {trackBrands.map((brand, idx) => (
-                                                <img
-                                                    key={`brand-track1-${idx}`}
-                                                    src={getMediaUrl(brand.logo?.url)}
-                                                    alt={brand.name || "Brand logo"}
-                                                    className={`${getBrandSize(brand)} w-auto object-contain transition-all duration-300 opacity-90 hover:opacity-100 shrink-0`}
-                                                    style={{ filter: 'brightness(0) invert(1)' }}
-                                                />
+                                                <div key={`brand-track1-${idx}`} className="flex items-center justify-center h-9 sm:h-10 shrink-0">
+                                                    <img
+                                                        src={getMediaUrl(brand.logo?.url)}
+                                                        alt={brand.name || "Brand logo"}
+                                                        className={`${getBrandSize(brand)} w-auto object-contain transition-all duration-300 opacity-90 hover:opacity-100`}
+                                                        style={{ filter: 'brightness(0) invert(1)' }}
+                                                    />
+                                                </div>
                                             ))}
                                         </div>
                                         <div className="flex shrink-0 items-center gap-8 lg:gap-12 pr-8 lg:pr-12" aria-hidden="true">
                                             {trackBrands.map((brand, idx) => (
-                                                <img
-                                                    key={`brand-track2-${idx}`}
-                                                    src={getMediaUrl(brand.logo?.url)}
-                                                    alt={brand.name || "Brand logo"}
-                                                    className={`${getBrandSize(brand)} w-auto object-contain transition-all duration-300 opacity-90 hover:opacity-100 shrink-0`}
-                                                    style={{ filter: 'brightness(0) invert(1)' }}
-                                                />
+                                                <div key={`brand-track2-${idx}`} className="flex items-center justify-center h-9 sm:h-10 shrink-0">
+                                                    <img
+                                                        src={getMediaUrl(brand.logo?.url)}
+                                                        alt={brand.name || "Brand logo"}
+                                                        className={`${getBrandSize(brand)} w-auto object-contain transition-all duration-300 opacity-90 hover:opacity-100`}
+                                                        style={{ filter: 'brightness(0) invert(1)' }}
+                                                    />
+                                                </div>
                                             ))}
                                         </div>
                                     </div>
@@ -194,43 +253,46 @@ export default function Hero({ data }: { data: HeroData }) {
                     </div>
 
                     {/* Interactive Shopify Quote Estimator */}
-                    <div id="quote" data-theme="light" className="-mx-6 sm:-mx-8 lg:-mx-[60px] xl:mx-0 w-[calc(100%+48px)] sm:w-[calc(100%+64px)] lg:w-[calc(100%+120px)] xl:w-full bg-[#F9F9F9] text-black px-6 py-8 sm:p-8 lg:p-[40px] xl:p-8 2xl:p-[48px] pb-10 sm:pb-12 xl:pb-8 2xl:pb-[48px] shadow-2xl relative mt-8 xl:mt-0 rounded-t-[20px] rounded-b-none xl:rounded-none transition-all duration-300 scroll-mt-24">
+                    <div id="quote" data-quote-form="true" data-theme="light" className="-mx-6 sm:-mx-8 lg:-mx-[60px] xl:mx-0 w-[calc(100%+48px)] sm:w-[calc(100%+64px)] lg:w-[calc(100%+120px)] xl:w-full bg-[#F9F9F9] text-black px-6 py-8 sm:p-8 lg:p-[40px] xl:p-8 2xl:p-[48px] pb-10 sm:pb-12 xl:pb-8 2xl:pb-[48px] shadow-2xl relative mt-8 xl:mt-0 rounded-t-[20px] rounded-b-none xl:rounded-none transition-all duration-300 scroll-mt-24">
                         <h2 className="font-nohemi text-[clamp(26px,2.5vw,36px)] font-normal text-[#1A1A1A] mb-2 leading-tight">
-                            {step === 1 && form?.title}
-                            {step === 2 && form?.step2Title}
-                            {step === 3 && form?.resultTitle}
+                            {step === 1 && (form?.title || "Get an instant quote")}
+                            {step === 2 && (form?.step2Title || "Choose your budget range")}
+                            {step === 3 && (form?.resultTitle || "Your Instant Quote Is Ready!")}
                         </h2>
                         <p className="font-satoshi text-[#6B6B6B] text-[14px] leading-relaxed mb-6">
-                            {step === 1 && form?.description}
-                            {step === 2 && form?.step2Description}
-                            {step === 3 && form?.resultDescription}
+                            {step === 1 && (form?.description || "Book a free consultation with us. We'll discuss materials, your vision, and provide an estimate.")}
+                            {step === 2 && (form?.step2Description || "Select what’s not working and your preferred budget.")}
+                            {step === 3 && (form?.resultDescription || "Based on your inputs, here’s your estimated range")}
                         </p>
 
                         {/* Step progress tabs */}
                         <div className="flex items-center gap-4 mb-6 select-none">
                             <div
                                 onClick={() => setStep(1)}
-                                className={`flex-1 ${step > 1 ? "cursor-pointer group" : ""}`}
+                                className="flex-1 cursor-pointer group"
                             >
-                                <p className={`font-satoshi text-[14px] font-medium mb-2 ${step === 1 ? "text-[#3441D4]" : "text-transparent"}`}>
-                                    {form?.stepLabel}
+                                <p className={`font-satoshi text-[14px] font-medium mb-2 ${step === 1 ? "text-[#3145DD]" : "text-transparent"}`}>
+                                    {form?.stepLabel || "Store Info"}
                                 </p>
                                 <div className={`h-[3px] w-full rounded-full transition-colors duration-300 ${step >= 1 ? "bg-[#1A1A1A]" : "bg-[#E0E0E0]"}`}></div>
                             </div>
 
                             <div
-                                onClick={() => (step > 2 ? setStep(2) : null)}
-                                className={`flex-1 ${step > 2 ? "cursor-pointer group" : ""}`}
+                                onClick={() => setStep(2)}
+                                className="flex-1 cursor-pointer group"
                             >
-                                <p className={`font-satoshi text-[14px] font-medium mb-2 ${step === 2 ? "text-[#3441D4]" : "text-transparent"}`}>
-                                    {form?.step2Label}
+                                <p className={`font-satoshi text-[14px] font-medium mb-2 ${step === 2 ? "text-[#3145DD]" : "text-transparent"}`}>
+                                    {form?.step2Label || "Budget range"}
                                 </p>
                                 <div className={`h-[3px] w-full rounded-full transition-colors duration-300 ${step >= 2 ? "bg-[#1A1A1A]" : "bg-[#E0E0E0]"}`}></div>
                             </div>
 
-                            <div className="flex-1">
-                                <p className={`font-satoshi text-[14px] font-medium mb-2 ${step === 3 ? "text-[#3441D4]" : "text-transparent"}`}>
-                                    {form?.step3Label}
+                            <div
+                                onClick={() => setStep(3)}
+                                className="flex-1 cursor-pointer group"
+                            >
+                                <p className={`font-satoshi text-[14px] font-medium mb-2 ${step === 3 ? "text-[#3145DD]" : "text-transparent"}`}>
+                                    {form?.step3Label || "Your Estimate"}
                                 </p>
                                 <div className={`h-[3px] w-full rounded-full transition-colors duration-300 ${step >= 3 ? "bg-[#1A1A1A]" : "bg-[#E0E0E0]"}`}></div>
                             </div>
@@ -378,75 +440,120 @@ export default function Hero({ data }: { data: HeroData }) {
                         {step === 3 && (
                             <div className="space-y-4">
                                 <div>
-                                    <h3 className="font-nohemi text-[17px] font-normal text-[#1A1A1A]">
-                                        {form?.estimateLabel}
+                                    <h3 className="font-nohemi text-[17px] sm:text-[18px] font-normal text-[#1A1A1A]">
+                                        {form?.estimateLabel || "Your Estimated Budget"}
                                     </h3>
-                                    <p className="font-satoshi text-[13px] text-[#555555] mt-1">
-                                        {form?.basedOnLabel}{" "}
-                                        <button
-                                            type="button"
-                                            onClick={() => setStep(2)}
-                                            className="font-satoshi text-[#2B44E7] underline hover:opacity-80 transition-opacity inline cursor-pointer font-medium"
-                                        >
-                                            {selectedIssues.length > 0 ? selectedIssues.join(", ") : "Select issues"}
-                                        </button>
+                                    <p className="font-satoshi text-[13px] sm:text-[13.5px] text-[#6B6B6B] mt-1 mb-4">
+                                        {form?.basedOnLabel || "Based on your selections:"}{" "}
+                                        {selectedIssues.length > 0 ? (
+                                            selectedIssues.map((issue, idx) => (
+                                                <span key={idx}>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setStep(2)}
+                                                        className="font-satoshi text-[#3145DD] underline cursor-pointer hover:opacity-80 font-normal"
+                                                    >
+                                                        {issue}
+                                                    </button>
+                                                    {idx < selectedIssues.length - 1 && ", "}
+                                                </span>
+                                            ))
+                                        ) : (
+                                            <>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setStep(2)}
+                                                    className="font-satoshi text-[#3145DD] underline cursor-pointer hover:opacity-80 font-normal"
+                                                >
+                                                    UX issues
+                                                </button>
+                                                {", "}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setStep(2)}
+                                                    className="font-satoshi text-[#3145DD] underline cursor-pointer hover:opacity-80 font-normal"
+                                                >
+                                                    Outdated Design
+                                                </button>
+                                            </>
+                                        )}
                                     </p>
 
-                                    <div className="mt-3 space-y-2">
+                                    <div className="space-y-3 sm:space-y-3.5 mb-5">
                                         {budgetList.map((tier) => {
-                                            const isChosen = selectedBudget === tier.value;
+                                            const isChosen =
+                                                selectedBudget === tier.value ||
+                                                selectedBudget === tier.label ||
+                                                (!selectedBudget && (tier.value === "balanced" || tier.label === "Balanced"));
                                             return isChosen ? (
                                                 <div key={tier.id || tier.value} className="py-1">
-                                                    <p className="font-satoshi text-[14px] font-medium text-[#2B44E7]">
+                                                    <p className="font-satoshi text-[14.5px] sm:text-[15px] font-medium text-[#3145DD]">
                                                         {tier.label} (Chosen Plan)
                                                     </p>
                                                     <div className="flex items-center gap-2 mt-0.5">
-                                                        <span className="font-nohemi text-[24px] sm:text-[28px] font-normal text-[#2B44E7] tracking-tight">
-                                                            {tier.range}
+                                                        <div className="font-satoshi text-[26px] sm:text-[28px] md:text-[30px] font-medium text-[#3145DD] tracking-tight flex items-center leading-none">
+                                                            {formatCurrency(tier.range)}
+                                                        </div>
+                                                        <span className="inline-flex items-center justify-center shrink-0 -translate-y-[1px] sm:-translate-y-[1.5px]">
+                                                            <svg
+                                                                className="w-[22px] h-[22px] sm:w-[24px] sm:h-[24px] md:w-[25px] md:h-[25px]"
+                                                                viewBox="0 0 24 24"
+                                                                fill="none"
+                                                                aria-label="Chosen Plan"
+                                                            >
+                                                                <circle cx="12" cy="12" r="10" fill="#B8DFC8" stroke="#168050" strokeWidth="1.8" />
+                                                                <path
+                                                                    d="M8.2 12.2L10.8 14.8L15.8 9.5"
+                                                                    stroke="#168050"
+                                                                    strokeWidth="2.2"
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                />
+                                                            </svg>
                                                         </span>
-                                                        <svg className="w-6 h-6 text-[#38A169] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                                                            <circle cx="12" cy="12" r="9" />
-                                                            <polyline points="9 12 11.5 14.5 15.5 9.5" />
-                                                        </svg>
                                                     </div>
                                                 </div>
                                             ) : (
                                                 <div
                                                     key={tier.id || tier.value}
                                                     onClick={() => setSelectedBudget(tier.value)}
-                                                    className="text-[#6B6B6B] cursor-pointer hover:text-[#333333] transition-colors"
+                                                    className="text-[#6B6B6B] cursor-pointer hover:text-[#333333] transition-colors py-0.5"
                                                 >
-                                                    <p className="font-satoshi text-[12px] leading-tight">{tier.label}</p>
-                                                    <p className="font-satoshi text-[13px] text-[#444444] font-medium">{tier.range}</p>
+                                                    <p className="font-satoshi text-[12px] sm:text-[12.5px] text-[#6B7280] leading-tight">
+                                                        {tier.label}
+                                                    </p>
+                                                    <p className="font-satoshi text-[13.5px] sm:text-[14px] text-[#374151] font-medium mt-0.5 flex items-center">
+                                                        {formatCurrency(tier.range)}
+                                                    </p>
                                                 </div>
                                             );
                                         })}
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                                     <div>
-                                        <label className="font-nohemi block text-[17px] font-normal text-[#1A1A1A] mb-2">
-                                            {form?.phoneLabel}
+                                        <label className="font-nohemi block text-[15px] sm:text-[15.5px] font-normal text-[#1A1A1A] mb-1.5">
+                                            {form?.phoneLabel || "Phone Number"}
                                         </label>
                                         <input
                                             type="tel"
                                             value={phone}
                                             onChange={(e) => setPhone(e.target.value)}
-                                            placeholder={form?.phonePlaceholder}
-                                            className="font-satoshi w-full px-5 py-2 sm:py-2.5 rounded-full border border-[#CAC4D0] focus:outline-none focus:border-[#2B44E7] focus:ring-1 focus:ring-[#2B44E7] text-[14px] text-[#3C3C3C] bg-[#F7F7F9] placeholder-[#8E8E93] transition-all duration-300 ease-out"
+                                            placeholder={form?.phonePlaceholder || "Enter Phone Number"}
+                                            className="font-satoshi w-full px-5 py-3 sm:py-3.5 rounded-full border border-[#CAC4D0] focus:outline-none focus:border-[#3145DD] focus:ring-1 focus:ring-[#3145DD] text-[13.5px] sm:text-[14px] text-[#3C3C3C] bg-[#F7F7F9] placeholder-[#8E8E93] transition-all duration-300 ease-out"
                                         />
                                     </div>
                                     <div>
-                                        <label className="font-nohemi block text-[17px] font-normal text-[#1A1A1A] mb-2">
-                                            {form?.emailLabel}
+                                        <label className="font-nohemi block text-[15px] sm:text-[15.5px] font-normal text-[#1A1A1A] mb-1.5">
+                                            {form?.emailLabel || "Email (Optional)"}
                                         </label>
                                         <input
                                             type="email"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
-                                            placeholder={form?.emailPlaceholder}
-                                            className="font-satoshi w-full px-5 py-2 sm:py-2.5 rounded-full border border-[#CAC4D0] focus:outline-none focus:border-[#2B44E7] focus:ring-1 focus:ring-[#2B44E7] text-[14px] text-[#3C3C3C] bg-[#F7F7F9] placeholder-[#8E8E93] transition-all duration-300 ease-out"
+                                            placeholder={form?.emailPlaceholder || "Enter Email"}
+                                            className="font-satoshi w-full px-5 py-3 sm:py-3.5 rounded-full border border-[#CAC4D0] focus:outline-none focus:border-[#3145DD] focus:ring-1 focus:ring-[#3145DD] text-[13.5px] sm:text-[14px] text-[#3C3C3C] bg-[#F7F7F9] placeholder-[#8E8E93] transition-all duration-300 ease-out"
                                         />
                                     </div>
                                 </div>
@@ -456,26 +563,34 @@ export default function Hero({ data }: { data: HeroData }) {
                                         ✓ Thank you! We&apos;ve received your request and will review your store.
                                     </div>
                                 ) : (
-                                    <button
-                                        type="button"
-                                        onClick={() => setIsSubmitted(true)}
-                                        className="font-satoshi w-full bg-[#2B44E7] hover:bg-[#2037CA] text-white font-medium py-2 sm:py-2.5 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 mt-4 text-[15px] sm:text-[16px] shadow-none cursor-pointer"
-                                    >
-                                        {form?.bookCallButtonLabel}
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                        </svg>
-                                    </button>
+                                    <div>
+                                        <button
+                                            type="button"
+                                            data-no-callback="true"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setIsSubmitted(true);
+                                            }}
+                                            className="font-satoshi w-full bg-[#3145DD] hover:bg-[#2637b8] text-white font-medium py-3.5 sm:py-4 px-6 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 text-[15.5px] sm:text-[16px] shadow-sm hover:shadow-md cursor-pointer"
+                                        >
+                                            <span>{form?.bookCallButtonLabel || "Book My Free Call"}</span>
+                                            <span className="text-[17px]">→</span>
+                                        </button>
+                                        <p className="text-center font-satoshi text-[12px] sm:text-[12.5px] text-[#777777] mt-3">
+                                            {form?.disclaimer || "We’ll review your store and send insights - no commitments."}
+                                        </p>
+                                    </div>
                                 )}
-
-                                <p className="text-center font-satoshi text-[12px] text-[#777777] pt-1">
-                                    {form?.disclaimer}
-                                </p>
                             </div>
                         )}
                     </div>
                 </div>
             </div>
+
+            <CallbackModal
+                isOpen={isCallbackOpen}
+                onClose={() => setIsCallbackOpen(false)}
+            />
         </section>
     );
 }

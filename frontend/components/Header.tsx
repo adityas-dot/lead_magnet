@@ -216,13 +216,13 @@ export default function Header({
                                             onClick={() => setIsOpen(false)}
                                             className="group relative block overflow-hidden font-nohemi text-[26px] sm:text-[36px] lg:text-[60px] font-normal tracking-[-0.02em] leading-[1.2] text-white w-fit cursor-pointer select-none"
                                         >
-                                            <span className="block transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] lg:group-hover:-translate-y-full">
+                                            <span className="block transition-transform duration-300 ease-[cubic-bezier(0.76,0,0.24,1)] lg:group-hover:-translate-y-full">
                                                 {link.label}
                                             </span>
 
                                             <span
                                                 aria-hidden="true"
-                                                className="absolute inset-0 block transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] translate-y-full lg:group-hover:translate-y-0 text-[#38E29D]"
+                                                className="absolute inset-0 block transition-transform duration-300 ease-[cubic-bezier(0.76,0,0.24,1)] translate-y-full lg:group-hover:translate-y-0 text-[#38E29D]"
                                             >
                                                 {link.label}
                                             </span>

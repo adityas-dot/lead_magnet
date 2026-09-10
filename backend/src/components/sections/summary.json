@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_sections_summaries",
+  "info": {
+    "displayName": "Summary"
+  },
+  "options": {},
+  "attributes": {
+    "state": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "default",
+        "one",
+        "multiple"
+      ]
+    },
+    "text": {
+      "type": "text",
+      "required": true
+    }
+  },
+  "config": {}
+}

@@ -44,6 +44,7 @@ export default function Footer({
 }: {
     data: FooterData;
 }) {
+    if (!data) return null;
     const newsletterLabel =
         (typeof data?.Newsletter === "object" && data?.Newsletter?.label) ||
         (typeof data?.newsletter === "object" && data?.newsletter?.label) ||
@@ -66,9 +67,9 @@ export default function Footer({
                                 {data.sayHi || "Say hi!"}
                             </h1>
 
-                            {data.logo && (
+                            {data.logo && getMediaUrl(data.logo) && (
                                 <img
-                                    src={getMediaUrl(data.logo.url)}
+                                    src={getMediaUrl(data.logo)}
                                     alt="Logo"
                                     className="h-[48px] w-[48px] sm:h-[64px] sm:w-[64px] animate-spin-pause shrink-0"
                                 />
@@ -91,22 +92,29 @@ export default function Footer({
 
                         {/* Social icons */}
                         <div className="mt-14 sm:mt-16 flex items-center gap-5 sm:gap-6">
-                            {data.socialLinks?.map((social) => (
-                                <a
-                                    key={social.id}
-                                    href={social.href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-white hover:opacity-80 transition-opacity"
-                                    aria-label={social.platform}
-                                >
-                                    <img
-                                        src={SOCIAL_ICONS[social.platform]}
-                                        alt={social.platform}
-                                        className="h-6 w-6"
-                                    />
-                                </a>
-                            ))}
+                            {data.socialLinks?.map((social) => {
+                                const iconSrc = SOCIAL_ICONS[social.platform] || SOCIAL_ICONS[social.platform?.toLowerCase()] || "";
+                                return (
+                                    <a
+                                        key={social.id}
+                                        href={social.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-white hover:opacity-80 transition-opacity"
+                                        aria-label={social.platform}
+                                    >
+                                        {iconSrc ? (
+                                            <img
+                                                src={iconSrc}
+                                                alt={social.platform}
+                                                className="h-6 w-6"
+                                            />
+                                        ) : (
+                                            <span className="text-white text-xs">{social.platform}</span>
+                                        )}
+                                    </a>
+                                );
+                            })}
                         </div>
 
                         {/* Desktop-only Privacy & Terms placement */}
@@ -131,7 +139,7 @@ export default function Footer({
                         <div className="grid grid-cols-2 gap-x-6 sm:gap-x-10 gap-y-8">
                             {/* Quick Links (First on mobile, Second on big screen) */}
                             <div className="order-1 lg:order-2 lg:pl-6 xl:pl-10">
-                                <h2 className="font-satoshi text-[15px] sm:text-[17px] lg:text-[18px] font-bold text-white tracking-tight mb-4 sm:mb-5 lg:mb-6">
+                                <h2 className="font-satoshi text-[clamp(15px,1.3vw,18px)] font-bold text-white tracking-tight mb-4 sm:mb-5 lg:mb-6">
                                     {data.quickLinksHeading || "Quick Links"}
                                 </h2>
 
@@ -150,7 +158,7 @@ export default function Footer({
 
                             {/* Contact (Second on mobile, First on big screen) */}
                             <div className="order-2 lg:order-1">
-                                <h2 className="font-satoshi text-[15px] sm:text-[17px] lg:text-[18px] font-bold text-white tracking-tight mb-4 sm:mb-5 lg:mb-6">
+                                <h2 className="font-satoshi text-[clamp(15px,1.3vw,18px)] font-bold text-white tracking-tight mb-4 sm:mb-5 lg:mb-6">
                                     {data.contactHeading || "Contact"}
                                 </h2>
 

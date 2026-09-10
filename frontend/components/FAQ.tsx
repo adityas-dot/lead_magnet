@@ -20,6 +20,7 @@ export default function FAQ({
 }: {
     data: Faqdata;
 }) {
+    if (!data) return null;
     const [openIndex, setOpenIndex] = useState<number | null>(null);
     const [openMobileIndex, setOpenMobileIndex] = useState<number | null>(null);
 
@@ -31,7 +32,7 @@ export default function FAQ({
         <section className="px-6 pt-14 pb-20 sm:pb-24 lg:py-24 lg:px-[60px] xl:px-[80px]">
             <div className="w-full mx-auto max-w-[1720px]">
                 <div>
-                    <h1 className="font-nohemi font-normal text-[clamp(28px,3.2vw,40px)] lg:text-[38px] xl:text-[42px] leading-tight">
+                    <h1 className="font-nohemi font-normal text-[clamp(28px,3.5vw,46px)] leading-tight">
                         {data.heading}
                     </h1>
                 </div>

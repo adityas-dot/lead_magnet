@@ -11,12 +11,6 @@
     "description": {
       "type": "text"
     },
-    "MobileHeading": {
-      "type": "string"
-    },
-    "MobileDescription": {
-      "type": "text"
-    },
     "cards": {
       "type": "component",
       "component": "shared.insight-card",

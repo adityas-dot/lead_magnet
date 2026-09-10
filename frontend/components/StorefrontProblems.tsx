@@ -21,6 +21,7 @@ export default function StorefrontProblems({
     data, }: {
         data: StorefrontProblemsData;
     }) {
+    if (!data) return null;
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
     const toggleSelect = (id: number) => {
@@ -30,10 +31,10 @@ export default function StorefrontProblems({
     };
 
     return (
-        <section className="w-full bg-white px-6 pt-15 pb-10 text-[#0D2108] lg:px-[60px] xl:px-[80px] lg:pt-[90px] lg:pb-[30px]">
+        <section id="storefront-problems" className="w-full bg-white px-6 pt-15 pb-10 text-[#0D2108] lg:px-[60px] xl:px-[80px] lg:pt-[90px] lg:pb-[30px]">
             <div className="mx-auto max-w-[1720px] w-full">
                 <div className="w-full">
-                    <h2 className="font-delight text-[clamp(30px,4.2vw,56px)] font-medium leading-[1.2] tracking-[-0.01em] lg:whitespace-nowrap text-[#0F1D07]">
+                    <h2 className="font-delight text-[clamp(32px,4.5vw,65px)] font-medium leading-[1.15] tracking-[-0.015em] xl:whitespace-nowrap text-[#0F1D07]">
                         {data.heading}
                     </h2>
 
@@ -44,7 +45,7 @@ export default function StorefrontProblems({
 
                 {/* Interactive problem selection cards */}
                 <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                    {data.items.map((item) => {
+                    {(data.items || []).map((item) => {
                         const isSelected = selectedIds.includes(item.id);
                         return (
                             <div
@@ -59,13 +60,13 @@ export default function StorefrontProblems({
                                         toggleSelect(item.id);
                                     }
                                 }}
-                                className={`relative min-h-[140px] rounded-[10px] p-5 cursor-pointer select-none transition-colors duration-200 ${isSelected
+                                className={`relative min-h-[165px] rounded-[10px] p-5 pb-11 cursor-pointer select-none transition-colors duration-200 ${isSelected
                                     ? "bg-[#B4BCFE]"
                                     : "bg-[#EEF0FF] hover:bg-[#B4BCFE]"
                                     }`}
                             >
                                 <div className="pr-8">
-                                    <h3 className="font-delight text-[16px] font-medium leading-[1.25] text-[#0F1D07]">
+                                    <h3 className="font-delight text-[clamp(17px,1.15vw,18.5px)] font-medium leading-[1.25] text-[#0F1D07]">
                                         {item.title}
                                     </h3>
 
@@ -115,19 +116,43 @@ export default function StorefrontProblems({
                 </div>
 
                 {/* Bottom summary and action bar */}
-                <div className="mt-8 flex flex-col items-center justify-between gap-5 rounded-[8px] bg-[#F7F7F7] px-5 py-3 sm:flex-row">
-                    <p className="font-satoshi text-[clamp(11px,4.2vw,16px)] font-bold">
-                        {data.summary}
-                    </p>
+                {(() => {
+                    const count = selectedIds.length;
+                    const summaryText = (() => {
+                        if (count === 0) {
+                            return "Select what applies above to diagnose your storefront.";
+                        }
+                        if (count < 3) {
+                            return `${count} identified. Early signs that structure is impacting your conversions.`;
+                        }
+                        const suffix = data.summary
+                            ? data.summary.replace(/^\d+\s*identified\.?\s*/i, "").trim()
+                            : "At that point the structure is the problem, not the styling.";
+                        return `${count} identified. ${suffix || "At that point the structure is the problem, not the styling."}`;
+                    })();
 
-                    <a
-                        href={data.submitHref}
-                        className="flex w-full font-inter items-center justify-center rounded-full bg-[#3447E5] px-10 py-4 text-[13px] font-medium text-white transition hover:opacity-90 sm:w-[260px]"
-                    >
-                        {data.submitLabel}
-                        <span className="ml-2">→</span>
-                    </a>
-                </div>
+                    return (
+                        <div className="mt-8 flex flex-col items-center justify-between gap-5 rounded-[8px] bg-[#F7F7F7] px-5 py-3 sm:flex-row">
+                            <p className="font-satoshi text-[clamp(11px,4.2vw,16px)] font-bold">
+                                {summaryText}
+                            </p>
+
+                            <a
+                                href={data.submitHref}
+                                onClick={(e) => {
+                                    if (data.submitHref === "#quote" || data.submitHref?.includes("quote")) {
+                                        e.preventDefault();
+                                        window.dispatchEvent(new CustomEvent("open-quote-modal"));
+                                    }
+                                }}
+                                className="flex w-full font-inter items-center justify-center rounded-full bg-[#3447E5] px-10 py-4 text-[13px] font-medium text-white transition hover:opacity-90 sm:w-[260px] cursor-pointer"
+                            >
+                                {data.submitLabel}
+                                <span className="ml-2">→</span>
+                            </a>
+                        </div>
+                    );
+                })()}
 
             </div>
         </section>

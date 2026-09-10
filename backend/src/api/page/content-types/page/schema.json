@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pages",
+  "info": {
+    "singularName": "page",
+    "pluralName": "pages",
+    "displayName": "Page"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "sections": {
+      "type": "dynamiczone",
+      "components": [
+        "sections.hero",
+        "sections.storefront-problems",
+        "sections.conversion-insights",
+        "sections.work-showcase",
+        "sections.engagement-fit",
+        "sections.our-work",
+        "sections.final-cta",
+        "sections.our-process",
+        "sections.faq"
+      ]
+    },
+    "stickyCTA": {
+      "type": "component",
+      "component": "sections.sticky-cta",
+      "repeatable": false
+    }
+  }
+}

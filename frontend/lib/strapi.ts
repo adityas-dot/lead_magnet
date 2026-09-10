@@ -45,25 +45,122 @@ export function getMediaUrl(
 }
 
 /**
- * Fetches landing page content with all populated relation blocks.
+ * Fetches page content from Strapi (Collection Type: pages + Single Types: header, footer).
  */
-export async function getLandingPage() {
+export async function getLandingPage(slug: string = "lead-magnet") {
     try {
-        const response = await fetch(
-            `${STRAPI_URL}/api/landing-page?populate[header][populate][quickLinks]=true&populate[hero][populate][primaryCta]=true&populate[hero][populate][brands][populate][logo]=true&populate[hero][populate][quoteForm][populate]=*&populate[storefrontProblems][populate][items]=true&populate[conversionInsights][populate][cards][populate][image]=true&populate[engagementFit][populate][suitablePoints]=true&populate[engagementFit][populate][notSuitablePoints]=true&populate[workShowcase][populate][items][populate][beforeImage]=true&populate[workShowcase][populate][items][populate][afterImage]=true&populate[workShowcase][populate][items][populate][mobileBeforeImage]=true&populate[workShowcase][populate][items][populate][mobileAfterImage]=true&populate[ourWork][populate][projects][populate][images]=true&populate[ourWork][populate][projects][populate][mobileImages]=true&populate[finalCTA][populate][logos][populate][logo]=true&populate[finalCTA][populate][primaryCta]=true&populate[finalCTA][populate][secondaryCta]=true&populate[ourProcess][populate][marqueeItems]=true&populate[ourProcess][populate][cta]=true&populate[ourProcess][populate][cards][populate][icon]=true&populate[ourProcess][populate][cards][populate][services]=true&populate[ourProcess][populate][cards][populate][cta]=true&populate[ourProcess][populate][video]=true&populate[ourProcess][populate][image]=true&populate[ourProcess][populate][service][populate][icon]=true&populate[ourProcess][populate][mobilePrimaryCta]=true&populate[ourProcess][populate][mobileSecondaryCta]=true&populate[faq][populate][items]=true&populate[faq][populate][mobileItems]=true&populate[footer][populate][logo]=true&populate[footer][populate][quickLinks]=true&populate[footer][populate][socialLinks]=true&populate[footer][populate][contacts]=true&populate[footer][populate][privacyLink]=true&populate[footer][populate][termsLink]=true&populate[footer][populate][Newsletter]=true&populate[stickyCTA][populate]=*`,
-            {
-                cache: "no-store",
-            }
-        );
+        // Deep populate query for all section components inside Dynamic Zone
+        const sectionsPopulate = [
+            "populate[sections][on][sections.hero][populate][brands][populate][logo]=true",
+            "populate[sections][on][sections.hero][populate][primaryCta]=true",
+            "populate[sections][on][sections.hero][populate][quoteForm][populate]=*",
+            "populate[sections][on][sections.storefront-problems][populate][items]=true",
+            "populate[sections][on][sections.storefront-problems][populate][summary]=true",
+            "populate[sections][on][sections.conversion-insights][populate][cards][populate][image]=true",
+            "populate[sections][on][sections.work-showcase][populate][items][populate][beforeImage]=true",
+            "populate[sections][on][sections.work-showcase][populate][items][populate][afterImage]=true",
+            "populate[sections][on][sections.work-showcase][populate][items][populate][mobileBeforeImage]=true",
+            "populate[sections][on][sections.work-showcase][populate][items][populate][mobileAfterImage]=true",
+            "populate[sections][on][sections.engagement-fit][populate][suitablePoints]=true",
+            "populate[sections][on][sections.engagement-fit][populate][notSuitablePoints]=true",
+            "populate[sections][on][sections.our-work][populate][projects][populate][images]=true",
+            "populate[sections][on][sections.our-work][populate][projects][populate][mobileImages]=true",
+            "populate[sections][on][sections.final-cta][populate][logos][populate][logo]=true",
+            "populate[sections][on][sections.final-cta][populate][primaryCta]=true",
+            "populate[sections][on][sections.final-cta][populate][secondaryCta]=true",
+            "populate[sections][on][sections.our-process][populate][marqueeItems]=true",
+            "populate[sections][on][sections.our-process][populate][cta]=true",
+            "populate[sections][on][sections.our-process][populate][cards][populate][icon]=true",
+            "populate[sections][on][sections.our-process][populate][cards][populate][services]=true",
+            "populate[sections][on][sections.our-process][populate][cards][populate][cta]=true",
+            "populate[sections][on][sections.our-process][populate][video]=true",
+            "populate[sections][on][sections.our-process][populate][image]=true",
+            "populate[stickyCTA][populate][primaryCta]=true",
+            "populate[stickyCTA][populate][secondaryCta]=true",
+            "populate[stickyCTA][populate][callbackForm]=true",
+        ].join("&");
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error("Failed to fetch landing page:", response.status, response.statusText, errorText);
-            return null;
+        // 1. Try fetching from the new Collection Type: /api/pages
+        let pageJson: any = null;
+
+        // Attempt 1A: by slug with deep population
+        const slugRes = await fetch(
+            `${STRAPI_URL}/api/pages?filters[slug][$eq]=${slug}&${sectionsPopulate}`,
+            { cache: "no-store" }
+        ).catch(() => null);
+
+        if (slugRes && slugRes.ok) {
+            pageJson = await slugRes.json().catch(() => null);
         }
 
-        const json = await response.json();
-        return json.data;
+        // Attempt 1B: without slug filter if slug query was empty or 404
+        if (!pageJson?.data || (Array.isArray(pageJson.data) && pageJson.data.length === 0)) {
+            const allPagesRes = await fetch(
+                `${STRAPI_URL}/api/pages?${sectionsPopulate}`,
+                { cache: "no-store" }
+            ).catch(() => null);
+
+            if (allPagesRes && allPagesRes.ok) {
+                pageJson = await allPagesRes.json().catch(() => null);
+            }
+        }
+
+        // Attempt 1C: fallback to simpler wildcard populate if deep populate failed
+        if (!pageJson?.data || (Array.isArray(pageJson.data) && pageJson.data.length === 0)) {
+            const simpleRes = await fetch(
+                `${STRAPI_URL}/api/pages?populate=*`,
+                { cache: "no-store" }
+            ).catch(() => null);
+
+            if (simpleRes && simpleRes.ok) {
+                pageJson = await simpleRes.json().catch(() => null);
+            }
+        }
+
+        // Normalize pageData from Strapi response (Strapi 4 attributes vs Strapi 5 flat)
+        let pageData: any = null;
+        if (pageJson?.data) {
+            const rawItem = Array.isArray(pageJson.data) ? pageJson.data[0] : pageJson.data;
+            if (rawItem) {
+                pageData = rawItem.attributes ? { id: rawItem.id, ...rawItem.attributes } : rawItem;
+            }
+        }
+
+        // 2. Fetch Header and Footer Single Types in parallel
+        const [headerRes, footerRes] = await Promise.all([
+            fetch(`${STRAPI_URL}/api/header?populate=*`, { cache: "no-store" }).catch(() => null),
+            fetch(`${STRAPI_URL}/api/footer?populate[footer][populate]=*`, { cache: "no-store" }).catch(() => null),
+        ]);
+
+        let headerData: any = null;
+        let footerData: any = null;
+
+        if (headerRes && headerRes.ok) {
+            const headerJson = await headerRes.json().catch(() => null);
+            const h = headerJson?.data;
+            const unwrappedH = h?.attributes || h;
+            headerData = unwrappedH?.Header || unwrappedH?.header || unwrappedH;
+        }
+
+        if (footerRes && footerRes.ok) {
+            const footerJson = await footerRes.json().catch(() => null);
+            const f = footerJson?.data;
+            const unwrappedF = f?.attributes || f;
+            footerData = unwrappedF?.footer || unwrappedF?.Footer || unwrappedF;
+        }
+
+        // If Collection Type (/api/pages) has data, return it
+        if (pageData) {
+            return {
+                ...pageData,
+                header: headerData || pageData.header,
+                footer: footerData || pageData.footer,
+                stickyCTA: pageData.stickyCTA,
+            };
+        }
+
+        console.warn("[Strapi Fetch] No published page found in /api/pages");
+        return null;
     } catch (err: unknown) {
         if (err && typeof err === "object" && "digest" in err && (err as { digest: string }).digest === "DYNAMIC_SERVER_USAGE") {
             throw err;

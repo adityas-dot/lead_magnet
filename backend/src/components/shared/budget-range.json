@@ -9,6 +9,9 @@
     "label": {
       "type": "string"
     },
+    "sublabel": {
+      "type": "string"
+    },
     "range": {
       "type": "string"
     },

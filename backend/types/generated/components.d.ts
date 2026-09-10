@@ -1,5 +1,38 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface SectionsCallbackForm extends Struct.ComponentSchema {
+  collectionName: 'components_sections_callback_forms';
+  info: {
+    description: 'Content for the Book a Free Call / Get a callback modal';
+    displayName: 'CallbackForm';
+  };
+  attributes: {
+    buttonLabel: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Book My Free Call'>;
+    description: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Let\u2019s make something amazing together.\nBook a call - we\u2019ve got coffee (or tea) ready and are always up for a good conversation.'>;
+    disclaimer: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<"We'll reach out within 24 hours \u2014 no spam, just expert guidance.">;
+    emailLabel: Schema.Attribute.String & Schema.Attribute.DefaultTo<'Email'>;
+    emailPlaceholder: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Enter Email'>;
+    phoneLabel: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Phone Number'>;
+    phonePlaceholder: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Enter Phone Number'>;
+    shopifyLinkLabel: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Shopify Link (Optional)'>;
+    shopifyLinkPlaceholder: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Enter Shopify link'>;
+    successDescription: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<"We'll reach out within 24 hours \u2014 no spam, just expert guidance.">;
+    successTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<"Thank you! We've received your request.">;
+    title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Get a callback'>;
+  };
+}
+
 export interface SectionsConversionInsights extends Struct.ComponentSchema {
   collectionName: 'components_sections_conversion_insights';
   info: {
@@ -9,8 +42,6 @@ export interface SectionsConversionInsights extends Struct.ComponentSchema {
     cards: Schema.Attribute.Component<'shared.insight-card', true>;
     description: Schema.Attribute.Text;
     heading: Schema.Attribute.String;
-    MobileDescription: Schema.Attribute.Text;
-    MobileHeading: Schema.Attribute.String;
   };
 }
 
@@ -37,7 +68,6 @@ export interface SectionsFaq extends Struct.ComponentSchema {
   attributes: {
     heading: Schema.Attribute.String;
     items: Schema.Attribute.Component<'shared.faq-item', true>;
-    mobileItems: Schema.Attribute.Component<'shared.faq-item', true>;
   };
 }
 
@@ -119,12 +149,6 @@ export interface SectionsOurProcess extends Struct.ComponentSchema {
     heading: Schema.Attribute.Text;
     image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     marqueeItems: Schema.Attribute.Component<'shared.marquee-item', true>;
-    mobileDescription: Schema.Attribute.Text;
-    mobileEyebrow: Schema.Attribute.String;
-    mobileHeading: Schema.Attribute.String;
-    mobilePrimaryCta: Schema.Attribute.Component<'shared.cta', false>;
-    mobileSecondaryCta: Schema.Attribute.Component<'shared.cta', false>;
-    service: Schema.Attribute.Component<'shared.services', true>;
     video: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
   };
 }
@@ -163,7 +187,8 @@ export interface SectionsQuoteForm extends Struct.ComponentSchema {
   attributes: {
     basedOnLabel: Schema.Attribute.String;
     bookCallButtonLabel: Schema.Attribute.String;
-    budgetLabel: Schema.Attribute.String;
+    budgetLabel: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Select your budget range'>;
     budgetRanges: Schema.Attribute.Component<'shared.budget-range', true>;
     budgetTypeLabel: Schema.Attribute.String;
     budgetTypeOptions: Schema.Attribute.Component<'shared.form-option', true>;
@@ -172,13 +197,17 @@ export interface SectionsQuoteForm extends Struct.ComponentSchema {
     disclaimer: Schema.Attribute.Text;
     emailLabel: Schema.Attribute.String;
     emailPlaceholder: Schema.Attribute.String;
-    estimateButtonLabel: Schema.Attribute.String;
+    estimateButtonLabel: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Get My Estimate'>;
     estimateLabel: Schema.Attribute.String;
     issueOptions: Schema.Attribute.Component<'shared.form-option', true>;
-    issuesLabel: Schema.Attribute.String;
+    issuesLabel: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'What needs Improvement ?'>;
     noLabel: Schema.Attribute.String;
-    otherIssuesLabel: Schema.Attribute.String;
-    otherIssuesPlaceholder: Schema.Attribute.String;
+    otherIssuesLabel: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Other issues (optional)'>;
+    otherIssuesPlaceholder: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Any other issues your shopify store is facing'>;
     phoneLabel: Schema.Attribute.String;
     phonePlaceholder: Schema.Attribute.String;
     resultDescription: Schema.Attribute.Text;
@@ -186,9 +215,12 @@ export interface SectionsQuoteForm extends Struct.ComponentSchema {
     shopifyLinkLabel: Schema.Attribute.String;
     shopifyLinkPlaceholder: Schema.Attribute.String;
     shopifyQuestion: Schema.Attribute.String;
-    step2Description: Schema.Attribute.Text;
-    step2Label: Schema.Attribute.String;
-    step2Title: Schema.Attribute.String;
+    step2Description: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Select what\u2019s not working and your preferred budget.'>;
+    step2Label: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Budget range'>;
+    step2Title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Choose your budget range'>;
     step3Label: Schema.Attribute.String;
     stepLabel: Schema.Attribute.String;
     title: Schema.Attribute.String;
@@ -202,6 +234,7 @@ export interface SectionsStickyCta extends Struct.ComponentSchema {
     displayName: 'StickyCTA';
   };
   attributes: {
+    callbackForm: Schema.Attribute.Component<'sections.callback-form', false>;
     primaryCta: Schema.Attribute.Component<'shared.cta', false>;
     secondaryCta: Schema.Attribute.Component<'shared.cta', false>;
     text: Schema.Attribute.String;
@@ -219,7 +252,19 @@ export interface SectionsStorefrontProblems extends Struct.ComponentSchema {
     items: Schema.Attribute.Component<'shared.pain-point', true>;
     submitHref: Schema.Attribute.String;
     submitLabel: Schema.Attribute.String;
-    summary: Schema.Attribute.String;
+    summary: Schema.Attribute.Component<'sections.summary', true>;
+  };
+}
+
+export interface SectionsSummary extends Struct.ComponentSchema {
+  collectionName: 'components_sections_summaries';
+  info: {
+    displayName: 'Summary';
+  };
+  attributes: {
+    state: Schema.Attribute.Enumeration<['default', 'one', 'multiple']> &
+      Schema.Attribute.Required;
+    text: Schema.Attribute.Text & Schema.Attribute.Required;
   };
 }
 
@@ -257,6 +302,7 @@ export interface SharedBudgetRange extends Struct.ComponentSchema {
   attributes: {
     label: Schema.Attribute.String;
     range: Schema.Attribute.String;
+    sublabel: Schema.Attribute.String;
     value: Schema.Attribute.String;
   };
 }
@@ -335,6 +381,7 @@ export interface SharedFormOption extends Struct.ComponentSchema {
   };
   attributes: {
     label: Schema.Attribute.String;
+    sublabel: Schema.Attribute.String;
     value: Schema.Attribute.String;
   };
 }
@@ -347,7 +394,6 @@ export interface SharedInsightCard extends Struct.ComponentSchema {
   attributes: {
     description: Schema.Attribute.Text;
     image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
-    mobileDescription: Schema.Attribute.Text;
     title: Schema.Attribute.String;
   };
 }
@@ -445,6 +491,7 @@ export interface SharedSocialLink extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export namespace Public {
     export interface ComponentSchemas {
+      'sections.callback-form': SectionsCallbackForm;
       'sections.conversion-insights': SectionsConversionInsights;
       'sections.engagement-fit': SectionsEngagementFit;
       'sections.faq': SectionsFaq;
@@ -458,6 +505,7 @@ declare module '@strapi/strapi' {
       'sections.quote-form': SectionsQuoteForm;
       'sections.sticky-cta': SectionsStickyCta;
       'sections.storefront-problems': SectionsStorefrontProblems;
+      'sections.summary': SectionsSummary;
       'sections.work-showcase': SectionsWorkShowcase;
       'shared.brand': SharedBrand;
       'shared.budget-range': SharedBudgetRange;

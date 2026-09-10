@@ -1,0 +1,59 @@
+{
+  "collectionName": "components_sections_callback_forms",
+  "info": {
+    "displayName": "CallbackForm",
+    "description": "Content for the Book a Free Call / Get a callback modal"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Get a callback"
+    },
+    "description": {
+      "type": "text",
+      "default": "Let’s make something amazing together.\nBook a call - we’ve got coffee (or tea) ready and are always up for a good conversation."
+    },
+    "emailLabel": {
+      "type": "string",
+      "default": "Email"
+    },
+    "emailPlaceholder": {
+      "type": "string",
+      "default": "Enter Email"
+    },
+    "phoneLabel": {
+      "type": "string",
+      "default": "Phone Number"
+    },
+    "phonePlaceholder": {
+      "type": "string",
+      "default": "Enter Phone Number"
+    },
+    "shopifyLinkLabel": {
+      "type": "string",
+      "default": "Shopify Link (Optional)"
+    },
+    "shopifyLinkPlaceholder": {
+      "type": "string",
+      "default": "Enter Shopify link"
+    },
+    "buttonLabel": {
+      "type": "string",
+      "default": "Book My Free Call"
+    },
+    "disclaimer": {
+      "type": "string",
+      "default": "We'll reach out within 24 hours — no spam, just expert guidance."
+    },
+    "successTitle": {
+      "type": "string",
+      "default": "Thank you! We've received your request."
+    },
+    "successDescription": {
+      "type": "string",
+      "default": "We'll reach out within 24 hours — no spam, just expert guidance."
+    }
+  },
+  "config": {}
+}

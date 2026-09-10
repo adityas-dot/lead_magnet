@@ -17,7 +17,9 @@
       "repeatable": true
     },
     "summary": {
-      "type": "string"
+      "type": "component",
+      "component": "sections.summary",
+      "repeatable": true
     },
     "submitLabel": {
       "type": "string"
