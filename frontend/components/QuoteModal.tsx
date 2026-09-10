@@ -78,6 +78,7 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
 
     // Container ref for modal
     const modalContainerRef = useRef<HTMLDivElement>(null);
+    const modalCardRef = useRef<HTMLDivElement>(null);
 
     // Lock body & document scroll, pause Lenis, and handle ESC key
     useEffect(() => {
@@ -113,6 +114,29 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
             window.removeEventListener("keydown", handleKeyDown);
         };
     }, [isOpen, onClose]);
+
+    // On desktop, Lenis may still consume wheel events even when stopped.
+    // Manually forward wheel events to the modal card so it can scroll.
+    useEffect(() => {
+        if (!isOpen) return;
+        const container = modalContainerRef.current;
+        const card = modalCardRef.current;
+        if (!container || !card) return;
+
+        const handleWheel = (e: WheelEvent) => {
+            // If the card itself can scroll, let it handle the wheel event
+            const canScroll =
+                card.scrollHeight > card.clientHeight;
+            if (canScroll) {
+                card.scrollTop += e.deltaY;
+                e.preventDefault();
+                e.stopImmediatePropagation();
+            }
+        };
+
+        container.addEventListener("wheel", handleWheel, { passive: false, capture: true });
+        return () => container.removeEventListener("wheel", handleWheel, { capture: true });
+    }, [isOpen]);
 
     // Reset step or form state on open if previously completed
     useEffect(() => {
@@ -184,6 +208,8 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
                     id="quote-modal"
                     data-modal="quote"
                     data-lenis-prevent="true"
+                    data-lenis-prevent-wheel="true"
+                    data-lenis-prevent-touch="true"
                     className="fixed inset-0 z-[999] flex items-center justify-center p-3 sm:p-5 md:p-6 overflow-y-auto overscroll-contain no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
                 >
                     {/* Semi-transparent Backdrop (no blur, dark overlay showing background) */}
@@ -199,11 +225,14 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
 
                     {/* Modal Card - Scrollable on small screens, Sharp Corners */}
                     <motion.div
+                        ref={modalCardRef}
                         initial={{ opacity: 0, scale: 0.92, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.94, y: 12 }}
                         transition={{ type: "spring", damping: 26, stiffness: 280, mass: 0.8 }}
                         data-lenis-prevent="true"
+                        data-lenis-prevent-wheel="true"
+                        data-lenis-prevent-touch="true"
                         className="relative w-full max-w-[550px] sm:max-w-[570px] max-h-[92vh] sm:max-h-[88vh] bg-[#FAFAFC] rounded-none p-5 sm:p-7 md:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.3)] my-auto text-[#111827] z-10 flex flex-col justify-between overflow-y-auto overscroll-contain"
                         onClick={(e) => e.stopPropagation()}
                     >

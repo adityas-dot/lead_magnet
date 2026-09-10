@@ -1,5 +1,5 @@
 /** Base URL for Strapi CMS API */
-const RAW_STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "https://lead-magnet-strapi.onrender.com";
+const RAW_STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "https://lead-magnet-7s2k.onrender.com";
 export const STRAPI_URL = RAW_STRAPI_URL.replace(/\/+$/, "");
 
 /** Centralized SVG icon paths for social media platforms */
