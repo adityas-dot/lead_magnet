@@ -33,14 +33,14 @@ export default function ConversionInsights({
 
     const formatSectionDescription = (desc: string) => {
         if (!desc) return "";
-        const match = desc.match(/(.*?\bmargin)\s+(pays\b.*)/s);
-        if (match) {
+        const idx = desc.indexOf("pays");
+        if (idx !== -1 && desc.toLowerCase().includes("margin")) {
             return (
                 <>
-                    {match[1]}
+                    {desc.slice(0, idx).trimEnd()}
                     <br className="hidden md:block" />
                     <span className="md:hidden"> </span>
-                    {match[2]}
+                    {desc.slice(idx)}
                 </>
             );
         }
