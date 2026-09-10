@@ -89,6 +89,22 @@ export default function WorkShowcase({
         } catch {}
     };
 
+    const formatDescription = (desc: string) => {
+        if (!desc) return "";
+        const match = desc.match(/(.*?\bredesign to)\s+(full technical management.*)/i);
+        if (match) {
+            return (
+                <>
+                    <span>{match[1]}</span>
+                    <br className="hidden sm:block" />
+                    <span className="sm:hidden"> </span>
+                    <span>{match[2]}</span>
+                </>
+            );
+        }
+        return desc;
+    };
+
     return (
         <section className="px-6 py-20 bg-[#f5f5f5] lg:px-[60px] xl:px-[80px]">
             <div className="mx-auto max-w-[1720px] w-full">
@@ -98,29 +114,29 @@ export default function WorkShowcase({
                     </h2>
                     {mobileDesc ? (
                         <>
-                            <p className="block sm:hidden max-w-[650px] font-satoshi text-[clamp(13px,3.6vw,16px)] text-[#000000] whitespace-pre-line leading-relaxed">
+                            <p className="block sm:hidden max-w-[650px] font-satoshi font-medium text-[clamp(13px,3.6vw,16px)] text-[#000000] whitespace-pre-line leading-relaxed">
                                 {mobileDesc}
                             </p>
-                            <p className="hidden sm:block max-w-[650px] font-satoshi text-[clamp(14px,1.2vw,16px)] text-[#000000] whitespace-pre-line leading-relaxed">
-                                {data.description}
+                            <p className="hidden sm:block max-w-[960px] font-satoshi font-medium text-[clamp(14px,1.2vw,16px)] text-[#000000] whitespace-pre-line leading-relaxed">
+                                {formatDescription(data.description)}
                             </p>
                         </>
                     ) : (
-                        <p className="max-w-[650px] font-satoshi text-[clamp(14px,1.2vw,16px)] text-[#000000] whitespace-pre-line leading-relaxed">
-                            {data.description}
+                        <p className="max-w-[960px] font-satoshi font-medium text-[clamp(14px,1.2vw,16px)] text-[#000000] whitespace-pre-line leading-relaxed">
+                            {formatDescription(data.description)}
                         </p>
                     )}
 
-                    <div className="mt-8 flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-1 md:flex-wrap">
+                    <div className="mt-8 sm:mt-10 flex items-center gap-3.5 sm:gap-4 overflow-x-auto no-scrollbar pb-1 md:flex-wrap">
                         {data.items.map((item) => (
                             <button
                                 key={item.id}
                                 onClick={() => setSelectedItem(item.id)}
                                 type="button"
-                                className={`shrink-0 rounded-full border px-5 py-2.5 text-[13px] font-satoshi font-medium transition-colors ${
+                                className={`shrink-0 rounded-full border px-6 sm:px-7 py-2.5 sm:py-3 text-[17px] sm:text-[18.5px] font-satoshi font-medium transition-colors cursor-pointer ${
                                     selectedItem === item.id
                                         ? "border-[#79BDB4] bg-[#DDF2EF] text-[#0D2108]"
-                                        : "border-[#CAC4D0] bg-transparent text-[#3C3C3C] hover:border-gray-400"
+                                        : "border-[#CAC4D0] bg-transparent text-[#2B2B2B] hover:border-gray-400"
                                 }`}
                             >
                                 {item.name}

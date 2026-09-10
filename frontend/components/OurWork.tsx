@@ -123,26 +123,42 @@ export default function OurWork({ data }: { data: OurWorkData }) {
         touchDeltaX.current = 0;
     };
 
+    const formatDescription = (desc: string) => {
+        if (!desc) return "";
+        const match = desc.match(/(.*?\bredesign to)\s+(full technical management.*)/i);
+        if (match) {
+            return (
+                <>
+                    <span>{match[1]}</span>
+                    <br className="hidden md:block" />
+                    <span className="md:hidden"> </span>
+                    <span>{match[2]}</span>
+                </>
+            );
+        }
+        return desc;
+    };
+
     return (
         <section className="w-full py-10 sm:py-20 overflow-hidden">
             <div className="mx-auto flex w-full max-w-[1880px] flex-col px-6 lg:px-[60px] xl:px-[80px]">
                 <div className="flex w-full justify-between items-end gap-6">
-                    <div className="max-w-[900px]">
+                    <div className="max-w-[960px]">
                         <h2 className="font-nohemi text-[clamp(28px,4vw,65px)] font-normal font-[400] leading-[1.15] tracking-[-0.015em] text-[#000000]">
                             {data.heading}
                         </h2>
 
                         {data.MobileDescription && (
-                            <p className="block md:hidden max-w-[650px] font-satoshi text-[clamp(14px,4.2vw,16px)] text-[#262626] whitespace-pre-line leading-relaxed mt-4">
+                            <p className="block md:hidden max-w-[650px] font-satoshi font-medium text-[clamp(14px,4.2vw,16px)] text-[#262626] whitespace-pre-line leading-relaxed mt-4">
                                 {data.MobileDescription}
                             </p>
                         )}
                         <p
                             className={`${
                                 data.MobileDescription ? "hidden md:block" : ""
-                            } max-w-[820px] font-satoshi text-[clamp(14px,1.2vw,16px)] font-medium text-[#000000] whitespace-pre-line leading-relaxed mt-3`}
+                            } max-w-[960px] font-satoshi text-[clamp(14px,1.2vw,16px)] font-medium text-[#000000] whitespace-pre-line leading-relaxed mt-3`}
                         >
-                            {data.description}
+                            {formatDescription(data.description)}
                         </p>
                     </div>
 
