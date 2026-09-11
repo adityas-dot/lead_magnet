@@ -158,7 +158,7 @@ export default function WorkShowcase({
         <section className="px-5 sm:px-6 py-14 sm:py-20 bg-[#f5f5f5] lg:px-[60px] xl:px-[80px]">
             <div className="mx-auto max-w-[1720px] w-full">
                 <div className="w-full">
-                    <h2 className="max-w-[1150px] font-delight text-[clamp(26px,4.2vw,65px)] font-medium leading-[1.15] tracking-[-0.015em] mb-4 sm:mb-6">
+                    <h2 className="max-w-[1150px] font-delight text-[clamp(26px,7.4vw,42px)] sm:text-[clamp(36px,4.2vw,65px)] font-medium leading-[1.15] tracking-[-0.015em] mb-4 sm:mb-6">
                         {data.heading}
                     </h2>
                     {mobileDesc ? (
@@ -182,7 +182,7 @@ export default function WorkShowcase({
                                 key={item.id}
                                 onClick={() => setSelectedItem(item.id)}
                                 type="button"
-                                className={`shrink-0 rounded-full border px-4.5 sm:px-7 py-2 sm:py-3 text-[14px] sm:text-[18.5px] font-satoshi font-medium transition-colors cursor-pointer ${
+                                className={`shrink-0 rounded-full border px-4.5 sm:px-7 py-2 sm:py-3 text-[clamp(14px,1.2vw,18.5px)] font-satoshi font-medium transition-colors cursor-pointer ${
                                     (activeItem?.id === item.id || selectedItem === item.id)
                                         ? "border-[#79BDB4] bg-[#DDF2EF] text-[#0D2108]"
                                         : "border-[#CAC4D0] bg-transparent text-[#2B2B2B] hover:border-gray-400"
@@ -198,6 +198,7 @@ export default function WorkShowcase({
                     <div
                         ref={containerRef}
                         role="slider"
+                        data-theme="dark"
                         aria-label={itemName ? `${itemName} comparison slider` : "Before and after comparison slider"}
                         aria-valuenow={Math.round(position)}
                         aria-valuemin={0}
@@ -229,7 +230,7 @@ export default function WorkShowcase({
                                             setPosition(100);
                                         }}
                                         title={`View full ${beforeText}`}
-                                        className="inline-flex items-center justify-center px-3.5 sm:px-6 py-1 sm:py-2 rounded-full bg-white/90 hover:bg-white text-black font-satoshi text-[12px] sm:text-[18px] md:text-[22px] font-medium tracking-tight shadow-md border border-black/10 transition-transform active:scale-95 cursor-pointer"
+                                        className="inline-flex items-center justify-center px-3.5 sm:px-6 py-1 sm:py-2 rounded-full bg-white/90 hover:bg-white text-black font-satoshi text-[clamp(13px,1.5vw,22px)] font-medium tracking-tight shadow-md border border-black/10 transition-transform active:scale-95 cursor-pointer"
                                     >
                                         {beforeText}
                                     </button>

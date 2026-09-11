@@ -120,7 +120,7 @@ export default function OurProcess({
                         <div key={`${item.id}-${index}`} className="flex shrink-0 items-center">
                             {/* Mobile / Tablet */}
                             <div className="flex lg:hidden items-center">
-                                <span className="text-white text-[12px] sm:text-[13px] font-satoshi font-normal font-[400] uppercase tracking-[0.04em] whitespace-nowrap">
+                                <span className="text-white text-[clamp(11.5px,0.95vw,13px)] font-satoshi font-normal font-[400] uppercase tracking-[0.04em] whitespace-nowrap">
                                     {item.text}
                                 </span>
                                 <span className="inline-block h-[7px] w-[7px] sm:h-[7.5px] sm:w-[7.5px] rounded-full bg-white shrink-0 mx-3 sm:mx-4" />
@@ -128,7 +128,7 @@ export default function OurProcess({
 
                             {/* Desktop */}
                             <div className="hidden lg:flex items-center">
-                                <span className="text-white text-[17px] xl:text-[18.5px] font-nohemi font-normal font-[400] whitespace-nowrap">
+                                <span className="text-white text-[clamp(16px,1.2vw,18.5px)] font-nohemi font-normal font-[400] whitespace-nowrap">
                                     {item.text}
                                 </span>
                                 <span className="inline-block h-[9px] w-[9px] xl:h-[10px] xl:w-[10px] rounded-full bg-white shrink-0 mx-4.5 xl:mx-5.5" />
@@ -143,7 +143,7 @@ export default function OurProcess({
                 <div className="mx-auto max-w-[1300px] w-full">
                     {/* Header */}
                     <div className="mb-8 sm:mb-10 lg:mb-14">
-                        <span className="font-satoshi text-[14px] sm:text-[15px] text-white/70 block">
+                        <span className="font-satoshi text-[clamp(13px,1vw,15px)] text-white/70 block">
                             {data.eyebrow}
                         </span>
 
@@ -156,14 +156,14 @@ export default function OurProcess({
                             {data.cta && (
                                 <a
                                     href={data.cta.href || "#"}
-                                    className="hidden md:inline-flex shrink-0 rounded-xl font-bold bg-white px-6 py-2.5 font-satoshi text-[14px] text-[#0F1D07] shadow-sm hover:bg-white/90 transition -translate-y-2 items-center justify-center"
+                                    className="hidden md:inline-flex shrink-0 rounded-xl font-bold bg-white px-6 py-2.5 font-satoshi text-[clamp(13.5px,1vw,14.5px)] text-[#0F1D07] shadow-sm hover:bg-white/90 transition -translate-y-2 items-center justify-center"
                                 >
                                     <span>{cleanCtaLabel}</span>
                                 </a>
                             )}
                         </div>
 
-                        <p className="font-satoshi text-white/90 text-[14px] sm:text-[15px] max-w-[750px] mt-3 sm:mt-4 leading-relaxed">
+                        <p className="font-satoshi text-white/90 text-[clamp(13.5px,1.05vw,15px)] max-w-[750px] mt-3 sm:mt-4 leading-relaxed">
                             {data.description}
                         </p>
 
@@ -172,7 +172,7 @@ export default function OurProcess({
                             <div className="mt-5 sm:mt-6 md:hidden">
                                 <a
                                     href={data.cta.href || "#"}
-                                    className="inline-flex rounded-[14px] font-medium bg-white px-5 sm:px-6 py-2.5 sm:py-3 font-satoshi text-[14px] sm:text-[14.5px] text-[#0F1D07] shadow-sm hover:bg-white/90 transition items-center justify-center"
+                                    className="inline-flex rounded-[14px] font-medium bg-white px-5 sm:px-6 py-2.5 sm:py-3 font-satoshi text-[clamp(13.5px,1vw,14.5px)] text-[#0F1D07] shadow-sm hover:bg-white/90 transition items-center justify-center"
                                 >
                                     <span>{cleanCtaLabel}</span>
                                 </a>
@@ -303,12 +303,12 @@ function ProcessCard({
                     )}
 
                     {/* Title */}
-                    <h3 className="font-satoshi text-[clamp(18px,4.2vw,28px)] 2xl:text-[32px] font-bold leading-tight text-white">
+                    <h3 className="font-satoshi text-[clamp(18px,2vw,32px)] font-bold leading-tight text-white">
                         {card.title}
                     </h3>
 
                     {/* Description */}
-                    <p className="mt-1.5 sm:mt-2 lg:mt-2 font-satoshi text-[11px] sm:text-[12.5px] lg:text-[13px] xl:text-[14.5px] font-normal leading-[1.4] text-[#9BA893] max-w-[300px]">
+                    <p className="mt-1.5 sm:mt-2 lg:mt-2 font-satoshi text-[clamp(11.5px,1.1vw,14.5px)] font-normal leading-[1.4] text-[#9BA893] max-w-[300px]">
                         {card.description}
                     </p>
                 </div>
@@ -316,7 +316,7 @@ function ProcessCard({
                 {/* CTA */}
                 {card.cta && (
                     <div className="mt-auto pt-2.5 sm:pt-3 lg:pt-3.5 xl:pt-5">
-                        <div className="inline-flex items-center gap-1.5 sm:gap-2 lg:gap-2.5 font-satoshi text-[12px] sm:text-[13px] lg:text-[13.5px] xl:text-[15.5px] font-semibold text-white transition-all duration-200">
+                        <div className="inline-flex items-center gap-1.5 sm:gap-2 lg:gap-2.5 font-satoshi text-[clamp(12px,1.2vw,15.5px)] font-semibold text-white transition-all duration-200">
                             <span className="lg:hidden">{ctaBase}</span>
                             <span className="hidden lg:inline">{ctaDesktop}</span>
                             <svg
@@ -385,7 +385,7 @@ function ProcessCard({
                                         strokeLinejoin="round"
                                     />
                                 </svg>
-                                <span className="font-satoshi text-[10px] xs:text-[10.5px] sm:text-[13px] lg:text-[15px] font-normal leading-[1.2] text-white">
+                                <span className="font-satoshi text-[clamp(11px,1.05vw,15px)] font-normal leading-[1.2] text-white">
                                     {service.text}
                                 </span>
                             </motion.div>

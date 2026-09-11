@@ -74,7 +74,7 @@ export default function FAQ({
                                             className="overflow-hidden"
                                         >
                                             <div className="pb-6 pr-12">
-                                                <p className="max-w-[700px] font-satoshi text-[16px] lg:text-[18px] text-[#000000] leading-[1.6]">
+                                                <p className="max-w-[700px] font-satoshi text-[clamp(15.5px,1.2vw,18px)] text-[#000000] leading-[1.6]">
                                                     {item.answer}
                                                 </p>
                                             </div>
@@ -124,7 +124,7 @@ export default function FAQ({
                                                 className="overflow-hidden"
                                             >
                                                 <div className="pb-5 pr-6">
-                                                    <p className="font-satoshi text-[14.5px] text-[#000000] leading-[1.6]">
+                                                    <p className="font-satoshi text-[clamp(13.5px,1.05vw,15px)] text-[#000000] leading-[1.6]">
                                                         {item.answer}
                                                     </p>
                                                 </div>

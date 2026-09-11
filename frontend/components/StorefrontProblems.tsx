@@ -18,9 +18,10 @@ type StorefrontProblemsData = {
 };
 
 export default function StorefrontProblems({
-    data, }: {
-        data: StorefrontProblemsData;
-    }) {
+    data,
+}: {
+    data: StorefrontProblemsData;
+}) {
     if (!data) return null;
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
@@ -70,7 +71,7 @@ export default function StorefrontProblems({
                                         {item.title}
                                     </h3>
 
-                                    <p className="font-satoshi mt-3 text-[14px] leading-[1.6] text-[#0F1D07]">
+                                    <p className="font-satoshi mt-3 text-[clamp(13px,1.05vw,14px)] leading-[1.6] text-[#0F1D07]">
                                         {item.description}
                                     </p>
                                 </div>
@@ -106,6 +107,7 @@ export default function StorefrontProblems({
                                                 stroke="currentColor"
                                                 strokeWidth="1.8"
                                                 strokeLinecap="round"
+                                                strokeLinejoin="round"
                                             />
                                         </svg>
                                     )}
@@ -146,7 +148,7 @@ export default function StorefrontProblems({
 
                     return (
                         <div className="mt-8 flex flex-col items-center justify-between gap-5 rounded-[8px] bg-[#F7F7F7] px-5 py-3 sm:flex-row">
-                            <p className="font-satoshi text-[clamp(11px,4.2vw,16px)] font-bold">
+                            <p className="font-satoshi text-[clamp(13px,1.1vw,16px)] font-bold">
                                 {summaryText}
                             </p>
 
@@ -158,7 +160,7 @@ export default function StorefrontProblems({
                                         window.dispatchEvent(new CustomEvent("open-quote-modal"));
                                     }
                                 }}
-                                className="flex w-full font-inter items-center justify-center rounded-full bg-[#3447E5] px-10 py-4 text-[13px] font-medium text-white transition hover:opacity-90 sm:w-[260px] cursor-pointer"
+                                className="flex w-full font-inter items-center justify-center rounded-full bg-[#3447E5] px-10 py-4 text-[clamp(13px,1.05vw,14.5px)] font-medium text-white transition hover:opacity-90 sm:w-[260px] cursor-pointer"
                             >
                                 {data.submitLabel}
                                 <span className="ml-2">→</span>

@@ -151,7 +151,7 @@ export default function Header({
                 <a
                     href="/"
                     onClick={() => setIsOpen(false)}
-                    className={`font-nohemi font-medium text-[20px] sm:text-[24px] tracking-[-0.02em] leading-none pointer-events-auto select-none transition-colors duration-300 ${
+                    className={`font-nohemi font-medium text-[clamp(20px,1.8vw,24px)] tracking-[-0.02em] leading-none pointer-events-auto select-none transition-colors duration-300 ${
                         isOpen
                             ? "text-white"
                             : isLight
@@ -178,10 +178,10 @@ export default function Header({
                             ? "bg-transparent text-white hover:text-[#38E29D]"
                             : isLight
                             ? "bg-[#D4F8EE] hover:bg-[#C2F3E5] shadow-sm"
-                            : "bg-[#87A8A4] hover:bg-[#72928E] shadow-sm"
+                            : "bg-transparent hover:opacity-80"
                     }`}
                 >
-                    <div className="relative w-6 h-5 flex items-center justify-center">
+                    <div className="relative w-6 h-5 flex items-center justify-center drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
                         <span
                             className={`absolute left-0 w-6 h-[2px] ${lineColor} rounded-full transition-all duration-300 ease-in-out origin-center ${
                                 isOpen
@@ -232,7 +232,7 @@ export default function Header({
                                             key={link.id}
                                             href={link.href}
                                             onClick={() => setIsOpen(false)}
-                                            className="group relative block overflow-hidden font-nohemi text-[26px] sm:text-[36px] lg:text-[60px] font-normal tracking-[-0.02em] leading-[1.2] text-white w-fit cursor-pointer select-none"
+                                            className="group relative block overflow-hidden font-nohemi text-[clamp(28px,4.5vw,60px)] font-normal tracking-[-0.02em] leading-[1.2] text-white w-fit cursor-pointer select-none"
                                         >
                                             <span className="block transition-transform duration-300 ease-[cubic-bezier(0.76,0,0.24,1)] lg:group-hover:-translate-y-full">
                                                 {link.label}
@@ -252,20 +252,20 @@ export default function Header({
 
                                 {/* Contact details */}
                                 <div className="lg:col-span-5 flex flex-col justify-start lg:pt-3">
-                                    <h3 className="font-satoshi font-bold text-[16px] sm:text-[18px] text-white mb-5 sm:mb-6 tracking-wide">
+                                    <h3 className="font-satoshi font-bold text-[clamp(16px,1.25vw,18px)] text-white mb-5 sm:mb-6 tracking-wide">
                                         {footerData?.contactHeading || "Contact"}
                                     </h3>
 
                                     <div className="space-y-4 sm:space-y-6">
                                         {contacts.map((contact) => (
                                             <div key={contact.id} className="space-y-1">
-                                                <p className="font-satoshi font-medium text-[14px] sm:text-[15px] text-white">
+                                                <p className="font-satoshi font-medium text-[clamp(13.5px,1.05vw,15px)] text-white">
                                                     {contact.location}
                                                 </p>
                                                 {contact.phone && (
                                                     <a
                                                         href={`tel:${contact.phone}`}
-                                                        className="block font-satoshi text-[14px] sm:text-[15px] text-white underline underline-offset-4 decoration-white/40 hover:decoration-[#38E29D] hover:text-[#38E29D] transition-colors"
+                                                        className="block font-satoshi text-[clamp(13.5px,1.05vw,15px)] text-white underline underline-offset-4 decoration-white/40 hover:decoration-[#38E29D] hover:text-[#38E29D] transition-colors"
                                                     >
                                                         {contact.phone}
                                                     </a>
@@ -273,7 +273,7 @@ export default function Header({
                                                 {contact.email && (
                                                     <a
                                                         href={`mailto:${contact.email}`}
-                                                        className="block font-satoshi text-[13.5px] sm:text-[14px] text-[#CBD2C9] underline underline-offset-4 decoration-white/30 hover:text-white transition-colors"
+                                                        className="block font-satoshi text-[clamp(13px,1vw,14px)] text-[#CBD2C9] underline underline-offset-4 decoration-white/30 hover:text-white transition-colors"
                                                     >
                                                         {contact.email}
                                                     </a>

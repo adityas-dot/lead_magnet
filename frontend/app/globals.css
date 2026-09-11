@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -16,7 +15,7 @@
 }
 
 .font-nohemi {
-  font-family: var(--font-nohemi), "Nohemi", sans-serif;
+  font-family: var(--font-nohemi), "Nohemi", var(--font-inter), "Inter", sans-serif;
 }
 
 .font-delight {
@@ -24,7 +23,7 @@
 }
 
 .font-satoshi {
-  font-family: var(--font-satoshi), "Satoshi", sans-serif;
+  font-family: var(--font-satoshi), "Satoshi", var(--font-inter), "Inter", sans-serif;
 }
 
 html,
@@ -109,4 +108,16 @@ body {
 .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+}
+
+.heading-engagement-fit {
+    font-size: clamp(28px, 8.4vw, 42px);
+    line-height: 1.12;
+}
+
+@media (min-width: 640px) {
+    .heading-engagement-fit {
+        font-size: clamp(38px, 4.2vw, 65px);
+        line-height: 1.15;
+    }
 }

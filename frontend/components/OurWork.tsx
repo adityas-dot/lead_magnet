@@ -90,14 +90,14 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                         </h2>
 
                         {data.MobileDescription && (
-                            <p className="block md:hidden max-w-[650px] font-satoshi font-medium text-[clamp(14px,4.2vw,16px)] text-[#262626] whitespace-pre-line text-pretty leading-relaxed mt-4">
+                            <p className="block md:hidden max-w-[650px] font-satoshi font-medium text-[clamp(13.5px,1.1vw,16px)] text-[#262626] whitespace-pre-line text-pretty leading-relaxed mt-4">
                                 {data.MobileDescription}
                             </p>
                         )}
                         <p
                             className={`${
                                 data.MobileDescription ? "hidden md:block" : ""
-                            } max-w-[960px] font-satoshi text-[clamp(14px,4.2vw,16px)] font-medium text-[#000000] whitespace-pre-line text-pretty leading-relaxed mt-3`}
+                            } max-w-[960px] font-satoshi text-[clamp(13.5px,1.1vw,16px)] font-medium text-[#000000] whitespace-pre-line text-pretty leading-relaxed mt-3`}
                         >
                             {data.description}
                         </p>
@@ -150,7 +150,7 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                             onClick={previousProject}
                             type="button"
                             disabled={!hasMultipleProjects}
-                            className="flex items-center gap-2 font-satoshi text-[15px] font-medium text-[#000000] hover:opacity-75 transition-opacity cursor-pointer select-none active:scale-90"
+                            className="flex items-center gap-2 font-satoshi text-[clamp(13.5px,1.1vw,15px)] font-medium text-[#000000] hover:opacity-75 transition-opacity cursor-pointer select-none active:scale-90"
                         >
                             <svg
                                 width="18"
@@ -192,7 +192,7 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                             onClick={nextProject}
                             type="button"
                             disabled={!hasMultipleProjects}
-                            className="flex items-center gap-2 font-satoshi text-[15px] font-medium text-[#000000] hover:opacity-75 transition-opacity cursor-pointer select-none active:scale-90"
+                            className="flex items-center gap-2 font-satoshi text-[clamp(13.5px,1.1vw,15px)] font-medium text-[#000000] hover:opacity-75 transition-opacity cursor-pointer select-none active:scale-90"
                         >
                             <span>Next</span>
                             <svg
@@ -214,6 +214,7 @@ export default function OurWork({ data }: { data: OurWorkData }) {
 
             {/* Production full-width showcase banner with instant fast-clicking support */}
             <div
+                data-theme="dark"
                 className="mt-6 sm:mt-10 w-full overflow-hidden select-none relative"
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}

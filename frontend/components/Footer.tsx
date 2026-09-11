@@ -106,7 +106,7 @@ export default function Footer({
                         </div>
 
                         {/* Text descriptions */}
-                        <div className="mt-6 space-y-2 text-white font-satoshi text-[13.5px] sm:text-[14px] leading-[1.65] max-w-[550px]">
+                        <div className="mt-6 space-y-2 text-white font-satoshi text-[clamp(13px,1vw,14px)] leading-[1.65] max-w-[550px]">
                             {d.heading && (
                                 <p className="font-medium text-white/95">
                                     {d.heading}
@@ -147,7 +147,7 @@ export default function Footer({
                         </div>
 
                         {/* Desktop-only Privacy & Terms placement */}
-                        <div className="hidden lg:flex items-center gap-8 mt-auto pt-14 text-[13px] font-satoshi text-white/90">
+                        <div className="hidden lg:flex items-center gap-8 mt-auto pt-14 text-[clamp(12.5px,0.95vw,13.5px)] font-satoshi text-white/90">
                             <a
                                 href={privacyLink.href || "#"}
                                 className="hover:underline underline-offset-4 transition-all"
@@ -168,7 +168,7 @@ export default function Footer({
                         <div className="grid grid-cols-2 gap-x-6 sm:gap-x-10 gap-y-8">
                             {/* Quick Links (First on mobile, Second on big screen) */}
                             <div className="order-1 lg:order-2 lg:pl-6 xl:pl-10">
-                                <h2 className="font-satoshi text-[clamp(15px,4.2vw,18px)] font-bold text-white tracking-tight mb-4 sm:mb-5 lg:mb-6">
+                                <h2 className="font-satoshi text-[clamp(15px,1.2vw,18px)] font-bold text-white tracking-tight mb-4 sm:mb-5 lg:mb-6">
                                     {d.quickLinksHeading || "Quick Links"}
                                 </h2>
 
@@ -177,7 +177,7 @@ export default function Footer({
                                         <a
                                             key={link.id}
                                             href={link.href}
-                                            className="font-satoshi text-[13px] sm:text-[14px] lg:text-[14.5px] font-medium text-white/90 hover:text-[#95E7D3] transition-colors"
+                                            className="font-satoshi text-[clamp(13px,1.05vw,14.5px)] font-medium text-white/90 hover:text-[#95E7D3] transition-colors"
                                         >
                                             {link.label}
                                         </a>
@@ -187,20 +187,20 @@ export default function Footer({
 
                             {/* Contact (Second on mobile, First on big screen) */}
                             <div className="order-2 lg:order-1">
-                                <h2 className="font-satoshi text-[clamp(15px,4.2vw,18px)] font-bold text-white tracking-tight mb-4 sm:mb-5 lg:mb-6">
+                                <h2 className="font-satoshi text-[clamp(15px,1.2vw,18px)] font-bold text-white tracking-tight mb-4 sm:mb-5 lg:mb-6">
                                     {d.contactHeading || "Contact"}
                                 </h2>
 
                                 <div className="flex flex-col space-y-4 sm:space-y-5 lg:space-y-6">
                                     {contacts.map((contact) => (
                                         <div key={contact.id}>
-                                            <p className="font-satoshi text-[13px] sm:text-[14px] lg:text-[15px] font-medium text-white">
+                                            <p className="font-satoshi text-[clamp(13px,1.1vw,15px)] font-medium text-white">
                                                 {contact.location}
                                             </p>
 
                                             <a
                                                 href={`tel:${contact.phone}`}
-                                                className="block mt-0.5 font-satoshi text-[13px] sm:text-[14px] lg:text-[15px] font-medium text-[#95E7D3] underline underline-offset-4 hover:opacity-90 transition-opacity"
+                                                className="block mt-0.5 font-satoshi text-[clamp(13px,1.1vw,15px)] font-medium text-[#95E7D3] underline underline-offset-4 hover:opacity-90 transition-opacity"
                                             >
                                                 {contact.phone}
                                             </a>
@@ -231,7 +231,7 @@ export default function Footer({
                                 href={newsletterHref}
                                 className="group flex w-full items-center justify-between rounded-full bg-white px-6 sm:px-7 py-3.5 sm:py-4 text-[#1A1A1A] shadow-md transition-all hover:bg-white/95 active:scale-[0.99]"
                             >
-                                <span className="font-satoshi text-[13.5px] sm:text-[14.5px] font-medium text-[#1A1A1A] tracking-tight">
+                                <span className="font-satoshi text-[clamp(13px,1.05vw,14.5px)] font-medium text-[#1A1A1A] tracking-tight">
                                     {newsletterLabel}
                                 </span>
                                 <svg

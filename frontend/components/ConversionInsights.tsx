@@ -37,30 +37,30 @@ export default function ConversionInsights({
                 <div className="w-full max-w-[1200px]">
                     {mobileHeading ? (
                         <>
-                            <h2 className="block md:hidden font-delight text-[clamp(26px,4.2vw,36px)] font-medium leading-[1.2] tracking-[-0.01em] text-[#0F1D07]">
+                            <h2 className="block md:hidden font-delight text-[clamp(26px,7.5vw,40px)] font-medium leading-[1.2] tracking-[-0.01em] text-[#0F1D07]">
                                 {mobileHeading}
                             </h2>
-                            <h2 className="hidden md:block font-delight text-[clamp(32px,4.2vw,65px)] font-medium leading-[1.15] tracking-[-0.015em] text-[#0F1D07]">
+                            <h2 className="hidden md:block font-delight text-[clamp(36px,4.2vw,65px)] font-medium leading-[1.15] tracking-[-0.015em] text-[#0F1D07]">
                                 {data.heading}
                             </h2>
                         </>
                     ) : (
-                        <h2 className="font-delight text-[clamp(32px,4.2vw,65px)] font-medium leading-[1.15] tracking-[-0.015em] text-[#0F1D07]">
+                        <h2 className="font-delight text-[clamp(26px,7.5vw,40px)] md:text-[clamp(36px,4.2vw,65px)] font-medium leading-[1.15] tracking-[-0.015em] text-[#0F1D07]">
                             {data.heading}
                         </h2>
                     )}
 
                     {mobileDesc ? (
                         <>
-                            <p className="block md:hidden font-satoshi font-medium mt-5 w-full whitespace-pre-line text-pretty text-[clamp(13px,4.2vw,16px)] leading-[1.7] text-[#0F1D07]">
+                            <p className="block md:hidden font-satoshi font-medium mt-5 w-full whitespace-pre-line text-pretty text-[clamp(13px,3.6vw,16px)] leading-[1.7] text-[#0F1D07]">
                                 {mobileDesc}
                             </p>
-                            <p className="hidden md:block font-satoshi font-medium mt-5 w-full max-w-[1200px] whitespace-pre-line text-pretty text-[clamp(14px,4.2vw,16px)] leading-[1.7] text-[#0F1D07]">
+                            <p className="hidden md:block font-satoshi font-medium mt-5 w-full max-w-[1200px] whitespace-pre-line text-pretty text-[clamp(14px,1.2vw,16px)] leading-[1.7] text-[#0F1D07]">
                                 {data.description}
                             </p>
                         </>
                     ) : (
-                        <p className="font-satoshi font-medium mt-5 w-full max-w-[1200px] whitespace-pre-line text-pretty text-[clamp(14px,4.2vw,16px)] leading-[1.7] text-[#0F1D07]">
+                        <p className="font-satoshi font-medium mt-5 w-full max-w-[1200px] whitespace-pre-line text-pretty text-[clamp(14px,1.2vw,16px)] leading-[1.7] text-[#0F1D07]">
                             {data.description}
                         </p>
                     )}
@@ -77,12 +77,8 @@ export default function ConversionInsights({
                         const descriptionWeight = index === 0 ? "font-normal" : "font-medium";
                         const cardMobileDesc = card.mobileDescription || card.MobileDescription;
 
-                        const formatCardTitle = (title: string, idx: number) => {
+                        const formatCardTitle = (title: string) => {
                             if (!title) return "";
-                            if (title.includes("\n")) return title;
-                            if (idx === 1 && /primary\s+storefront/i.test(title)) {
-                                return title.replace(/primary\s+storefront/i, "primary\nstorefront");
-                            }
                             return title;
                         };
 
@@ -120,25 +116,25 @@ export default function ConversionInsights({
                                 )}
 
                                 <div className="flex flex-col justify-start flex-grow p-[18px_24px_24px] min-[460px]:p-[20px_28px_26px] md:px-8 md:pt-5 md:pb-9 min-[1750px]:px-10 min-[1750px]:pt-7 min-[1750px]:pb-11">
-                                    <h3 className={`font-nohemi font-normal whitespace-pre-line text-pretty ${textColor} text-[clamp(20px,4.2vw,26px)] min-[1750px]:text-[29px] leading-[1.2] min-[1750px]:leading-[1.22] tracking-[-0.02em] mb-4 md:mb-5 min-h-[48px] md:min-h-[64px] min-[1750px]:min-h-[72px] w-full flex items-start`}>
-                                        {formatCardTitle(card.title, index)}
+                                    <h3 className={`font-nohemi font-normal whitespace-pre-line text-pretty ${textColor} text-[clamp(20px,3.2vw,26px)] min-[1750px]:text-[29px] leading-[1.2] min-[1750px]:leading-[1.22] tracking-[-0.02em] mb-4 md:mb-5 min-h-[auto] md:min-h-[64px] min-[1750px]:min-h-[72px] w-full flex items-start`}>
+                                        {formatCardTitle(card.title)}
                                     </h3>
 
                                     {cardMobileDesc ? (
                                         <>
-                                            <p className={`block md:hidden font-satoshi text-[clamp(12px,4.2vw,13px)] leading-[1.5] whitespace-pre-line text-pretty w-full ${descriptionWeight} ${descriptionColor}`}>
+                                            <p className={`block md:hidden font-satoshi text-[clamp(13px,2vw,15px)] leading-[1.6] whitespace-pre-line text-pretty w-full ${descriptionWeight} ${descriptionColor}`}>
                                                 {cardMobileDesc}
                                             </p>
-                                            <p className={`hidden md:block font-satoshi text-[clamp(12px,4.2vw,13px)] min-[1750px]:text-[14.5px] leading-[1.6] min-[1750px]:leading-[1.65] whitespace-pre-line text-pretty w-full ${descriptionWeight} ${descriptionColor}`}>
+                                            <p className={`hidden md:block font-satoshi text-[clamp(13.5px,0.95vw,15px)] min-[1750px]:text-[15.5px] leading-[1.6] min-[1750px]:leading-[1.65] whitespace-pre-line text-pretty w-full ${descriptionWeight} ${descriptionColor}`}>
                                                 {card.description}
                                             </p>
                                         </>
                                     ) : (
                                         <>
-                                            <p className={`block md:hidden font-satoshi text-[clamp(12px,4.2vw,13px)] leading-[1.5] whitespace-pre-line text-pretty w-full ${descriptionWeight} ${descriptionColor}`}>
+                                            <p className={`block md:hidden font-satoshi text-[clamp(13px,2vw,15px)] leading-[1.6] whitespace-pre-line text-pretty w-full ${descriptionWeight} ${descriptionColor}`}>
                                                 {card.description}
                                             </p>
-                                            <p className={`hidden md:block font-satoshi text-[clamp(12px,4.2vw,13px)] min-[1750px]:text-[14.5px] leading-[1.6] min-[1750px]:leading-[1.65] whitespace-pre-line text-pretty w-full ${descriptionWeight} ${descriptionColor}`}>
+                                            <p className={`hidden md:block font-satoshi text-[clamp(13.5px,0.95vw,15px)] min-[1750px]:text-[15.5px] leading-[1.6] min-[1750px]:leading-[1.65] whitespace-pre-line text-pretty w-full ${descriptionWeight} ${descriptionColor}`}>
                                                 {card.description}
                                             </p>
                                         </>

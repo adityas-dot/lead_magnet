@@ -148,25 +148,25 @@ export default function CallbackModal({ isOpen, onClose, data }: CallbackModalPr
 
                         {/* Title & Description */}
                         <div className="mb-5 sm:mb-6">
-                            <h2 className="font-nohemi text-[28px] sm:text-[32px] md:text-[34px] font-normal text-[#111827] leading-[1.15] tracking-tight pr-8">
+                            <h2 className="font-nohemi text-[clamp(26px,3.2vw,34px)] font-normal text-[#111827] leading-[1.15] tracking-tight pr-8">
                                 {title}
                             </h2>
-                            <p className="font-satoshi text-[#555555] text-[13px] sm:text-[13.5px] leading-relaxed mt-1.5 sm:mt-2 max-w-[520px] whitespace-pre-line">
+                            <p className="font-satoshi text-[#555555] text-[clamp(12.5px,1.05vw,13.5px)] leading-relaxed mt-1.5 sm:mt-2 max-w-[520px] whitespace-pre-line">
                                 {description}
                             </p>
                         </div>
 
                         {isSubmitted ? (
-                            <div className="p-6 rounded-none bg-[#EBF7F2] text-[#1E7448] text-center font-satoshi text-[15px] space-y-2.5 my-4">
-                                <p className="font-medium text-[16px]">✓ {successTitle}</p>
-                                <p className="text-[13.5px] text-[#2A7550]">
+                            <div className="p-6 rounded-none bg-[#EBF7F2] text-[#1E7448] text-center font-satoshi text-[clamp(14px,1.1vw,15px)] space-y-2.5 my-4">
+                                <p className="font-medium text-[clamp(15px,1.2vw,16px)]">✓ {successTitle}</p>
+                                <p className="text-[clamp(12.5px,1vw,13.5px)] text-[#2A7550]">
                                     {successDescription}
                                 </p>
                                 {(data?.closeButtonLabel || (data as any)?.closeLabel) && (
                                     <button
                                         type="button"
                                         onClick={onClose}
-                                        className="text-xs sm:text-sm font-semibold underline text-[#1E7448] hover:text-[#145232] cursor-pointer pt-2 inline-block"
+                                        className="text-[clamp(12px,0.95vw,13.5px)] font-semibold underline text-[#1E7448] hover:text-[#145232] cursor-pointer pt-2 inline-block"
                                     >
                                         {data?.closeButtonLabel || (data as any)?.closeLabel}
                                     </button>
@@ -176,7 +176,7 @@ export default function CallbackModal({ isOpen, onClose, data }: CallbackModalPr
                             <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4">
                                 {/* Email Field */}
                                 <div>
-                                    <label className="font-nohemi block text-[14.5px] sm:text-[15.5px] font-normal text-[#111827] mb-1.5">
+                                    <label className="font-nohemi block text-[clamp(14px,1.15vw,15.5px)] font-normal text-[#111827] mb-1.5">
                                         {emailLabel}
                                     </label>
                                     <input
@@ -185,13 +185,13 @@ export default function CallbackModal({ isOpen, onClose, data }: CallbackModalPr
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         placeholder={emailPlaceholder}
-                                        className="font-satoshi w-full px-5 py-2.5 sm:py-3 rounded-full border border-[#D1D5DB] focus:outline-none focus:border-[#18181B] focus:ring-1 focus:ring-[#18181B] text-[13px] sm:text-[13.5px] text-[#111827] bg-[#F1F1F3] placeholder-[#8E8E93] transition-all duration-200"
+                                        className="font-satoshi w-full px-5 py-2.5 sm:py-3 rounded-full border border-[#D1D5DB] focus:outline-none focus:border-[#18181B] focus:ring-1 focus:ring-[#18181B] text-[clamp(12.5px,1vw,13.5px)] text-[#111827] bg-[#F1F1F3] placeholder-[#8E8E93] transition-all duration-200"
                                     />
                                 </div>
 
                                 {/* Phone Number Field */}
                                 <div>
-                                    <label className="font-nohemi block text-[14.5px] sm:text-[15.5px] font-normal text-[#111827] mb-1.5">
+                                    <label className="font-nohemi block text-[clamp(14px,1.15vw,15.5px)] font-normal text-[#111827] mb-1.5">
                                         {phoneLabel}
                                     </label>
                                     <input
@@ -200,13 +200,13 @@ export default function CallbackModal({ isOpen, onClose, data }: CallbackModalPr
                                         value={phone}
                                         onChange={(e) => setPhone(e.target.value)}
                                         placeholder={phonePlaceholder}
-                                        className="font-satoshi w-full px-5 py-2.5 sm:py-3 rounded-full border border-[#D1D5DB] focus:outline-none focus:border-[#18181B] focus:ring-1 focus:ring-[#18181B] text-[13px] sm:text-[13.5px] text-[#111827] bg-[#F1F1F3] placeholder-[#8E8E93] transition-all duration-200"
+                                        className="font-satoshi w-full px-5 py-2.5 sm:py-3 rounded-full border border-[#D1D5DB] focus:outline-none focus:border-[#18181B] focus:ring-1 focus:ring-[#18181B] text-[clamp(12.5px,1vw,13.5px)] text-[#111827] bg-[#F1F1F3] placeholder-[#8E8E93] transition-all duration-200"
                                     />
                                 </div>
 
                                 {/* Shopify Link Field */}
                                 <div>
-                                    <label className="font-nohemi block text-[14.5px] sm:text-[15.5px] font-normal text-[#111827] mb-1.5">
+                                    <label className="font-nohemi block text-[clamp(14px,1.15vw,15.5px)] font-normal text-[#111827] mb-1.5">
                                         {shopifyLinkLabel}
                                     </label>
                                     <input
@@ -214,7 +214,7 @@ export default function CallbackModal({ isOpen, onClose, data }: CallbackModalPr
                                         value={shopifyLink}
                                         onChange={(e) => setShopifyLink(e.target.value)}
                                         placeholder={shopifyLinkPlaceholder}
-                                        className="font-satoshi w-full px-5 py-2.5 sm:py-3 rounded-full border border-[#D1D5DB] focus:outline-none focus:border-[#18181B] focus:ring-1 focus:ring-[#18181B] text-[13px] sm:text-[13.5px] text-[#111827] bg-[#F1F1F3] placeholder-[#8E8E93] transition-all duration-200"
+                                        className="font-satoshi w-full px-5 py-2.5 sm:py-3 rounded-full border border-[#D1D5DB] focus:outline-none focus:border-[#18181B] focus:ring-1 focus:ring-[#18181B] text-[clamp(12.5px,1vw,13.5px)] text-[#111827] bg-[#F1F1F3] placeholder-[#8E8E93] transition-all duration-200"
                                     />
                                 </div>
 
@@ -222,11 +222,11 @@ export default function CallbackModal({ isOpen, onClose, data }: CallbackModalPr
                                 <div className="pt-2 sm:pt-2.5">
                                     <button
                                         type="submit"
-                                        className="font-satoshi w-full bg-[#242120] hover:bg-black text-white font-medium py-3 sm:py-3.5 px-6 rounded-full transition-all duration-200 flex justify-center items-center text-[14.5px] sm:text-[15px] cursor-pointer shadow-md active:scale-[0.99]"
+                                        className="font-satoshi w-full bg-[#242120] hover:bg-black text-white font-medium py-3 sm:py-3.5 px-6 rounded-full transition-all duration-200 flex justify-center items-center text-[clamp(14px,1.1vw,15px)] cursor-pointer shadow-md active:scale-[0.99]"
                                     >
                                         {buttonLabel}
                                     </button>
-                                    <p className="text-center font-satoshi text-[12px] sm:text-[12.5px] text-[#777777] mt-2.5 sm:mt-3">
+                                    <p className="text-center font-satoshi text-[clamp(11.5px,0.9vw,12.5px)] text-[#777777] mt-2.5 sm:mt-3">
                                         {disclaimer}
                                     </p>
                                 </div>
