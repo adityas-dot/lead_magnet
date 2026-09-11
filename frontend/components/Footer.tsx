@@ -42,18 +42,47 @@ type FooterData = {
 export default function Footer({
     data,
 }: {
-    data: FooterData;
+    data?: FooterData | null;
 }) {
-    if (!data) return null;
+    const d = data || ({} as Partial<FooterData>);
+
     const newsletterLabel =
-        (typeof data?.Newsletter === "object" && data?.Newsletter?.label) ||
-        (typeof data?.newsletter === "object" && data?.newsletter?.label) ||
+        (typeof d?.Newsletter === "object" && d?.Newsletter?.label) ||
+        (typeof d?.newsletter === "object" && d?.newsletter?.label) ||
         "Sign up to our newsletter";
 
     const newsletterHref =
-        (typeof data?.Newsletter === "object" && data?.Newsletter?.href) ||
-        (typeof data?.newsletter === "object" && data?.newsletter?.href) ||
+        (typeof d?.Newsletter === "object" && d?.Newsletter?.href) ||
+        (typeof d?.newsletter === "object" && d?.newsletter?.href) ||
         "#news";
+
+    const quickLinks = (d.quickLinks && d.quickLinks.length > 0) ? d.quickLinks : [
+        { id: 1, label: "Work", href: "#work" },
+        { id: 2, label: "Services", href: "#services" },
+        { id: 3, label: "Process", href: "#process" },
+        { id: 4, label: "FAQ", href: "#faq" },
+    ];
+
+    const socialLinks = (d.socialLinks && d.socialLinks.length > 0) ? d.socialLinks : [
+        { id: 1, platform: "Instagram", href: "https://instagram.com" },
+        { id: 2, platform: "LinkedIn", href: "https://linkedin.com" },
+        { id: 3, platform: "YouTube", href: "https://youtube.com" },
+        { id: 4, platform: "Facebook", href: "https://facebook.com" },
+    ];
+
+    const contacts = (d.contacts && d.contacts.length > 0) ? d.contacts : [
+        {
+            id: 1,
+            location: "United States",
+            phone: "+1 (555) 000-0000",
+            email: "hello@thumbstack.com",
+            Address: "San Francisco, CA",
+        },
+    ];
+
+    const privacyLink = d.privacyLink || { id: 1, label: "Privacy Policies", href: "#privacy" };
+    const termsLink = d.termsLink || { id: 2, label: "Terms and Conditions", href: "#terms" };
+    const marqueeText = d.marqueeText || "Let's talk • ";
 
     return (
         <section id="contact" data-theme="dark" className="w-full pt-16 pb-24 sm:pt-20 sm:pb-28 md:py-24 bg-[#3145DD] overflow-hidden">
@@ -64,12 +93,12 @@ export default function Footer({
                         {/* Top row: Say hi! + Logo */}
                         <div className="flex items-center gap-2.5 sm:gap-3">
                             <h1 className="font-delight text-[clamp(44px,4.2vw,80px)] font-medium leading-none text-white tracking-tight">
-                                {data.sayHi || "Say hi!"}
+                                {d.sayHi || "Say hi!"}
                             </h1>
 
-                            {data.logo && getMediaUrl(data.logo) && (
+                            {d.logo && getMediaUrl(d.logo) && (
                                 <img
-                                    src={getMediaUrl(data.logo)}
+                                    src={getMediaUrl(d.logo)}
                                     alt="Logo"
                                     className="h-[48px] w-[48px] sm:h-[64px] sm:w-[64px] animate-spin-pause shrink-0"
                                 />
@@ -78,21 +107,21 @@ export default function Footer({
 
                         {/* Text descriptions */}
                         <div className="mt-6 space-y-2 text-white font-satoshi text-[13.5px] sm:text-[14px] leading-[1.65] max-w-[550px]">
-                            {data.heading && (
+                            {d.heading && (
                                 <p className="font-medium text-white/95">
-                                    {data.heading}
+                                    {d.heading}
                                 </p>
                             )}
-                            {data.description && (
+                            {d.description && (
                                 <p className="font-normal text-white/90">
-                                    {data.description}
+                                    {d.description}
                                 </p>
                             )}
                         </div>
 
                         {/* Social icons */}
                         <div className="mt-14 sm:mt-16 flex items-center gap-5 sm:gap-6">
-                            {data.socialLinks?.map((social) => {
+                            {socialLinks.map((social) => {
                                 const iconSrc = SOCIAL_ICONS[social.platform] || SOCIAL_ICONS[social.platform?.toLowerCase()] || "";
                                 return (
                                     <a
@@ -120,16 +149,16 @@ export default function Footer({
                         {/* Desktop-only Privacy & Terms placement */}
                         <div className="hidden lg:flex items-center gap-8 mt-auto pt-14 text-[13px] font-satoshi text-white/90">
                             <a
-                                href={data?.privacyLink?.href || "#"}
+                                href={privacyLink.href || "#"}
                                 className="hover:underline underline-offset-4 transition-all"
                             >
-                                {data?.privacyLink?.label || "Privacy Policies"}
+                                {privacyLink.label || "Privacy Policies"}
                             </a>
                             <a
-                                href={data?.termsLink?.href || "#"}
+                                href={termsLink.href || "#"}
                                 className="hover:underline underline-offset-4 transition-all"
                             >
-                                {data?.termsLink?.label || "Terms and Conditions"}
+                                {termsLink.label || "Terms and Conditions"}
                             </a>
                         </div>
                     </div>
@@ -140,11 +169,11 @@ export default function Footer({
                             {/* Quick Links (First on mobile, Second on big screen) */}
                             <div className="order-1 lg:order-2 lg:pl-6 xl:pl-10">
                                 <h2 className="font-satoshi text-[clamp(15px,1.3vw,18px)] font-bold text-white tracking-tight mb-4 sm:mb-5 lg:mb-6">
-                                    {data.quickLinksHeading || "Quick Links"}
+                                    {d.quickLinksHeading || "Quick Links"}
                                 </h2>
 
                                 <div className="flex flex-col space-y-3 sm:space-y-3.5 lg:space-y-4">
-                                    {data.quickLinks?.map((link) => (
+                                    {quickLinks.map((link) => (
                                         <a
                                             key={link.id}
                                             href={link.href}
@@ -159,11 +188,11 @@ export default function Footer({
                             {/* Contact (Second on mobile, First on big screen) */}
                             <div className="order-2 lg:order-1">
                                 <h2 className="font-satoshi text-[clamp(15px,1.3vw,18px)] font-bold text-white tracking-tight mb-4 sm:mb-5 lg:mb-6">
-                                    {data.contactHeading || "Contact"}
+                                    {d.contactHeading || "Contact"}
                                 </h2>
 
                                 <div className="flex flex-col space-y-4 sm:space-y-5 lg:space-y-6">
-                                    {data.contacts?.map((contact) => (
+                                    {contacts.map((contact) => (
                                         <div key={contact.id}>
                                             <p className="font-satoshi text-[13px] sm:text-[14px] lg:text-[15px] font-medium text-white">
                                                 {contact.location}
@@ -227,16 +256,16 @@ export default function Footer({
                         {/* Mobile-only Privacy & Terms placement (below Newsletter button) */}
                         <div className="flex lg:hidden items-center gap-6 mt-6 text-[12px] font-satoshi text-white/90">
                             <a
-                                href={data?.privacyLink?.href || "#"}
+                                href={privacyLink.href || "#"}
                                 className="hover:underline underline-offset-4 transition-all"
                             >
-                                {data?.privacyLink?.label || "Privacy Policies"}
+                                {privacyLink.label || "Privacy Policies"}
                             </a>
                             <a
-                                href={data?.termsLink?.href || "#"}
+                                href={termsLink.href || "#"}
                                 className="hover:underline underline-offset-4 transition-all"
                             >
-                                {data?.termsLink?.label || "Terms and Conditions"}
+                                {termsLink.label || "Terms and Conditions"}
                             </a>
                         </div>
                     </div>
@@ -252,7 +281,7 @@ export default function Footer({
                             className="flex shrink-0 items-center gap-8 sm:gap-12 pr-8 sm:pr-12"
                         >
                             <span className="font-delight text-[clamp(44px,4.2vw,100px)] font-medium text-white">
-                                {data.marqueeText}
+                                {marqueeText}
                             </span>
 
                             <div className="group relative flex h-[90px] w-[90px] sm:h-[140px] sm:w-[140px] shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#7DE7D0]">

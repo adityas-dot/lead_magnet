@@ -85,9 +85,7 @@ export default async function Home() {
         </>
       )}
 
-      {data.footer && (
-        <Footer data={data.footer} />
-      )}
+      <Footer data={data.footer} />
 
       <StickyCTA
         data={data.stickyCTA}

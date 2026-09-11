@@ -6,18 +6,10 @@ import { getMediaUrl } from "@/lib/strapi";
 type ShowcaseItem = {
     id: number;
     name: string;
-    beforeImage?: {
-        url: string;
-    };
-    afterImage?: {
-        url: string;
-    };
-    mobileBeforeImage?: {
-        url: string;
-    };
-    mobileAfterImage?: {
-        url: string;
-    };
+    beforeImage?: any;
+    afterImage?: any;
+    mobileBeforeImage?: any;
+    mobileAfterImage?: any;
 };
 
 type WorkShowcaseData = {
@@ -43,9 +35,21 @@ export default function WorkShowcase({
     const containerRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
 
-    const activeItem = items.find((item) => item.id === selectedItem);
+    const activeItem = items.find((item) => item.id === selectedItem) || items[0];
     const mobileDesc = data.MobileDescription || data.mobileDescription;
     const beforeText = data.Before || data.before || "Before";
+
+    const beforeUrl = getMediaUrl(activeItem?.beforeImage);
+    const afterUrl = getMediaUrl(activeItem?.afterImage);
+    const mobileBeforeUrl = getMediaUrl(activeItem?.mobileBeforeImage) || beforeUrl;
+    const mobileAfterUrl = getMediaUrl(activeItem?.mobileAfterImage) || afterUrl;
+    const hasImages = Boolean((beforeUrl || mobileBeforeUrl) && (afterUrl || mobileAfterUrl));
+
+    useEffect(() => {
+        if (items.length > 0 && (!selectedItem || !items.some((it) => it.id === selectedItem))) {
+            setSelectedItem(items[0].id);
+        }
+    }, [items, selectedItem]);
 
     useEffect(() => {
         const checkMobile = () => {
@@ -89,22 +93,6 @@ export default function WorkShowcase({
         } catch {}
     };
 
-    const formatDescription = (desc: string) => {
-        if (!desc) return "";
-        const match = desc.match(/(.*?\bredesign to)\s+(full technical management.*)/i);
-        if (match) {
-            return (
-                <>
-                    <span>{match[1]}</span>
-                    <br className="hidden sm:block" />
-                    <span className="sm:hidden"> </span>
-                    <span>{match[2]}</span>
-                </>
-            );
-        }
-        return desc;
-    };
-
     return (
         <section className="px-6 py-20 bg-[#f5f5f5] lg:px-[60px] xl:px-[80px]">
             <div className="mx-auto max-w-[1720px] w-full">
@@ -114,16 +102,16 @@ export default function WorkShowcase({
                     </h2>
                     {mobileDesc ? (
                         <>
-                            <p className="block sm:hidden max-w-[650px] font-satoshi font-medium text-[clamp(13px,3.6vw,16px)] text-[#000000] whitespace-pre-line leading-relaxed">
+                            <p className="block sm:hidden max-w-[650px] font-satoshi font-medium text-[clamp(13px,3.6vw,16px)] text-[#000000] whitespace-pre-line text-pretty leading-relaxed">
                                 {mobileDesc}
                             </p>
-                            <p className="hidden sm:block max-w-[960px] font-satoshi font-medium text-[clamp(14px,1.2vw,16px)] text-[#000000] whitespace-pre-line leading-relaxed">
-                                {formatDescription(data.description)}
+                            <p className="hidden sm:block max-w-[960px] font-satoshi font-medium text-[clamp(14px,1.2vw,16px)] text-[#000000] whitespace-pre-line text-pretty leading-relaxed">
+                                {data.description}
                             </p>
                         </>
                     ) : (
-                        <p className="max-w-[960px] font-satoshi font-medium text-[clamp(14px,1.2vw,16px)] text-[#000000] whitespace-pre-line leading-relaxed">
-                            {formatDescription(data.description)}
+                        <p className="max-w-[960px] font-satoshi font-medium text-[clamp(14px,1.2vw,16px)] text-[#000000] whitespace-pre-line text-pretty leading-relaxed">
+                            {data.description}
                         </p>
                     )}
 
@@ -134,7 +122,7 @@ export default function WorkShowcase({
                                 onClick={() => setSelectedItem(item.id)}
                                 type="button"
                                 className={`shrink-0 rounded-full border px-6 sm:px-7 py-2.5 sm:py-3 text-[17px] sm:text-[18.5px] font-satoshi font-medium transition-colors cursor-pointer ${
-                                    selectedItem === item.id
+                                    (activeItem?.id === item.id || selectedItem === item.id)
                                         ? "border-[#79BDB4] bg-[#DDF2EF] text-[#0D2108]"
                                         : "border-[#CAC4D0] bg-transparent text-[#2B2B2B] hover:border-gray-400"
                                 }`}
@@ -145,7 +133,7 @@ export default function WorkShowcase({
                     </div>
                 </div>
 
-                {activeItem && (activeItem.beforeImage || activeItem.mobileBeforeImage) && (activeItem.afterImage || activeItem.mobileAfterImage) && (
+                {activeItem && hasImages && (
                     <div
                         ref={containerRef}
                         role="slider"
@@ -168,25 +156,25 @@ export default function WorkShowcase({
                         }}
                         className="relative mt-8 sm:mt-12 aspect-[9/18.5] sm:aspect-[9/16] md:aspect-[16/9] w-full max-w-[440px] md:max-w-none mx-auto overflow-hidden rounded-[24px] md:rounded-lg touch-none select-none cursor-pointer bg-white shadow-sm border border-black/5"
                     >
-                        {activeItem.mobileAfterImage?.url && (
+                        {mobileAfterUrl && (
                             <img
-                                src={getMediaUrl(activeItem.mobileAfterImage.url)}
+                                src={mobileAfterUrl}
                                 alt="After"
                                 className="md:hidden absolute inset-0 h-full w-full object-cover object-top pointer-events-none"
                                 draggable={false}
                             />
                         )}
-                        {activeItem.afterImage?.url && (
+                        {afterUrl && (
                             <img
-                                src={getMediaUrl(activeItem.afterImage.url)}
+                                src={afterUrl}
                                 alt="After"
-                                className={`${activeItem.mobileAfterImage?.url ? "hidden md:block" : ""} absolute inset-0 h-full w-full object-cover object-top pointer-events-none`}
+                                className={`${mobileAfterUrl && mobileAfterUrl !== afterUrl ? "hidden md:block" : ""} absolute inset-0 h-full w-full object-cover object-top pointer-events-none`}
                                 draggable={false}
                             />
                         )}
 
                         {/* Before Layer (clipped by slider position) */}
-                        {(activeItem.beforeImage || activeItem.mobileBeforeImage) && (
+                        {(beforeUrl || mobileBeforeUrl) && (
                             <div
                                 className="absolute inset-0 pointer-events-none z-10"
                                 style={{
@@ -195,19 +183,19 @@ export default function WorkShowcase({
                                         : `inset(0 ${100 - position}% 0 0)`,
                                 }}
                             >
-                                {activeItem.mobileBeforeImage?.url && (
+                                {mobileBeforeUrl && (
                                     <img
-                                        src={getMediaUrl(activeItem.mobileBeforeImage.url)}
+                                        src={mobileBeforeUrl}
                                         alt="Before"
                                         className="md:hidden absolute inset-0 h-full w-full object-cover object-top pointer-events-none"
                                         draggable={false}
                                     />
                                 )}
-                                {activeItem.beforeImage?.url && (
+                                {beforeUrl && (
                                     <img
-                                        src={getMediaUrl(activeItem.beforeImage.url)}
+                                        src={beforeUrl}
                                         alt="Before"
-                                        className={`${activeItem.mobileBeforeImage?.url ? "hidden md:block" : ""} absolute inset-0 h-full w-full object-cover object-top pointer-events-none`}
+                                        className={`${mobileBeforeUrl && mobileBeforeUrl !== beforeUrl ? "hidden md:block" : ""} absolute inset-0 h-full w-full object-cover object-top pointer-events-none`}
                                         draggable={false}
                                     />
                                 )}
@@ -290,10 +278,10 @@ export default function WorkShowcase({
                     </div>
                 )}
 
-                {activeItem?.afterImage && !activeItem.beforeImage && !activeItem.mobileBeforeImage && (
+                {afterUrl && !beforeUrl && !mobileBeforeUrl && (
                     <div className="mt-8 sm:mt-12 overflow-hidden rounded-[20px] sm:rounded-[24px] md:rounded-lg">
                         <img
-                            src={getMediaUrl(activeItem.afterImage.url)}
+                            src={afterUrl}
                             alt={activeItem.name}
                             className="h-auto w-full"
                         />

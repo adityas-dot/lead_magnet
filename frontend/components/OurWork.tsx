@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { getMediaUrl } from "@/lib/strapi";
 
 type OurWorkImage = {
@@ -29,76 +30,32 @@ function getMediaAlt(media?: OurWorkImage | OurWorkImage[] | null, fallback: str
 
 export default function OurWork({ data }: { data: OurWorkData }) {
     const projects = data?.projects || [];
-    const hasMultipleProjects = projects.length > 1;
+    const total = projects.length;
+    const hasMultipleProjects = total > 1;
 
-    // Infinite clone slider: [lastProject, ...projects, firstProject]
-    // Index 1 corresponds to projects[0]
-    const [currentIndex, setCurrentIndex] = useState(1);
-    const [withTransition, setWithTransition] = useState(true);
-    const [isAnimating, setIsAnimating] = useState(false);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [direction, setDirection] = useState(1);
 
     const touchStartX = useRef<number | null>(null);
     const touchDeltaX = useRef<number>(0);
 
-    const slides = hasMultipleProjects
-        ? [projects[projects.length - 1], ...projects, projects[0]]
-        : projects;
-
     const nextProject = () => {
-        if (!hasMultipleProjects || isAnimating) return;
-        setIsAnimating(true);
-        setWithTransition(true);
-        setCurrentIndex((prev) => prev + 1);
+        if (!hasMultipleProjects) return;
+        setDirection(1);
+        setCurrentIndex((prev) => (prev + 1) % total);
     };
 
     const previousProject = () => {
-        if (!hasMultipleProjects || isAnimating) return;
-        setIsAnimating(true);
-        setWithTransition(true);
-        setCurrentIndex((prev) => prev - 1);
+        if (!hasMultipleProjects) return;
+        setDirection(-1);
+        setCurrentIndex((prev) => (prev - 1 + total) % total);
     };
 
     const goToProject = (dotIdx: number) => {
-        if (!hasMultipleProjects || isAnimating) return;
-        const targetIndex = dotIdx + 1;
-        if (targetIndex === currentIndex) return;
-        setIsAnimating(true);
-        setWithTransition(true);
-        setCurrentIndex(targetIndex);
+        if (!hasMultipleProjects || dotIdx === currentIndex) return;
+        setDirection(dotIdx > currentIndex ? 1 : -1);
+        setCurrentIndex(dotIdx);
     };
-
-    const handleTransitionEnd = () => {
-        if (!hasMultipleProjects) return;
-
-        if (currentIndex === slides.length - 1) {
-            // Reached clone of first item -> reset instantly to real first item (index 1)
-            setWithTransition(false);
-            setCurrentIndex(1);
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    setWithTransition(true);
-                    setIsAnimating(false);
-                });
-            });
-        } else if (currentIndex === 0) {
-            // Reached clone of last item -> reset instantly to real last item
-            setWithTransition(false);
-            setCurrentIndex(projects.length);
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    setWithTransition(true);
-                    setIsAnimating(false);
-                });
-            });
-        } else {
-            setIsAnimating(false);
-        }
-    };
-
-    // Active project index (0..projects.length - 1) for indicators
-    const activeProjectIndex = hasMultipleProjects
-        ? (currentIndex - 1 + projects.length) % projects.length
-        : 0;
 
     const handleTouchStart = (e: React.TouchEvent) => {
         touchStartX.current = e.touches[0].clientX;
@@ -123,22 +80,6 @@ export default function OurWork({ data }: { data: OurWorkData }) {
         touchDeltaX.current = 0;
     };
 
-    const formatDescription = (desc: string) => {
-        if (!desc) return "";
-        const match = desc.match(/(.*?\bredesign to)\s+(full technical management.*)/i);
-        if (match) {
-            return (
-                <>
-                    <span>{match[1]}</span>
-                    <br className="hidden md:block" />
-                    <span className="md:hidden"> </span>
-                    <span>{match[2]}</span>
-                </>
-            );
-        }
-        return desc;
-    };
-
     return (
         <section className="w-full py-10 sm:py-20 overflow-hidden">
             <div className="mx-auto flex w-full max-w-[1880px] flex-col px-6 lg:px-[60px] xl:px-[80px]">
@@ -149,16 +90,16 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                         </h2>
 
                         {data.MobileDescription && (
-                            <p className="block md:hidden max-w-[650px] font-satoshi font-medium text-[clamp(14px,4.2vw,16px)] text-[#262626] whitespace-pre-line leading-relaxed mt-4">
+                            <p className="block md:hidden max-w-[650px] font-satoshi font-medium text-[clamp(14px,4.2vw,16px)] text-[#262626] whitespace-pre-line text-pretty leading-relaxed mt-4">
                                 {data.MobileDescription}
                             </p>
                         )}
                         <p
                             className={`${
                                 data.MobileDescription ? "hidden md:block" : ""
-                            } max-w-[960px] font-satoshi text-[clamp(14px,1.2vw,16px)] font-medium text-[#000000] whitespace-pre-line leading-relaxed mt-3`}
+                            } max-w-[960px] font-satoshi text-[clamp(14px,1.2vw,16px)] font-medium text-[#000000] whitespace-pre-line text-pretty leading-relaxed mt-3`}
                         >
-                            {formatDescription(data.description)}
+                            {data.description}
                         </p>
                     </div>
 
@@ -168,10 +109,10 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                             onClick={previousProject}
                             type="button"
                             aria-label="Previous project"
-                            disabled={!hasMultipleProjects || isAnimating}
-                            className={`flex h-11 w-11 items-center justify-center rounded-md bg-[#092008] transition-opacity ${
+                            disabled={!hasMultipleProjects}
+                            className={`flex h-11 w-11 items-center justify-center rounded-md bg-[#092008] transition-all ${
                                 hasMultipleProjects
-                                    ? "hover:opacity-80 cursor-pointer opacity-100 active:scale-95"
+                                    ? "hover:opacity-80 cursor-pointer opacity-100 active:scale-90"
                                     : "opacity-40 cursor-not-allowed"
                             }`}
                         >
@@ -186,10 +127,10 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                             onClick={nextProject}
                             type="button"
                             aria-label="Next project"
-                            disabled={!hasMultipleProjects || isAnimating}
-                            className={`flex h-11 w-11 items-center justify-center rounded-md bg-[#092008] transition-opacity ${
+                            disabled={!hasMultipleProjects}
+                            className={`flex h-11 w-11 items-center justify-center rounded-md bg-[#092008] transition-all ${
                                 hasMultipleProjects
-                                    ? "hover:opacity-80 cursor-pointer opacity-100 active:scale-95"
+                                    ? "hover:opacity-80 cursor-pointer opacity-100 active:scale-90"
                                     : "opacity-40 cursor-not-allowed"
                             }`}
                         >
@@ -208,8 +149,8 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                         <button
                             onClick={previousProject}
                             type="button"
-                            disabled={isAnimating}
-                            className="flex items-center gap-2 font-satoshi text-[15px] font-medium text-[#000000] hover:opacity-75 transition-opacity cursor-pointer select-none"
+                            disabled={!hasMultipleProjects}
+                            className="flex items-center gap-2 font-satoshi text-[15px] font-medium text-[#000000] hover:opacity-75 transition-opacity cursor-pointer select-none active:scale-90"
                         >
                             <svg
                                 width="18"
@@ -228,8 +169,8 @@ export default function OurWork({ data }: { data: OurWorkData }) {
 
                         {/* Tracker Indicator */}
                         <div className="flex items-center gap-1.5">
-                            {[0, 1, 2].slice(0, Math.min(3, projects.length)).map((dotIdx) => {
-                                const isCurrent = dotIdx === (activeProjectIndex % Math.min(3, projects.length));
+                            {[0, 1, 2].slice(0, Math.min(3, total)).map((dotIdx) => {
+                                const isCurrent = dotIdx === (currentIndex % Math.min(3, total));
 
                                 return (
                                     <button
@@ -250,8 +191,8 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                         <button
                             onClick={nextProject}
                             type="button"
-                            disabled={isAnimating}
-                            className="flex items-center gap-2 font-satoshi text-[15px] font-medium text-[#000000] hover:opacity-75 transition-opacity cursor-pointer select-none"
+                            disabled={!hasMultipleProjects}
+                            className="flex items-center gap-2 font-satoshi text-[15px] font-medium text-[#000000] hover:opacity-75 transition-opacity cursor-pointer select-none active:scale-90"
                         >
                             <span>Next</span>
                             <svg
@@ -271,55 +212,72 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                 )}
             </div>
 
-            {/* Responsive project banner with hardware-accelerated GPU slide */}
+            {/* Production full-width showcase banner with instant fast-clicking support */}
             <div
-                className="mt-6 sm:mt-12 w-full overflow-hidden select-none"
+                className="mt-6 sm:mt-10 w-full overflow-hidden select-none relative"
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
             >
-                {slides.length > 0 ? (
-                    <div
-                        className="flex w-full will-change-transform"
-                        style={{
-                            transform: `translate3d(-${hasMultipleProjects ? currentIndex * 100 : 0}%, 0, 0)`,
-                            transition: withTransition
-                                ? "transform 550ms cubic-bezier(0.16, 1, 0.3, 1)"
-                                : "none",
-                        }}
-                        onTransitionEnd={handleTransitionEnd}
-                    >
-                        {slides.map((proj, idx) => {
-                            const bUrl = getMediaUrl(proj?.images);
-                            const mUrl = getMediaUrl(proj?.mobileImages);
-                            const alt =
-                                getMediaAlt(proj?.images) ||
-                                getMediaAlt(proj?.mobileImages) ||
-                                data?.heading ||
-                                "Our Work";
+                {total > 0 ? (
+                    <div className="relative w-full overflow-hidden">
+                        <AnimatePresence initial={false} custom={direction} mode="popLayout">
+                            <motion.div
+                                key={currentIndex}
+                                custom={direction}
+                                variants={{
+                                    enter: (dir: number) => ({
+                                        x: dir > 0 ? "100%" : "-100%",
+                                        opacity: 0.95,
+                                    }),
+                                    center: {
+                                        x: 0,
+                                        opacity: 1,
+                                    },
+                                    exit: (dir: number) => ({
+                                        x: dir > 0 ? "-100%" : "100%",
+                                        opacity: 0.95,
+                                    }),
+                                }}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                transition={{
+                                    x: { type: "tween", ease: [0.16, 1, 0.3, 1], duration: 0.28 },
+                                    opacity: { duration: 0.2 },
+                                }}
+                                className="w-full"
+                            >
+                                {(() => {
+                                    const proj = projects[currentIndex];
+                                    const bUrl = getMediaUrl(proj?.images);
+                                    const mUrl = getMediaUrl(proj?.mobileImages);
+                                    const alt =
+                                        getMediaAlt(proj?.images) ||
+                                        getMediaAlt(proj?.mobileImages) ||
+                                        data?.heading ||
+                                        "Our Work";
 
-                            return (
-                                <div key={idx} className="w-full shrink-0">
-                                    <picture className="w-full block">
-                                        {mUrl && (
-                                            <source media="(max-width: 767px)" srcSet={mUrl} />
-                                        )}
-                                        <img
-                                            src={bUrl || mUrl || ""}
-                                            alt={alt}
-                                            className="h-auto w-full object-cover block select-none pointer-events-none"
-                                            draggable={false}
-                                        />
-                                    </picture>
-                                </div>
-                            );
-                        })}
+                                    return (
+                                        <picture className="w-full block">
+                                            {mUrl && (
+                                                <source media="(max-width: 767px)" srcSet={mUrl} />
+                                            )}
+                                            <img
+                                                src={bUrl || mUrl || ""}
+                                                alt={alt}
+                                                className="h-auto w-full max-h-[85vh] 2xl:max-h-[860px] object-cover object-top block select-none pointer-events-none"
+                                                draggable={false}
+                                            />
+                                        </picture>
+                                    );
+                                })()}
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
                 ) : (
-                    <div className="mx-auto max-w-[1300px] px-8">
-                        <div className="flex h-[320px] w-full items-center justify-center rounded-2xl bg-[#F5F5F5] text-gray-400">
-                            <p className="font-satoshi text-base">No banner image available</p>
-                        </div>
+                    <div className="flex h-[320px] w-full items-center justify-center bg-[#F5F5F5] text-gray-400">
+                        <p className="font-satoshi text-base">No banner image available</p>
                     </div>
                 )}
             </div>

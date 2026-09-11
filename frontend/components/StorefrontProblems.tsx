@@ -65,8 +65,8 @@ export default function StorefrontProblems({
                                     : "bg-[#EEF0FF] hover:bg-[#B4BCFE]"
                                     }`}
                             >
-                                <div className="pr-8">
-                                    <h3 className="font-delight text-[clamp(17px,1.15vw,18.5px)] font-medium leading-[1.25] text-[#0F1D07]">
+                                <div className="pr-7">
+                                    <h3 className="font-delight text-[clamp(17px,1.2vw,18.5px)] font-medium leading-[1.25] text-[#0F1D07] text-balance whitespace-pre-line">
                                         {item.title}
                                     </h3>
 
@@ -119,14 +119,27 @@ export default function StorefrontProblems({
                 {(() => {
                     const count = selectedIds.length;
                     const summaryText = (() => {
+                        if (Array.isArray(data.summary)) {
+                            if (count === 0) {
+                                const def = (data.summary as any[]).find((s: any) => s?.state === "default");
+                                if (def?.text) return def.text;
+                            } else if (count === 1) {
+                                const one = (data.summary as any[]).find((s: any) => s?.state === "one");
+                                if (one?.text) return one.text.replace(/\{count\}/g, "1");
+                            } else {
+                                const mult = (data.summary as any[]).find((s: any) => s?.state === "multiple");
+                                if (mult?.text) return mult.text.replace(/\{count\}/g, String(count));
+                            }
+                        }
                         if (count === 0) {
                             return "Select what applies above to diagnose your storefront.";
                         }
                         if (count < 3) {
                             return `${count} identified. Early signs that structure is impacting your conversions.`;
                         }
-                        const suffix = data.summary
-                            ? data.summary.replace(/^\d+\s*identified\.?\s*/i, "").trim()
+                        const summaryStr = typeof data.summary === "string" ? data.summary : "";
+                        const suffix = summaryStr
+                            ? summaryStr.replace(/^\d+\s*identified\.?\s*/i, "").trim()
                             : "At that point the structure is the problem, not the styling.";
                         return `${count} identified. ${suffix || "At that point the structure is the problem, not the styling."}`;
                     })();

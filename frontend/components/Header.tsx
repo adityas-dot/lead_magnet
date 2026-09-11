@@ -115,9 +115,27 @@ export default function Header({
         };
     }, []);
 
-    const navLinks = footerData?.quickLinks || data?.quickLinks || [];
-    const contacts = footerData?.contacts || [];
-    const socialLinks = footerData?.socialLinks || [];
+    const navLinks = (footerData?.quickLinks && footerData.quickLinks.length > 0 ? footerData.quickLinks : data?.quickLinks && data.quickLinks.length > 0 ? data.quickLinks : [
+        { id: 1, label: "Work", href: "#work" },
+        { id: 2, label: "Services", href: "#services" },
+        { id: 3, label: "Process", href: "#process" },
+        { id: 4, label: "FAQ", href: "#faq" },
+    ]);
+    const contacts = (footerData?.contacts && footerData.contacts.length > 0 ? footerData.contacts : [
+        {
+            id: 1,
+            location: "United States",
+            phone: "+1 (555) 000-0000",
+            email: "hello@thumbstack.com",
+            Address: "San Francisco, CA",
+        },
+    ]);
+    const socialLinks = (footerData?.socialLinks && footerData.socialLinks.length > 0 ? footerData.socialLinks : [
+        { id: 1, platform: "Instagram", href: "https://instagram.com" },
+        { id: 2, platform: "LinkedIn", href: "https://linkedin.com" },
+        { id: 3, platform: "YouTube", href: "https://youtube.com" },
+        { id: 4, platform: "Facebook", href: "https://facebook.com" },
+    ]);
     const brandName = data?.logoText || "Thumbstack.";
 
     const lineColor = isOpen
@@ -267,11 +285,11 @@ export default function Header({
                                     {/* CTA */}
                                     <div className="hidden lg:block mt-8 sm:mt-10">
                                         <a
-                                            href="#quote"
+                                            href={(data as any)?.cta?.href || (footerData as any)?.cta?.href || "#quote"}
                                             onClick={() => setIsOpen(false)}
                                             className="inline-flex items-center gap-2 rounded-full bg-[#3145DD] hover:bg-[#2537c7] text-white px-7 py-3.5 font-satoshi text-[15px] font-medium transition-all shadow-md active:scale-95 w-fit"
                                         >
-                                            <span>Talk to us</span>
+                                            <span>{(data as any)?.cta?.label || (data as any)?.ctaLabel || (footerData as any)?.cta?.label || "Talk to us"}</span>
                                             <span className="text-[17px] leading-none">→</span>
                                         </a>
                                     </div>

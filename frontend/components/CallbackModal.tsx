@@ -17,6 +17,7 @@ export type CallbackFormData = {
     disclaimer?: string;
     successTitle?: string;
     successDescription?: string;
+    closeButtonLabel?: string;
 };
 
 interface CallbackModalProps {
@@ -161,13 +162,15 @@ export default function CallbackModal({ isOpen, onClose, data }: CallbackModalPr
                                 <p className="text-[13.5px] text-[#2A7550]">
                                     {successDescription}
                                 </p>
-                                <button
-                                    type="button"
-                                    onClick={onClose}
-                                    className="text-xs sm:text-sm font-semibold underline text-[#1E7448] hover:text-[#145232] cursor-pointer pt-2 inline-block"
-                                >
-                                    Close Window
-                                </button>
+                                {(data?.closeButtonLabel || (data as any)?.closeLabel) && (
+                                    <button
+                                        type="button"
+                                        onClick={onClose}
+                                        className="text-xs sm:text-sm font-semibold underline text-[#1E7448] hover:text-[#145232] cursor-pointer pt-2 inline-block"
+                                    >
+                                        {data?.closeButtonLabel || (data as any)?.closeLabel}
+                                    </button>
+                                )}
                             </div>
                         ) : (
                             <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4">

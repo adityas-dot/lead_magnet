@@ -55,6 +55,7 @@ export type QuoteFormData = {
     emailPlaceholder?: string;
     bookCallButtonLabel?: string;
     disclaimer?: string;
+    closeButtonLabel?: string;
 };
 
 interface QuoteModalProps {
@@ -533,23 +534,18 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
                                                 </span>
                                             ))
                                         ) : (
-                                            <>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setStep(2)}
-                                                    className="text-[#3145DD] underline cursor-pointer hover:opacity-80 font-normal"
-                                                >
-                                                    UX issues
-                                                </button>
-                                                {", "}
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setStep(2)}
-                                                    className="text-[#3145DD] underline cursor-pointer hover:opacity-80 font-normal"
-                                                >
-                                                    Outdated Design
-                                                </button>
-                                            </>
+                                            issuesList.slice(0, 2).map((opt, idx) => (
+                                                <span key={opt.id || idx}>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setStep(2)}
+                                                        className="text-[#3145DD] underline cursor-pointer hover:opacity-80 font-normal"
+                                                    >
+                                                        {opt.label}
+                                                    </button>
+                                                    {idx < Math.min(issuesList.length, 2) - 1 && ", "}
+                                                </span>
+                                            ))
                                         )}
                                     </p>
 
@@ -636,15 +632,17 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
 
                                 {isSubmitted ? (
                                     <div className="p-4 rounded-xl bg-[#EBF7F2] text-[#1E7448] text-center font-satoshi text-[14px] mt-2 space-y-1.5">
-                                        <p className="font-medium">✓ Thank you! We&apos;ve received your request.</p>
-                                        <p className="text-xs text-[#2A7550]">We will review your store setup and get back to you shortly.</p>
-                                        <button
-                                            type="button"
-                                            onClick={onClose}
-                                            className="text-xs font-semibold underline text-[#1E7448] hover:text-[#145232] cursor-pointer pt-0.5"
-                                        >
-                                            Close Window
-                                        </button>
+                                        <p className="font-medium">✓ {form?.resultTitle || (form as any)?.successTitle || "Thank you! We've received your request."}</p>
+                                        <p className="text-xs text-[#2A7550]">{form?.resultDescription || (form as any)?.successDescription || "We will review your store setup and get back to you shortly."}</p>
+                                        {(form?.closeButtonLabel || (form as any)?.closeLabel) && (
+                                            <button
+                                                type="button"
+                                                onClick={onClose}
+                                                className="text-xs font-semibold underline text-[#1E7448] hover:text-[#145232] cursor-pointer pt-0.5"
+                                            >
+                                                {form?.closeButtonLabel || (form as any)?.closeLabel}
+                                            </button>
+                                        )}
                                     </div>
                                 ) : (
                                     <div>

@@ -174,10 +174,10 @@ export default function OurProcess({
                     <div className="mt-8 sm:mt-10 lg:mt-12 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
                         {/* 1. Image Diagram Card */}
                         <div className="col-span-2 order-1 lg:order-none lg:col-start-1 lg:col-span-2 lg:row-start-1 w-full aspect-[2896/1614] overflow-hidden rounded-[12px] sm:rounded-2xl bg-white flex items-center justify-center p-3 sm:p-4 md:p-5 lg:p-6 shadow-[0px_4px_20.6px_rgba(0,0,0,0.14)]">
-                            {data.image?.url && (
+                            {getMediaUrl(data.image) && (
                                 <div className="h-full max-w-full aspect-[2896/1614] overflow-hidden rounded-[10px] sm:rounded-[14px] md:rounded-[18px]">
                                     <img
-                                        src={getMediaUrl(data.image.url)}
+                                        src={getMediaUrl(data.image)}
                                         alt={data.heading || "Our Process"}
                                         className="w-full h-full object-cover rounded-[10px] sm:rounded-[14px] md:rounded-[18px]"
                                     />
@@ -203,9 +203,9 @@ export default function OurProcess({
 
                         {/* 4. Video Showcase Card */}
                         <div className="order-4 col-span-2 lg:order-none lg:col-start-2 lg:col-span-2 lg:row-start-2 w-full aspect-[2896/1614] relative rounded-[12px] sm:rounded-2xl overflow-hidden shadow-[0px_4px_20.6px_rgba(0,0,0,0.14)] bg-black flex items-center justify-center">
-                            {data.video?.url && (
+                            {getMediaUrl(data.video) && (
                                 <video
-                                    src={getMediaUrl(data.video.url)}
+                                    src={getMediaUrl(data.video)}
                                     autoPlay
                                     muted
                                     loop
@@ -245,7 +245,7 @@ function ProcessCard({
     className?: string;
 }) {
     const [isHovered, setIsHovered] = useState(false);
-    const iconUrl = getMediaUrl(card.icon) || (card.icon?.url ? getMediaUrl(card.icon.url) : "");
+    const iconUrl = getMediaUrl(card.icon);
 
     const ctaBase = card.cta?.label || "Explore";
     const ctaDesktop = ctaBase.toLowerCase().includes(card.title.toLowerCase())

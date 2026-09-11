@@ -9,6 +9,7 @@ export interface SectionsCallbackForm extends Struct.ComponentSchema {
   attributes: {
     buttonLabel: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Book My Free Call'>;
+    closeButtonLabel: Schema.Attribute.String;
     description: Schema.Attribute.Text &
       Schema.Attribute.DefaultTo<'Let\u2019s make something amazing together.\nBook a call - we\u2019ve got coffee (or tea) ready and are always up for a good conversation.'>;
     disclaimer: Schema.Attribute.String &

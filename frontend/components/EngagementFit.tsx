@@ -14,28 +14,12 @@ type EngagementFitData = {
 
 function formatHeading(heading: string) {
     if (!heading) return null;
-
     const normalized = heading.replace(/\\n/g, "\n");
-    if (normalized.includes("\n")) {
-        return normalized.split("\n").map((line, idx) => (
-            <span key={idx} className="block whitespace-normal sm:whitespace-nowrap">
-                {line}
-            </span>
-        ));
-    }
-
-    const match = heading.match(/^(Where this)\s+(engagement works,)\s+(.*)$/i);
-    if (match) {
-        return (
-            <>
-                <span className="block">{match[1]}</span>
-                <span className="block whitespace-normal sm:whitespace-nowrap">{match[2]}</span>
-                <span className="block whitespace-normal sm:whitespace-nowrap">{match[3]}</span>
-            </>
-        );
-    }
-
-    return heading;
+    return (
+        <span className="whitespace-pre-line text-pretty block">
+            {normalized}
+        </span>
+    );
 }
 
 export default function EngagementFit({
@@ -49,11 +33,11 @@ export default function EngagementFit({
             <div className="mx-auto w-full max-w-[1720px]">
                 <div className="flex flex-col lg:flex-row justify-between items-start gap-8 lg:gap-10 xl:gap-14 2xl:gap-16">
                     {/* Left Column: Heading & Description */}
-                    <div className="flex flex-col w-full lg:max-w-[480px] xl:max-w-[520px] 2xl:max-w-[560px]">
-                        <h2 className="font-delight text-[clamp(28px,3.2vw,50px)] font-medium leading-[1.15] lg:leading-[1.18] tracking-[-0.01em] text-[#0f1d07] space-y-1.5 lg:space-y-2 mb-4 lg:mb-6">
+                    <div className="flex flex-col w-full lg:max-w-[640px] xl:max-w-[680px] 2xl:max-w-[720px]">
+                        <h2 className="font-delight text-[clamp(29px,3.6vw,57px)] font-medium leading-[1.15] tracking-[-0.015em] text-[#0f1d07] mb-4 lg:mb-6 max-w-[480px] sm:max-w-[540px]">
                             {formatHeading(data.heading)}
                         </h2>
-                        <p className="font-satoshi font-medium text-[#4A4A4A] text-[14px] xl:text-[15px] leading-[1.65] xl:leading-[1.75] max-w-[460px]">
+                        <p className="font-satoshi font-medium text-[#0F1D07] text-[16px] xl:text-[16px] leading-[1.6] xl:leading-[1.65] max-w-[550px] whitespace-pre-line text-pretty">
                             {data.description}
                         </p>
                     </div>

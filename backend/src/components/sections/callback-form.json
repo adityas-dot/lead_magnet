@@ -53,6 +53,9 @@
     "successDescription": {
       "type": "string",
       "default": "We'll reach out within 24 hours — no spam, just expert guidance."
+    },
+    "closeButtonLabel": {
+      "type": "string"
     }
   },
   "config": {}

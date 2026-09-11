@@ -114,6 +114,9 @@
     },
     "disclaimer": {
       "type": "text"
+    },
+    "closeButtonLabel": {
+      "type": "string"
     }
   },
   "config": {}

@@ -62,6 +62,7 @@ type QuoteForm = {
     emailPlaceholder?: string;
     bookCallButtonLabel?: string;
     disclaimer?: string;
+    closeButtonLabel?: string;
 };
 
 type HeroData = {
@@ -226,7 +227,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                             {trackBrands.map((brand, idx) => (
                                                 <div key={`brand-track1-${idx}`} className="flex items-center justify-center h-9 sm:h-10 shrink-0">
                                                     <img
-                                                        src={getMediaUrl(brand.logo?.url)}
+                                                        src={getMediaUrl(brand.logo)}
                                                         alt={brand.name || "Brand logo"}
                                                         className={`${getBrandSize(brand)} w-auto object-contain transition-all duration-300 opacity-90 hover:opacity-100`}
                                                         style={{ filter: 'brightness(0) invert(1)' }}
@@ -238,7 +239,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                             {trackBrands.map((brand, idx) => (
                                                 <div key={`brand-track2-${idx}`} className="flex items-center justify-center h-9 sm:h-10 shrink-0">
                                                     <img
-                                                        src={getMediaUrl(brand.logo?.url)}
+                                                        src={getMediaUrl(brand.logo)}
                                                         alt={brand.name || "Brand logo"}
                                                         className={`${getBrandSize(brand)} w-auto object-contain transition-all duration-300 opacity-90 hover:opacity-100`}
                                                         style={{ filter: 'brightness(0) invert(1)' }}
@@ -459,23 +460,18 @@ export default function Hero({ data }: { data: HeroData }) {
                                                 </span>
                                             ))
                                         ) : (
-                                            <>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setStep(2)}
-                                                    className="font-satoshi text-[#3145DD] underline cursor-pointer hover:opacity-80 font-normal"
-                                                >
-                                                    UX issues
-                                                </button>
-                                                {", "}
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setStep(2)}
-                                                    className="font-satoshi text-[#3145DD] underline cursor-pointer hover:opacity-80 font-normal"
-                                                >
-                                                    Outdated Design
-                                                </button>
-                                            </>
+                                            issuesList.slice(0, 2).map((opt, idx) => (
+                                                <span key={opt.id || idx}>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setStep(2)}
+                                                        className="font-satoshi text-[#3145DD] underline cursor-pointer hover:opacity-80 font-normal"
+                                                    >
+                                                        {opt.label}
+                                                    </button>
+                                                    {idx < Math.min(issuesList.length, 2) - 1 && ", "}
+                                                </span>
+                                            ))
                                         )}
                                     </p>
 
@@ -559,8 +555,11 @@ export default function Hero({ data }: { data: HeroData }) {
                                 </div>
 
                                 {isSubmitted ? (
-                                    <div className="p-4 rounded-xl bg-[#EBF7F2] text-[#1E7448] text-center font-satoshi text-[14px] mt-4">
-                                        ✓ Thank you! We&apos;ve received your request and will review your store.
+                                    <div className="p-4 rounded-xl bg-[#EBF7F2] text-[#1E7448] text-center font-satoshi text-[14px] mt-4 space-y-1">
+                                        <p className="font-medium">✓ {form?.resultTitle || "Thank you! We've received your request."}</p>
+                                        {form?.resultDescription && (
+                                            <p className="text-xs text-[#2A7550]">{form.resultDescription}</p>
+                                        )}
                                     </div>
                                 ) : (
                                     <div>

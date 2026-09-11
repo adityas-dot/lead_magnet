@@ -32,7 +32,7 @@ export default function FinalCTA({
     data: FinalCtaData;
 }) {
     if (!data) return null;
-    const validLogos = (data.logos || []).filter((l) => l?.logo?.url);
+    const validLogos = (data.logos || []).filter((l) => Boolean(getMediaUrl(l?.logo)));
     const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
@@ -92,10 +92,10 @@ export default function FinalCTA({
                                     <span>{headingParts.likeWord}</span>
                                     <span className="mx-2.5 sm:mx-3.5 lg:mx-4.5 inline-flex h-[42px] w-[42px] min-[360px]:h-[46px] min-[360px]:w-[46px] sm:h-[56px] sm:w-[56px] lg:h-[68px] lg:w-[68px] align-middle -mt-0.5 sm:-mt-1.5 rounded-[8px] sm:rounded-[10px] border border-[#00000030] bg-white relative overflow-hidden select-none shrink-0 shadow-xs">
                                         <AnimatePresence mode="wait">
-                                            {currentLogo?.logo?.url && (
+                                            {currentLogo?.logo && (
                                                 <motion.img
                                                     key={currentLogo.id || currentIndex}
-                                                    src={getMediaUrl(currentLogo.logo.url)}
+                                                    src={getMediaUrl(currentLogo.logo)}
                                                     alt=""
                                                     initial={{ opacity: 0 }}
                                                     animate={{ opacity: 1 }}
