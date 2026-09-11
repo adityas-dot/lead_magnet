@@ -32,7 +32,7 @@ export default function FAQ({
         <section className="px-6 pt-14 pb-20 sm:pb-24 lg:py-24 lg:px-[60px] xl:px-[80px]">
             <div className="w-full mx-auto max-w-[1720px]">
                 <div>
-                    <h1 className="font-nohemi font-normal text-[clamp(28px,3.5vw,46px)] leading-tight">
+                    <h1 className="font-nohemi font-normal text-[clamp(32px,4.2vw,52px)] leading-tight">
                         {data.heading}
                     </h1>
                 </div>
@@ -52,12 +52,12 @@ export default function FAQ({
                                     onClick={() => setOpenIndex(isOpen ? null : index)}
                                     className="flex w-full items-center justify-between py-3.5 sm:py-6 text-left cursor-pointer"
                                 >
-                                    <span className="font-nohemi text-[18px] lg:text-[20px] font-medium text-[#000000] pr-4">
+                                    <span className="font-nohemi text-[clamp(20px,4.2vw,25px)] font-medium text-[#000000] pr-4">
                                         {item.question}
                                     </span>
 
                                     <span
-                                        className={`inline-block text-[36px] leading-none select-none transition-transform duration-300 ease-in-out text-black font-light shrink-0 ${isOpen ? "rotate-45" : "rotate-0"
+                                        className={`inline-block text-[clamp(38px,4.2vw,44px)] leading-none select-none transition-transform duration-300 ease-in-out text-black font-light shrink-0 ${isOpen ? "rotate-45" : "rotate-0"
                                             }`}
                                     >
                                         +
@@ -102,12 +102,12 @@ export default function FAQ({
                                         onClick={() => setOpenMobileIndex(isOpen ? null : index)}
                                         className="flex w-full items-center justify-between py-3.5 sm:py-5 text-left cursor-pointer"
                                     >
-                                        <span className="font-satoshi text-[clamp(14px,4.2vw,18px)] font-medium text-[#000000] pr-4 leading-[1.35]">
+                                        <span className="font-satoshi text-[clamp(15.5px,4.2vw,19.5px)] font-medium text-[#000000] pr-4 leading-[1.35]">
                                             {item.question}
                                         </span>
 
                                         <span
-                                            className={`inline-block text-[30px] leading-none select-none transition-transform duration-300 ease-in-out text-black font-light shrink-0 ${isOpen ? "rotate-45" : "rotate-0"
+                                            className={`inline-block text-[clamp(32px,4.2vw,36px)] leading-none select-none transition-transform duration-300 ease-in-out text-black font-light shrink-0 ${isOpen ? "rotate-45" : "rotate-0"
                                                 }`}
                                         >
                                             +

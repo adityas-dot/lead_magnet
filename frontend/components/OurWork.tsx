@@ -85,7 +85,7 @@ export default function OurWork({ data }: { data: OurWorkData }) {
             <div className="mx-auto flex w-full max-w-[1880px] flex-col px-6 lg:px-[60px] xl:px-[80px]">
                 <div className="flex w-full justify-between items-end gap-6">
                     <div className="max-w-[960px]">
-                        <h2 className="font-nohemi text-[clamp(28px,4vw,65px)] font-normal font-[400] leading-[1.15] tracking-[-0.015em] text-[#000000]">
+                        <h2 className="font-nohemi text-[clamp(28px,4.2vw,65px)] font-normal font-[400] leading-[1.15] tracking-[-0.015em] text-[#000000]">
                             {data.heading}
                         </h2>
 
@@ -97,7 +97,7 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                         <p
                             className={`${
                                 data.MobileDescription ? "hidden md:block" : ""
-                            } max-w-[960px] font-satoshi text-[clamp(14px,1.2vw,16px)] font-medium text-[#000000] whitespace-pre-line text-pretty leading-relaxed mt-3`}
+                            } max-w-[960px] font-satoshi text-[clamp(14px,4.2vw,16px)] font-medium text-[#000000] whitespace-pre-line text-pretty leading-relaxed mt-3`}
                         >
                             {data.description}
                         </p>

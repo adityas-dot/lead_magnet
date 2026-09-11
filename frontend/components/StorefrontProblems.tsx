@@ -34,7 +34,7 @@ export default function StorefrontProblems({
         <section id="storefront-problems" className="w-full bg-white px-6 pt-15 pb-10 text-[#0D2108] lg:px-[60px] xl:px-[80px] lg:pt-[90px] lg:pb-[30px]">
             <div className="mx-auto max-w-[1720px] w-full">
                 <div className="w-full">
-                    <h2 className="font-delight text-[clamp(32px,4.5vw,65px)] font-medium leading-[1.15] tracking-[-0.015em] xl:whitespace-nowrap text-[#0F1D07]">
+                    <h2 className="font-delight text-[clamp(32px,4.2vw,65px)] font-medium leading-[1.15] tracking-[-0.015em] xl:whitespace-nowrap text-[#0F1D07]">
                         {data.heading}
                     </h2>
 
@@ -66,7 +66,7 @@ export default function StorefrontProblems({
                                     }`}
                             >
                                 <div className="pr-7">
-                                    <h3 className="font-delight text-[clamp(17px,1.2vw,18.5px)] font-medium leading-[1.25] text-[#0F1D07] text-balance whitespace-pre-line">
+                                    <h3 className="font-delight text-[clamp(17px,4.2vw,18.5px)] font-medium leading-[1.25] text-[#0F1D07] text-balance whitespace-pre-line">
                                         {item.title}
                                     </h3>
 

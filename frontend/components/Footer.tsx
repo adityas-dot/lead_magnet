@@ -168,7 +168,7 @@ export default function Footer({
                         <div className="grid grid-cols-2 gap-x-6 sm:gap-x-10 gap-y-8">
                             {/* Quick Links (First on mobile, Second on big screen) */}
                             <div className="order-1 lg:order-2 lg:pl-6 xl:pl-10">
-                                <h2 className="font-satoshi text-[clamp(15px,1.3vw,18px)] font-bold text-white tracking-tight mb-4 sm:mb-5 lg:mb-6">
+                                <h2 className="font-satoshi text-[clamp(15px,4.2vw,18px)] font-bold text-white tracking-tight mb-4 sm:mb-5 lg:mb-6">
                                     {d.quickLinksHeading || "Quick Links"}
                                 </h2>
 
@@ -187,7 +187,7 @@ export default function Footer({
 
                             {/* Contact (Second on mobile, First on big screen) */}
                             <div className="order-2 lg:order-1">
-                                <h2 className="font-satoshi text-[clamp(15px,1.3vw,18px)] font-bold text-white tracking-tight mb-4 sm:mb-5 lg:mb-6">
+                                <h2 className="font-satoshi text-[clamp(15px,4.2vw,18px)] font-bold text-white tracking-tight mb-4 sm:mb-5 lg:mb-6">
                                     {d.contactHeading || "Contact"}
                                 </h2>
 
@@ -206,7 +206,7 @@ export default function Footer({
                                             </a>
 
                                             {contact.Address && (
-                                                <p className="hidden lg:block mt-4 max-w-[300px] font-satoshi text-[14px] font-medium leading-[1.4] text-white">
+                                                <p className="hidden lg:block mt-4 max-w-[300px] font-satoshi text-[14px] font-[450] leading-[1.4] text-white">
                                                     {contact.Address}
                                                 </p>
                                             )}

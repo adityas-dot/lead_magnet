@@ -263,13 +263,13 @@ export default function Hero({ data }: { data: HeroData }) {
 
     return (
         <section data-theme="dark" className="relative min-h-0 xl:min-h-screen bg-[#37386B] text-white flex flex-col font-sans overflow-x-hidden">
-            <div className="flex-grow flex items-start xl:items-center pt-[100px] pb-0 xl:pb-12 px-6 lg:px-[40px] xl:px-[48px] 2xl:px-[80px]">
+            <div className="flex-grow flex items-start xl:items-center pt-[88px] sm:pt-[100px] pb-0 xl:pb-12 px-5 sm:px-6 lg:px-[40px] xl:px-[48px] 2xl:px-[80px]">
                 <div className="max-w-[1720px] mx-auto w-full grid grid-cols-1 xl:grid-cols-[1fr_490px] 2xl:grid-cols-[1fr_620px] gap-8 xl:gap-8 2xl:gap-16 items-start">
 
                     {/* Left Column: Hero copy and client brands */}
                     <div className="max-w-full flex flex-col justify-between self-stretch min-w-0">
                         <div>
-                            <h1 className="font-nohemi font-normal text-white text-[clamp(38px,3.8vw,80px)] tracking-[-0.01em] mb-6 leading-[1.7] sm:leading-[1.3] xl:leading-[1.15] 2xl:leading-[82px]">
+                            <h1 className="font-nohemi font-normal text-white text-[clamp(32px,7.5vw,80px)] tracking-[-0.01em] mb-4 sm:mb-6 leading-[1.18] sm:leading-[1.25] xl:leading-[1.15] 2xl:leading-[82px]">
                                 {formattedHeading.split("\n").map((line, idx) => (
                                     <span key={idx} className="block whitespace-normal 2xl:whitespace-nowrap">
                                         {line}
@@ -277,7 +277,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                 ))}
                             </h1>
 
-                            <p className="font-satoshi text-white/70 lg:text-white text-[clamp(13px,1.2vw,18px)] mb-6 max-w-[778px] leading-[1.5] lg:leading-[35.4px] tracking-normal">
+                            <p className="font-satoshi text-white/80 lg:text-white text-[15px] sm:text-[16px] lg:text-[18px] mb-6 max-w-[778px] leading-[1.6] lg:leading-[35.4px] tracking-normal">
                                 {data.description}
                             </p>
 
@@ -304,9 +304,9 @@ export default function Hero({ data }: { data: HeroData }) {
                         </div>
 
                         {/* Client logo marquee */}
-                        <div className="mt-20 lg:mt-28 xl:mt-auto pt-8">
+                        <div className="mt-10 sm:mt-16 lg:mt-28 xl:mt-auto pt-4 sm:pt-8">
                             {data.brandsHeading && (
-                                <p className="font-satoshi font-normal text-[#F6F6F6] text-[clamp(13px,1.15vw,18px)] mb-3 lg:mb-4 w-full whitespace-nowrap leading-tight tracking-[-0.3px]">
+                                <p className="font-satoshi font-normal text-[#F6F6F6] text-[13.5px] sm:text-[15px] lg:text-[16px] mb-3 lg:mb-4 w-full whitespace-normal xl:whitespace-nowrap leading-snug tracking-[-0.2px]">
                                     {data.brandsHeading}
                                 </p>
                             )}
@@ -319,7 +319,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                     }}
                                 >
                                     <div className="flex w-max items-center animate-marquee hover:[animation-play-state:paused]">
-                                        <div className="flex shrink-0 items-center gap-8 lg:gap-12 pr-8 lg:pr-12">
+                                        <div className="flex shrink-0 items-center gap-6 sm:gap-8 lg:gap-12 pr-6 sm:pr-8 lg:pr-12">
                                             {trackBrands.map((brand, idx) => (
                                                 <div key={`brand-track1-${idx}`} className="flex items-center justify-center h-9 sm:h-10 shrink-0">
                                                     <img
@@ -331,7 +331,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                                 </div>
                                             ))}
                                         </div>
-                                        <div className="flex shrink-0 items-center gap-8 lg:gap-12 pr-8 lg:pr-12" aria-hidden="true">
+                                        <div className="flex shrink-0 items-center gap-6 sm:gap-8 lg:gap-12 pr-6 sm:pr-8 lg:pr-12" aria-hidden="true">
                                             {trackBrands.map((brand, idx) => (
                                                 <div key={`brand-track2-${idx}`} className="flex items-center justify-center h-9 sm:h-10 shrink-0">
                                                     <img
@@ -350,8 +350,8 @@ export default function Hero({ data }: { data: HeroData }) {
                     </div>
 
                     {/* Interactive Shopify Quote Estimator */}
-                    <div id="quote" data-quote-form="true" data-theme="light" className="-mx-6 sm:-mx-8 lg:-mx-[60px] xl:mx-0 w-[calc(100%+48px)] sm:w-[calc(100%+64px)] lg:w-[calc(100%+120px)] xl:w-full bg-[#F9F9F9] text-black px-6 py-8 sm:p-8 lg:p-[40px] xl:p-8 2xl:p-[48px] pb-10 sm:pb-12 xl:pb-8 2xl:pb-[48px] shadow-2xl relative mt-8 xl:mt-0 rounded-t-[20px] rounded-b-none xl:rounded-none transition-all duration-300 scroll-mt-24">
-                        <h2 className="font-nohemi text-[clamp(26px,2.5vw,36px)] font-normal text-[#1A1A1A] mb-2 leading-tight">
+                    <div id="quote" data-quote-form="true" data-theme="light" className="-mx-5 sm:-mx-6 lg:-mx-[60px] xl:mx-0 w-[calc(100%+40px)] sm:w-[calc(100%+48px)] lg:w-[calc(100%+120px)] xl:w-full bg-[#F9F9F9] text-black px-5 py-8 sm:p-8 lg:p-[40px] xl:p-8 2xl:p-[48px] pb-10 sm:pb-12 xl:pb-8 2xl:pb-[48px] shadow-2xl relative mt-8 xl:mt-0 rounded-t-[20px] rounded-b-none xl:rounded-none transition-all duration-300 scroll-mt-24">
+                        <h2 className="font-nohemi text-[clamp(26px,4.2vw,36px)] font-normal text-[#1A1A1A] mb-2 leading-tight">
                             {step === 1 && (form?.title || "Get an instant quote")}
                             {step === 2 && (form?.step2Title || "Choose your budget range")}
                             {step === 3 && (form?.resultTitle || "Your Instant Quote Is Ready!")}
@@ -465,7 +465,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                 <button
                                     type="button"
                                     onClick={handleStep1Continue}
-                                    className="font-satoshi w-full bg-[#2B44E7] hover:bg-[#2037CA] text-white font-medium py-2 sm:py-2.5 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 mt-[200px] sm:mt-[230px] lg:mt-[110px] xl:mt-[90px] 2xl:mt-[120px] text-[15px] sm:text-[16px] shadow-none cursor-pointer"
+                                    className="font-satoshi w-full bg-[#2B44E7] hover:bg-[#2037CA] text-white font-medium py-2 sm:py-2.5 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 mt-8 sm:mt-12 xl:mt-[90px] 2xl:mt-[120px] text-[15px] sm:text-[16px] shadow-none cursor-pointer"
                                 >
                                     {form?.continueLabel}
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

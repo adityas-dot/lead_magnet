@@ -149,7 +149,7 @@ export default function OurProcess({
 
                         {/* Heading & Desktop CTA */}
                         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mt-2.5 sm:mt-3 md:mt-5">
-                            <h2 className="font-delight text-[clamp(26px,5.5vw,38px)] font-medium md:max-w-[500px] leading-[1.15] text-white">
+                            <h2 className="font-delight text-[clamp(26px,4.2vw,38px)] font-medium md:max-w-[500px] leading-[1.15] text-white">
                                 {data.heading}
                             </h2>
 
@@ -181,15 +181,15 @@ export default function OurProcess({
                     </div>
 
                     {/* Responsive Grid: 2 columns on mobile/tablet, 4 columns on desktop */}
-                    <div className="mt-8 sm:mt-10 lg:mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-7 xl:gap-8">
+                    <div className="mt-8 sm:mt-10 lg:mt-12 grid grid-cols-2 lg:grid-cols-4 lg:auto-rows-fr gap-4 sm:gap-5 lg:gap-7 xl:gap-8">
                         {/* 1. Image Diagram Card */}
-                        <div className="col-span-2 order-1 lg:order-none lg:col-start-1 lg:col-span-2 lg:row-start-1 w-full aspect-[2896/1614] overflow-hidden rounded-[14px] bg-white flex items-center justify-center p-2 sm:p-2.5 md:p-3 lg:p-3.5 shadow-[0px_4px_20.6px_rgba(0,0,0,0.14)]">
+                        <div className="col-span-2 order-1 lg:order-none lg:col-start-1 lg:col-span-2 lg:row-start-1 w-full h-full aspect-[2896/1614] overflow-hidden rounded-[14px] bg-white flex items-center justify-center p-2 sm:p-2.5 md:p-3 lg:p-3.5 border border-white/10">
                             {getMediaUrl(data.image) && (
-                                <div className="h-full max-w-full aspect-[2896/1614] overflow-hidden rounded-[8px]">
+                                <div className="h-full w-full overflow-hidden rounded-[8px] flex items-center justify-center">
                                     <img
                                         src={getMediaUrl(data.image)}
                                         alt={data.heading || "Our Process"}
-                                        className="w-full h-full object-cover rounded-[8px]"
+                                        className="w-full h-full object-contain rounded-[8px]"
                                     />
                                 </div>
                             )}
@@ -212,7 +212,7 @@ export default function OurProcess({
                         )}
 
                         {/* 4. Video Showcase Card */}
-                        <div className="order-4 col-span-2 lg:order-none lg:col-start-2 lg:col-span-2 lg:row-start-2 w-full aspect-[2896/1614] relative rounded-[14px] overflow-hidden shadow-[0px_4px_20.6px_rgba(0,0,0,0.14)] bg-black flex items-center justify-center">
+                        <div className="order-4 col-span-2 lg:order-none lg:col-start-2 lg:col-span-2 lg:row-start-2 w-full h-full aspect-[2896/1614] relative rounded-[14px] overflow-hidden border border-white/10">
                             {getMediaUrl(data.video) && (
                                 <video
                                     src={getMediaUrl(data.video)}
@@ -220,7 +220,7 @@ export default function OurProcess({
                                     muted
                                     loop
                                     playsInline
-                                    className="h-full w-full object-cover rounded-[14px]"
+                                    className="w-full h-full object-cover rounded-[14px]"
                                 />
                             )}
                         </div>
@@ -267,7 +267,7 @@ function ProcessCard({
 
     return (
         <div
-            className={`group relative flex h-full min-h-[250px] sm:min-h-[280px] w-full flex-col rounded-[14px] text-white overflow-hidden cursor-pointer transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] select-none shadow-[0px_4px_20.6px_rgba(0,0,0,0.14)] hover:shadow-xl ${
+            className={`group relative flex h-full min-h-[240px] sm:min-h-[250px] lg:min-h-0 w-full flex-col rounded-[14px] text-white overflow-hidden cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] select-none border border-white/[0.07] hover:border-white/20 ${
                 hasServices && isHovered ? "bg-[#2D4620]" : "bg-[#1A2F11]"
             } ${className}`}
             onMouseEnter={() => setIsHovered(true)}
@@ -284,7 +284,7 @@ function ProcessCard({
                     duration: 0.38,
                     ease: [0.16, 1, 0.3, 1],
                 }}
-                className={`flex h-full w-full flex-col justify-between p-4 sm:p-6 lg:p-8 ${
+                className={`flex h-full w-full flex-col justify-between p-4 sm:p-5 lg:p-4.5 xl:p-6 2xl:p-8 ${
                     hasServices && isHovered
                         ? "pointer-events-none"
                         : "pointer-events-auto"
@@ -293,30 +293,30 @@ function ProcessCard({
                 <div>
                     {/* Icon */}
                     {iconUrl && (
-                        <div className="h-7 w-7 sm:h-8 sm:w-8 mb-3 sm:mb-4 flex items-center justify-start">
+                        <div className="h-6 w-6 sm:h-7 sm:w-7 lg:h-7 lg:w-7 xl:h-8 xl:w-8 mb-2 sm:mb-3 lg:mb-3 xl:mb-4 flex items-center justify-start">
                             <img
                                 src={iconUrl}
                                 alt={card.title || ""}
-                                className="h-7 w-7 sm:h-8 sm:w-8 object-contain brightness-0 invert"
+                                className="h-6 w-6 sm:h-7 sm:w-7 lg:h-7 lg:w-7 xl:h-8 xl:w-8 object-contain brightness-0 invert"
                             />
                         </div>
                     )}
 
                     {/* Title */}
-                    <h3 className="font-satoshi text-[clamp(18px,2.2vw,34px)] font-bold leading-tight text-white">
+                    <h3 className="font-satoshi text-[clamp(18px,4.2vw,28px)] 2xl:text-[32px] font-bold leading-tight text-white">
                         {card.title}
                     </h3>
 
                     {/* Description */}
-                    <p className="mt-2 sm:mt-2.5 lg:mt-3 font-satoshi text-[11.5px] sm:text-[13px] lg:text-[14.5px] font-normal leading-[1.45] text-[#9BA893] max-w-[300px]">
+                    <p className="mt-1.5 sm:mt-2 lg:mt-2 font-satoshi text-[11px] sm:text-[12.5px] lg:text-[13px] xl:text-[14.5px] font-normal leading-[1.4] text-[#9BA893] max-w-[300px]">
                         {card.description}
                     </p>
                 </div>
 
                 {/* CTA */}
                 {card.cta && (
-                    <div className="mt-auto pt-3 sm:pt-4 lg:pt-6">
-                        <div className="inline-flex items-center gap-1.5 sm:gap-2 lg:gap-3 font-satoshi text-[12.5px] sm:text-[14px] lg:text-[16px] font-semibold text-white transition-all duration-200">
+                    <div className="mt-auto pt-2.5 sm:pt-3 lg:pt-3.5 xl:pt-5">
+                        <div className="inline-flex items-center gap-1.5 sm:gap-2 lg:gap-2.5 font-satoshi text-[12px] sm:text-[13px] lg:text-[13.5px] xl:text-[15.5px] font-semibold text-white transition-all duration-200">
                             <span className="lg:hidden">{ctaBase}</span>
                             <span className="hidden lg:inline">{ctaDesktop}</span>
                             <svg
