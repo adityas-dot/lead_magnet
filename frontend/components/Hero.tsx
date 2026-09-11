@@ -269,7 +269,7 @@ export default function Hero({ data }: { data: HeroData }) {
                     {/* Left Column: Hero copy and client brands */}
                     <div className="max-w-full flex flex-col justify-between self-stretch min-w-0">
                         <div>
-                            <h1 className="font-nohemi font-normal text-white text-[clamp(32px,7.5vw,80px)] tracking-[-0.01em] mb-4 sm:mb-6 leading-[1.18] sm:leading-[1.25] xl:leading-[1.15] 2xl:leading-[82px]">
+                            <h1 className="font-nohemi font-normal text-white text-[clamp(28px,7vw,42px)] xl:text-[clamp(36px,4.2vw,65px)] 2xl:text-[clamp(44px,4.2vw,80px)] tracking-[-0.01em] mb-4 sm:mb-6 leading-[1.18] sm:leading-[1.25] xl:leading-[1.15] 2xl:leading-[82px]">
                                 {formattedHeading.split("\n").map((line, idx) => (
                                     <span key={idx} className="block whitespace-normal 2xl:whitespace-nowrap">
                                         {line}
