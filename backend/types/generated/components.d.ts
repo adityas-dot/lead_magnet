@@ -192,6 +192,8 @@ export interface SectionsQuoteForm extends Struct.ComponentSchema {
     budgetRanges: Schema.Attribute.Component<'shared.budget-range', true>;
     budgetTypeLabel: Schema.Attribute.String;
     budgetTypeOptions: Schema.Attribute.Component<'shared.form-option', true>;
+    budgetWarning: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Please select your preferred budget range'>;
     closeButtonLabel: Schema.Attribute.String;
     continueLabel: Schema.Attribute.String;
     description: Schema.Attribute.Text;
@@ -204,6 +206,8 @@ export interface SectionsQuoteForm extends Struct.ComponentSchema {
     issueOptions: Schema.Attribute.Component<'shared.form-option', true>;
     issuesLabel: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'What needs Improvement ?'>;
+    issuesWarning: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Please select at least one issue that needs improvement'>;
     noLabel: Schema.Attribute.String;
     otherIssuesLabel: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Other issues (optional)'>;
@@ -211,8 +215,12 @@ export interface SectionsQuoteForm extends Struct.ComponentSchema {
       Schema.Attribute.DefaultTo<'Any other issues your shopify store is facing'>;
     phoneLabel: Schema.Attribute.String;
     phonePlaceholder: Schema.Attribute.String;
+    phoneWarning: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Please enter a valid phone number'>;
     resultDescription: Schema.Attribute.Text;
     resultTitle: Schema.Attribute.String;
+    selectionWarning: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Please select what needs improvement and your budget range'>;
     shopifyLinkLabel: Schema.Attribute.String;
     shopifyLinkPlaceholder: Schema.Attribute.String;
     shopifyQuestion: Schema.Attribute.String;
@@ -224,6 +232,12 @@ export interface SectionsQuoteForm extends Struct.ComponentSchema {
       Schema.Attribute.DefaultTo<'Choose your budget range'>;
     step3Label: Schema.Attribute.String;
     stepLabel: Schema.Attribute.String;
+    storeWarning: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Please select whether you own a Shopify website'>;
+    successDescription: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'We will review your store setup and get back to you shortly.'>;
+    successTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<"Thank you! We've received your request.">;
     title: Schema.Attribute.String;
     yesLabel: Schema.Attribute.String;
   };

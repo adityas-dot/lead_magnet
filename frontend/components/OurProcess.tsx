@@ -181,15 +181,15 @@ export default function OurProcess({
                     </div>
 
                     {/* Responsive Grid: 2 columns on mobile/tablet, 4 columns on desktop */}
-                    <div className="mt-8 sm:mt-10 lg:mt-12 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+                    <div className="mt-8 sm:mt-10 lg:mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-7 xl:gap-8">
                         {/* 1. Image Diagram Card */}
-                        <div className="col-span-2 order-1 lg:order-none lg:col-start-1 lg:col-span-2 lg:row-start-1 w-full aspect-[2896/1614] overflow-hidden rounded-[12px] sm:rounded-2xl bg-white flex items-center justify-center p-3 sm:p-4 md:p-5 lg:p-6 shadow-[0px_4px_20.6px_rgba(0,0,0,0.14)]">
+                        <div className="col-span-2 order-1 lg:order-none lg:col-start-1 lg:col-span-2 lg:row-start-1 w-full aspect-[2896/1614] overflow-hidden rounded-[14px] bg-white flex items-center justify-center p-2 sm:p-2.5 md:p-3 lg:p-3.5 shadow-[0px_4px_20.6px_rgba(0,0,0,0.14)]">
                             {getMediaUrl(data.image) && (
-                                <div className="h-full max-w-full aspect-[2896/1614] overflow-hidden rounded-[10px] sm:rounded-[14px] md:rounded-[18px]">
+                                <div className="h-full max-w-full aspect-[2896/1614] overflow-hidden rounded-[8px]">
                                     <img
                                         src={getMediaUrl(data.image)}
                                         alt={data.heading || "Our Process"}
-                                        className="w-full h-full object-cover rounded-[10px] sm:rounded-[14px] md:rounded-[18px]"
+                                        className="w-full h-full object-cover rounded-[8px]"
                                     />
                                 </div>
                             )}
@@ -212,7 +212,7 @@ export default function OurProcess({
                         )}
 
                         {/* 4. Video Showcase Card */}
-                        <div className="order-4 col-span-2 lg:order-none lg:col-start-2 lg:col-span-2 lg:row-start-2 w-full aspect-[2896/1614] relative rounded-[12px] sm:rounded-2xl overflow-hidden shadow-[0px_4px_20.6px_rgba(0,0,0,0.14)] bg-black flex items-center justify-center">
+                        <div className="order-4 col-span-2 lg:order-none lg:col-start-2 lg:col-span-2 lg:row-start-2 w-full aspect-[2896/1614] relative rounded-[14px] overflow-hidden shadow-[0px_4px_20.6px_rgba(0,0,0,0.14)] bg-black flex items-center justify-center">
                             {getMediaUrl(data.video) && (
                                 <video
                                     src={getMediaUrl(data.video)}
@@ -220,7 +220,7 @@ export default function OurProcess({
                                     muted
                                     loop
                                     playsInline
-                                    className="h-full w-full object-cover rounded-[12px] sm:rounded-2xl"
+                                    className="h-full w-full object-cover rounded-[14px]"
                                 />
                             )}
                         </div>
@@ -267,7 +267,7 @@ function ProcessCard({
 
     return (
         <div
-            className={`group relative flex h-full min-h-[250px] sm:min-h-[280px] w-full flex-col rounded-[12px] sm:rounded-2xl text-white overflow-hidden cursor-pointer transition-colors duration-300 select-none shadow-[0px_4px_20.6px_rgba(0,0,0,0.14)] hover:shadow-xl ${
+            className={`group relative flex h-full min-h-[250px] sm:min-h-[280px] w-full flex-col rounded-[14px] text-white overflow-hidden cursor-pointer transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] select-none shadow-[0px_4px_20.6px_rgba(0,0,0,0.14)] hover:shadow-xl ${
                 hasServices && isHovered ? "bg-[#2D4620]" : "bg-[#1A2F11]"
             } ${className}`}
             onMouseEnter={() => setIsHovered(true)}
@@ -275,11 +275,19 @@ function ProcessCard({
             onClick={() => setIsHovered((prev) => !prev)}
         >
             {/* Front View (Normal State) */}
-            <div
-                className={`flex h-full w-full flex-col justify-between p-4 sm:p-6 lg:p-8 transition-all duration-300 ease-out ${
+            <motion.div
+                animate={{
+                    opacity: hasServices && isHovered ? 0 : 1,
+                    y: hasServices && isHovered ? -8 : 0,
+                }}
+                transition={{
+                    duration: 0.38,
+                    ease: [0.16, 1, 0.3, 1],
+                }}
+                className={`flex h-full w-full flex-col justify-between p-4 sm:p-6 lg:p-8 ${
                     hasServices && isHovered
-                        ? "opacity-0 pointer-events-none -translate-y-2 scale-[0.98]"
-                        : "opacity-100 pointer-events-auto translate-y-0 scale-100"
+                        ? "pointer-events-none"
+                        : "pointer-events-auto"
                 }`}
             >
                 <div>
@@ -326,29 +334,42 @@ function ProcessCard({
                         </div>
                     </div>
                 )}
-            </div>
+            </motion.div>
 
             {/* Hovered View (Services List) */}
             {hasServices && (
-                <div
-                    className={`absolute inset-0 flex h-full w-full flex-col justify-between px-3 py-2 sm:p-5 lg:px-7 lg:pt-2.5 lg:pb-10 bg-[#2D4620] transition-all duration-300 ease-out ${
+                <motion.div
+                    initial={false}
+                    animate={{
+                        opacity: isHovered ? 1 : 0,
+                    }}
+                    transition={{
+                        duration: 0.3,
+                        ease: [0.16, 1, 0.3, 1],
+                    }}
+                    className={`absolute inset-0 flex h-full w-full flex-col justify-between px-3 py-2 sm:p-5 lg:px-7 lg:pt-2.5 lg:pb-10 ${
                         isHovered
-                            ? "opacity-100 pointer-events-auto translate-y-0 scale-100"
-                            : "opacity-0 pointer-events-none translate-y-2 scale-[0.98]"
+                            ? "pointer-events-auto"
+                            : "pointer-events-none"
                     }`}
                 >
                     <div className="flex h-full w-full flex-col justify-between overflow-hidden">
                         {services.map((service, idx) => (
-                            <div
+                            <motion.div
                                 key={service.id || idx}
-                                style={{
-                                    transitionDelay: isHovered ? `${idx * 55 + 40}ms` : "0ms",
+                                initial={false}
+                                animate={{
+                                    opacity: isHovered ? 1 : 0,
+                                    x: isHovered ? 0 : -14,
                                 }}
-                                className={`flex flex-1 items-center gap-1.5 sm:gap-3 lg:gap-4.5 py-0.5 sm:py-1.5 lg:py-2 transition-all duration-300 ease-out ${
-                                    isHovered
-                                        ? "opacity-100 translate-x-0"
-                                        : "opacity-0 -translate-x-3.5"
-                                } ${idx !== services.length - 1 ? "border-b border-[#3E5634]" : ""}`}
+                                transition={{
+                                    duration: isHovered ? 0.48 : 0.2,
+                                    delay: isHovered ? 0.12 + idx * 0.055 : 0,
+                                    ease: [0.16, 1, 0.3, 1],
+                                }}
+                                className={`flex flex-1 items-center gap-1.5 sm:gap-3 lg:gap-4.5 py-0.5 sm:py-1.5 lg:py-2 will-change-[transform,opacity] ${
+                                    idx !== services.length - 1 ? "border-b border-[#3E5634]" : ""
+                                }`}
                             >
                                 <svg
                                     className="w-1.5 sm:w-[9px] lg:w-[10px] h-2.5 sm:h-[15px] lg:h-[17px] shrink-0 text-white"
@@ -367,10 +388,10 @@ function ProcessCard({
                                 <span className="font-satoshi text-[10px] xs:text-[10.5px] sm:text-[13px] lg:text-[15px] font-normal leading-[1.2] text-white">
                                     {service.text}
                                 </span>
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
-                </div>
+                </motion.div>
             )}
         </div>
     );

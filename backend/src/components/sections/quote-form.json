@@ -32,6 +32,10 @@
     "continueLabel": {
       "type": "string"
     },
+    "storeWarning": {
+      "type": "string",
+      "default": "Please select whether you own a Shopify website"
+    },
     "step2Title": {
       "type": "string",
       "default": "Choose your budget range"
@@ -78,6 +82,18 @@
       "component": "shared.form-option",
       "repeatable": true
     },
+    "issuesWarning": {
+      "type": "string",
+      "default": "Please select at least one issue that needs improvement"
+    },
+    "budgetWarning": {
+      "type": "string",
+      "default": "Please select your preferred budget range"
+    },
+    "selectionWarning": {
+      "type": "string",
+      "default": "Please select what needs improvement and your budget range"
+    },
     "estimateButtonLabel": {
       "type": "string",
       "default": "Get My Estimate"
@@ -103,6 +119,10 @@
     "phonePlaceholder": {
       "type": "string"
     },
+    "phoneWarning": {
+      "type": "string",
+      "default": "Please enter a valid phone number"
+    },
     "emailLabel": {
       "type": "string"
     },
@@ -111,6 +131,14 @@
     },
     "bookCallButtonLabel": {
       "type": "string"
+    },
+    "successTitle": {
+      "type": "string",
+      "default": "Thank you! We've received your request."
+    },
+    "successDescription": {
+      "type": "text",
+      "default": "We will review your store setup and get back to you shortly."
     },
     "disclaimer": {
       "type": "text"

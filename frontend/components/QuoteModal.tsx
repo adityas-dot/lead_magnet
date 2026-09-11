@@ -30,6 +30,7 @@ export type QuoteFormData = {
     shopifyLinkLabel?: string;
     shopifyLinkPlaceholder?: string;
     continueLabel?: string;
+    storeWarning?: string;
     // Step 2
     step2Title?: string;
     step2Description?: string;
@@ -42,6 +43,9 @@ export type QuoteFormData = {
     otherIssuesPlaceholder?: string;
     budgetTypeLabel?: string;
     budgetTypeOptions?: FormOption[];
+    issuesWarning?: string;
+    budgetWarning?: string;
+    selectionWarning?: string;
     estimateButtonLabel?: string;
     // Step 3
     resultTitle?: string;
@@ -51,9 +55,12 @@ export type QuoteFormData = {
     basedOnLabel?: string;
     phoneLabel?: string;
     phonePlaceholder?: string;
+    phoneWarning?: string;
     emailLabel?: string;
     emailPlaceholder?: string;
     bookCallButtonLabel?: string;
+    successTitle?: string;
+    successDescription?: string;
     disclaimer?: string;
     closeButtonLabel?: string;
 };
@@ -76,6 +83,14 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
     const [isSubmitted, setIsSubmitted] = useState(false);
+
+    // Validation & warning states
+    const [step1Warning, setStep1Warning] = useState("");
+    const [step2Warning, setStep2Warning] = useState("");
+    const [step3Warning, setStep3Warning] = useState("");
+    const [issuesTouched, setIssuesTouched] = useState(false);
+    const [budgetTouched, setBudgetTouched] = useState(false);
+    const [phoneTouched, setPhoneTouched] = useState(false);
 
     // Container ref for modal
     const modalContainerRef = useRef<HTMLDivElement>(null);
@@ -165,9 +180,89 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
     const currentTier = budgetList.find((b) => b.value === selectedBudget) || budgetList[1] || budgetList[0];
 
     const toggleIssue = (label: string) => {
-        setSelectedIssues((prev) =>
-            prev.includes(label) ? prev.filter((item) => item !== label) : [...prev, label]
-        );
+        setSelectedIssues((prev) => {
+            const next = prev.includes(label) ? prev.filter((item) => item !== label) : [...prev, label];
+            if (next.length > 0) {
+                setIssuesTouched(false);
+                if (selectedBudget) {
+                    setStep2Warning("");
+                } else if (budgetTouched) {
+                    setStep2Warning(form?.budgetWarning || "Please select your preferred budget range");
+                }
+            }
+            return next;
+        });
+    };
+
+    const handleSelectBudget = (value: string) => {
+        setSelectedBudget(value);
+        setBudgetTouched(false);
+        if (selectedIssues.length > 0) {
+            setStep2Warning("");
+        } else if (issuesTouched) {
+            setStep2Warning(form?.issuesWarning || "Please select at least one issue that needs improvement");
+        }
+    };
+
+    const handleStep1Continue = () => {
+        if (hasStore === null) {
+            setStep1Warning(form?.storeWarning || "Please select whether you own a Shopify website");
+            return;
+        }
+        setStep1Warning("");
+        setStep(2);
+    };
+
+    const handleStep2Continue = () => {
+        const hasNoIssues = selectedIssues.length === 0;
+        const hasNoBudget = !selectedBudget;
+
+        if (hasNoIssues && hasNoBudget) {
+            setIssuesTouched(true);
+            setBudgetTouched(true);
+            setStep2Warning(form?.selectionWarning || "Please select what needs improvement and your budget range");
+            return;
+        }
+        if (hasNoIssues) {
+            setIssuesTouched(true);
+            setStep2Warning(form?.issuesWarning || "Please select at least one issue that needs improvement");
+            return;
+        }
+        if (hasNoBudget) {
+            setBudgetTouched(true);
+            setStep2Warning(form?.budgetWarning || "Please select your preferred budget range");
+            return;
+        }
+
+        setIssuesTouched(false);
+        setBudgetTouched(false);
+        setStep2Warning("");
+        setStep(3);
+    };
+
+    const handlePhoneChange = (val: string) => {
+        setPhone(val);
+        if (val.trim().replace(/\D/g, "").length >= 7) {
+            setStep3Warning("");
+            setPhoneTouched(false);
+        }
+    };
+
+    const handleBookCallSubmit = (e?: React.MouseEvent | React.FormEvent) => {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        setPhoneTouched(true);
+
+        const cleanDigits = phone.trim().replace(/\D/g, "");
+        if (!phone.trim() || cleanDigits.length < 7) {
+            setStep3Warning(form?.phoneWarning || "Please enter a valid phone number");
+            return;
+        }
+
+        setStep3Warning("");
+        setIsSubmitted(true);
     };
 
     const noOptionLabel = form?.noLabel?.replace("No, But I want", "No, I want") || form?.noLabel || "No, I want to build one";
@@ -281,13 +376,26 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
                                         }`}
                                     />
                                     <div
-                                        onClick={() => setStep(2)}
+                                        onClick={() => {
+                                            if (hasStore !== null) {
+                                                setStep(2);
+                                            } else {
+                                                setStep1Warning(form?.storeWarning || "Please select whether you own a Shopify website");
+                                            }
+                                        }}
                                         className={`h-[2px] flex-1 transition-colors duration-300 cursor-pointer ${
                                             step >= 2 ? "bg-[#18181B]" : "bg-[#D8D8DC]"
                                         }`}
                                     />
                                     <div
-                                        onClick={() => setStep(3)}
+                                        onClick={() => {
+                                            if (hasStore === null) {
+                                                setStep(1);
+                                                setStep1Warning(form?.storeWarning || "Please select whether you own a Shopify website");
+                                                return;
+                                            }
+                                            handleStep2Continue();
+                                        }}
                                         className={`h-[2px] flex-1 transition-colors duration-300 cursor-pointer ${
                                             step >= 3 ? "bg-[#18181B]" : "bg-[#D8D8DC]"
                                         }`}
@@ -308,7 +416,10 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
                                         <div className="flex flex-wrap items-center gap-3">
                                             <button
                                                 type="button"
-                                                onClick={() => setHasStore(true)}
+                                                onClick={() => {
+                                                    setHasStore(true);
+                                                    setStep1Warning("");
+                                                }}
                                                 className={`flex items-center gap-2.5 px-5 py-2.5 rounded-full border text-[13.5px] sm:text-[14px] font-satoshi transition-all duration-200 cursor-pointer ${
                                                     hasStore === true
                                                         ? "border-[#18181B] bg-white text-[#111827] font-medium"
@@ -329,7 +440,10 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
 
                                             <button
                                                 type="button"
-                                                onClick={() => setHasStore(false)}
+                                                onClick={() => {
+                                                    setHasStore(false);
+                                                    setStep1Warning("");
+                                                }}
                                                 className={`flex items-center gap-2.5 px-5 py-2.5 rounded-full border text-[13.5px] sm:text-[14px] font-satoshi transition-all duration-200 cursor-pointer ${
                                                     hasStore === false
                                                         ? "border-[#18181B] bg-white text-[#111827] font-medium"
@@ -368,10 +482,23 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
                                     </div>
                                 </div>
 
+                                {step1Warning && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -4 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="flex items-center justify-center gap-2 py-2 px-4 rounded-full bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-[12.5px] sm:text-[13px] font-satoshi font-medium mt-4 shadow-2xs"
+                                    >
+                                        <svg className="w-3.5 h-3.5 text-[#DC2626] shrink-0" viewBox="0 0 16 16" fill="currentColor">
+                                            <path fillRule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm8-3.25a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0V5.5A.75.75 0 018 4.75zm0 6.5a.875.875 0 100-1.75.875.875 0 000 1.75z" clipRule="evenodd" />
+                                        </svg>
+                                        <span>{step1Warning}</span>
+                                    </motion.div>
+                                )}
+
                                 {/* Gap below Shopify input before Continue button */}
                                 <button
                                     type="button"
-                                    onClick={() => setStep(2)}
+                                    onClick={handleStep1Continue}
                                     className="font-satoshi w-full bg-[#242120] hover:bg-black text-white font-medium py-3.5 sm:py-4 px-6 rounded-full transition-all duration-200 flex justify-center items-center gap-2 mt-8 sm:mt-14 md:mt-20 text-[15px] sm:text-[15.5px] cursor-pointer shadow-md active:scale-[0.99]"
                                 >
                                     <span>{form?.continueLabel || "Continue"}</span>
@@ -386,9 +513,11 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
                                 <div className="space-y-4 sm:space-y-4.5">
                                     {/* Question 1: What needs Improvement ? (Checkboxes) */}
                                     <div>
-                                        <label className="font-nohemi block text-[15.5px] sm:text-[16.5px] font-normal text-[#111827] mb-2">
-                                            {form?.issuesLabel || "What needs Improvement ?"}
-                                        </label>
+                                        <div className="flex items-center justify-between mb-2">
+                                            <label className="font-nohemi block text-[15.5px] sm:text-[16.5px] font-normal text-[#111827]">
+                                                {form?.issuesLabel || "What needs Improvement ?"}
+                                            </label>
+                                        </div>
                                         <div className="grid grid-cols-1 min-[460px]:grid-cols-3 gap-2 sm:gap-1.5">
                                             {issuesList.map((item) => {
                                                 const isSelected = selectedIssues.includes(item.label) || selectedIssues.includes(item.value);
@@ -440,9 +569,11 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
 
                                     {/* Question 2: Select your budget range (Radio buttons) */}
                                     <div>
-                                        <label className="font-nohemi block text-[15.5px] sm:text-[16.5px] font-normal text-[#111827] mb-2">
-                                            {form?.budgetLabel || "Select your budget range"}
-                                        </label>
+                                        <div className="flex items-center justify-between mb-2">
+                                            <label className="font-nohemi block text-[15.5px] sm:text-[16.5px] font-normal text-[#111827]">
+                                                {form?.budgetLabel || "Select your budget range"}
+                                            </label>
+                                        </div>
                                         <div className="grid grid-cols-1 min-[460px]:grid-cols-3 gap-2 sm:gap-1.5">
                                             {budgetList.map((tier) => {
                                                 const isSelected = selectedBudget === tier.value || selectedBudget === tier.label;
@@ -450,7 +581,7 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
                                                     <button
                                                         key={tier.id || tier.value}
                                                         type="button"
-                                                        onClick={() => setSelectedBudget(tier.value)}
+                                                        onClick={() => handleSelectBudget(tier.value)}
                                                         className={`flex items-center gap-2.5 px-3.5 min-[460px]:px-2.5 md:px-3 py-2 min-[460px]:py-1.5 md:py-2 rounded-full border text-left transition-all duration-150 cursor-pointer min-h-[44px] sm:min-h-[46px] w-full ${
                                                             isSelected
                                                                 ? "border-[#18181B] bg-white shadow-xs"
@@ -459,7 +590,9 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
                                                     >
                                                         <span
                                                             className={`w-4 h-4 sm:w-4.5 sm:h-4.5 rounded-full border-[1.5px] flex items-center justify-center shrink-0 transition-colors duration-150 ${
-                                                                isSelected ? "border-[#18181B] bg-white" : "border-[#4B5563] bg-white"
+                                                                isSelected
+                                                                    ? "border-[#18181B] bg-white"
+                                                                    : "border-[#4B5563] bg-white"
                                                             }`}
                                                         >
                                                             {isSelected && (
@@ -500,9 +633,22 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
                                     </div>
                                 </div>
 
+                                {step2Warning && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -4 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="flex items-center justify-center gap-2 py-2 px-4 rounded-full bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-[12.5px] sm:text-[13px] font-satoshi font-medium mt-3.5 shadow-2xs"
+                                    >
+                                        <svg className="w-3.5 h-3.5 text-[#DC2626] shrink-0" viewBox="0 0 16 16" fill="currentColor">
+                                            <path fillRule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm8-3.25a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0V5.5A.75.75 0 018 4.75zm0 6.5a.875.875 0 100-1.75.875.875 0 000 1.75z" clipRule="evenodd" />
+                                        </svg>
+                                        <span>{step2Warning}</span>
+                                    </motion.div>
+                                )}
+
                                 <button
                                     type="button"
-                                    onClick={() => setStep(3)}
+                                    onClick={handleStep2Continue}
                                     className="font-satoshi w-full bg-[#242120] hover:bg-black text-white font-medium py-3.5 sm:py-4 px-6 rounded-full transition-all duration-200 flex justify-center items-center gap-2 mt-5 sm:mt-6 text-[15px] sm:text-[15.5px] cursor-pointer shadow-md active:scale-[0.99]"
                                 >
                                     <span>{form?.estimateButtonLabel || "Get My Estimate"}</span>
@@ -604,15 +750,22 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
                                     {/* Lead Capture Inputs */}
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                                         <div>
-                                            <label className="font-nohemi block text-[15px] sm:text-[15.5px] font-normal text-[#111827] mb-1.5">
-                                                {form?.phoneLabel || "Phone Number"}
-                                            </label>
+                                            <div className="flex items-center justify-between mb-1.5">
+                                                <label className="font-nohemi block text-[15px] sm:text-[15.5px] font-normal text-[#111827]">
+                                                    {form?.phoneLabel || "Phone Number"}
+                                                </label>
+                                            </div>
                                             <input
                                                 type="tel"
+                                                required
                                                 value={phone}
-                                                onChange={(e) => setPhone(e.target.value)}
+                                                onChange={(e) => handlePhoneChange(e.target.value)}
                                                 placeholder={form?.phonePlaceholder || "Enter Phone Number"}
-                                                className="font-satoshi w-full px-5 py-3 sm:py-3.5 rounded-full border border-[#D1D5DB] focus:outline-none focus:border-[#18181B] focus:ring-1 focus:ring-[#18181B] text-[13.5px] sm:text-[14px] text-[#111827] bg-[#F7F7F9] placeholder-[#8E8E93] transition-all duration-200"
+                                                className={`font-satoshi w-full px-5 py-3 sm:py-3.5 rounded-full border text-[13.5px] sm:text-[14px] text-[#111827] bg-[#F7F7F9] placeholder-[#8E8E93] transition-all duration-200 focus:outline-none ${
+                                                    phoneTouched && (!phone.trim() || phone.trim().replace(/\D/g, "").length < 7)
+                                                        ? "border-rose-400 focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
+                                                        : "border-[#D1D5DB] focus:border-[#18181B] focus:ring-1 focus:ring-[#18181B]"
+                                                }`}
                                             />
                                         </div>
                                         <div>
@@ -632,8 +785,8 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
 
                                 {isSubmitted ? (
                                     <div className="p-4 rounded-xl bg-[#EBF7F2] text-[#1E7448] text-center font-satoshi text-[14px] mt-2 space-y-1.5">
-                                        <p className="font-medium">✓ {form?.resultTitle || (form as any)?.successTitle || "Thank you! We've received your request."}</p>
-                                        <p className="text-xs text-[#2A7550]">{form?.resultDescription || (form as any)?.successDescription || "We will review your store setup and get back to you shortly."}</p>
+                                        <p className="font-medium text-[15px]">✓ {form?.successTitle || "Thank you! We've received your request."}</p>
+                                        <p className="text-xs text-[#2A7550]">{form?.successDescription || "We will review your store setup and call you with your quote."}</p>
                                         {(form?.closeButtonLabel || (form as any)?.closeLabel) && (
                                             <button
                                                 type="button"
@@ -646,13 +799,23 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
                                     </div>
                                 ) : (
                                     <div>
+                                        {step3Warning && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: -4 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                className="flex items-center justify-center gap-2 py-2 px-4 rounded-full bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-[12.5px] sm:text-[13px] font-satoshi font-medium mb-3 shadow-2xs"
+                                            >
+                                                <svg className="w-3.5 h-3.5 text-[#DC2626] shrink-0" viewBox="0 0 16 16" fill="currentColor">
+                                                    <path fillRule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm8-3.25a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0V5.5A.75.75 0 018 4.75zm0 6.5a.875.875 0 100-1.75.875.875 0 000 1.75z" clipRule="evenodd" />
+                                                </svg>
+                                                <span>{step3Warning}</span>
+                                            </motion.div>
+                                        )}
+
                                         <button
                                             type="button"
                                             data-no-callback="true"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setIsSubmitted(true);
-                                            }}
+                                            onClick={handleBookCallSubmit}
                                             className="font-satoshi w-full bg-[#242120] hover:bg-black text-white font-medium py-3.5 sm:py-4 px-6 rounded-full transition-all duration-200 flex justify-center items-center gap-2 text-[15.5px] sm:text-[16px] cursor-pointer shadow-md active:scale-[0.99]"
                                         >
                                             <span>{form?.bookCallButtonLabel || "Book My Free Call"}</span>
