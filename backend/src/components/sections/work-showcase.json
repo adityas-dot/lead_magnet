@@ -11,9 +11,6 @@
     "description": {
       "type": "text"
     },
-    "MobileDescription": {
-      "type": "text"
-    },
     "items": {
       "type": "component",
       "component": "shared.showcase-item",

@@ -162,7 +162,6 @@ export interface SectionsOurWork extends Struct.ComponentSchema {
   attributes: {
     description: Schema.Attribute.Text;
     heading: Schema.Attribute.String;
-    MobileDescription: Schema.Attribute.Text;
     projects: Schema.Attribute.Component<'sections.our-work-project', true>;
   };
 }
@@ -193,6 +192,7 @@ export interface SectionsQuoteForm extends Struct.ComponentSchema {
     budgetRanges: Schema.Attribute.Component<'shared.budget-range', true>;
     budgetTypeLabel: Schema.Attribute.String;
     budgetTypeOptions: Schema.Attribute.Component<'shared.form-option', true>;
+    closeButtonLabel: Schema.Attribute.String;
     continueLabel: Schema.Attribute.String;
     description: Schema.Attribute.Text;
     disclaimer: Schema.Attribute.Text;
@@ -279,7 +279,6 @@ export interface SectionsWorkShowcase extends Struct.ComponentSchema {
     description: Schema.Attribute.Text;
     heading: Schema.Attribute.String;
     items: Schema.Attribute.Component<'shared.showcase-item', true>;
-    MobileDescription: Schema.Attribute.Text;
   };
 }
 

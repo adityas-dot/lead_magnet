@@ -11,9 +11,6 @@
     "description": {
       "type": "text"
     },
-    "MobileDescription": {
-      "type": "text"
-    },
     "projects": {
       "type": "component",
       "component": "sections.our-work-project",

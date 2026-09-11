@@ -89,8 +89,8 @@ export default function OurProcess({
         return () => window.removeEventListener("resize", updateDistance);
     }, [items]);
 
-    const ctaLabel = data.cta?.label || "Explore Our Services";
-    const hasArrow = ctaLabel.includes("↗") || ctaLabel.includes("→") || ctaLabel.includes("->");
+    const rawCtaLabel = data.cta?.label || "Explore Our Services";
+    const cleanCtaLabel = rawCtaLabel.replace(/[↗→]/g, "").replace(/->/g, "").trim();
 
     // Balanced speed (~45-50px/s): comfortably readable yet active
     const marqueeDuration = scrollDistance > 0 ? Math.max(40, Math.round(scrollDistance / 45)) : DURATION;
@@ -143,31 +143,41 @@ export default function OurProcess({
                 <div className="mx-auto max-w-[1300px] w-full">
                     {/* Header */}
                     <div className="mb-8 sm:mb-10 lg:mb-14">
-                        <span className="font-satoshi text-[14px] sm:text-[15px] text-white/70">
+                        <span className="font-satoshi text-[14px] sm:text-[15px] text-white/70 block">
                             {data.eyebrow}
                         </span>
 
-                        <div className="flex flex-row items-center sm:items-end justify-between gap-4 mt-3 sm:mt-5">
-                            <h2 className="font-delight text-[clamp(24px,5.5vw,36px)] font-medium max-w-[240px] xs:max-w-[300px] sm:max-w-[420px] lg:max-w-[500px] leading-[1.15]">
+                        {/* Heading & Desktop CTA */}
+                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mt-2.5 sm:mt-3 md:mt-5">
+                            <h2 className="font-delight text-[clamp(26px,5.5vw,38px)] font-medium md:max-w-[500px] leading-[1.15] text-white">
                                 {data.heading}
                             </h2>
 
                             {data.cta && (
                                 <a
                                     href={data.cta.href || "#"}
-                                    className="shrink-0 rounded-xl font-bold bg-white px-3.5 sm:px-6 py-2 sm:py-2.5 font-satoshi text-[12px] sm:text-[14px] text-[#0F1D07] shadow-sm hover:bg-white/90 transition -translate-y-1 sm:-translate-y-2 flex items-center gap-1.5"
+                                    className="hidden md:inline-flex shrink-0 rounded-xl font-bold bg-white px-6 py-2.5 font-satoshi text-[14px] text-[#0F1D07] shadow-sm hover:bg-white/90 transition -translate-y-2 items-center justify-center"
                                 >
-                                    <span>{ctaLabel}</span>
-                                    {!hasArrow && (
-                                        <span className="text-[13px] sm:text-[15px] leading-none">↗</span>
-                                    )}
+                                    <span>{cleanCtaLabel}</span>
                                 </a>
                             )}
                         </div>
 
-                        <p className="font-satoshi text-white/90 text-[13.5px] sm:text-[15px] max-w-[750px] mt-3.5 sm:mt-5 leading-relaxed">
+                        <p className="font-satoshi text-white/90 text-[14px] sm:text-[15px] max-w-[750px] mt-3 sm:mt-4 leading-relaxed">
                             {data.description}
                         </p>
+
+                        {/* Mobile CTA: shown below description on small screens */}
+                        {data.cta && (
+                            <div className="mt-5 sm:mt-6 md:hidden">
+                                <a
+                                    href={data.cta.href || "#"}
+                                    className="inline-flex rounded-[14px] font-medium bg-white px-5 sm:px-6 py-2.5 sm:py-3 font-satoshi text-[14px] sm:text-[14.5px] text-[#0F1D07] shadow-sm hover:bg-white/90 transition items-center justify-center"
+                                >
+                                    <span>{cleanCtaLabel}</span>
+                                </a>
+                            </div>
+                        )}
                     </div>
 
                     {/* Responsive Grid: 2 columns on mobile/tablet, 4 columns on desktop */}
@@ -321,22 +331,27 @@ function ProcessCard({
             {/* Hovered View (Services List) */}
             {hasServices && (
                 <div
-                    className={`absolute inset-0 flex h-full w-full flex-col justify-between p-3.5 sm:p-5 lg:px-7 lg:pt-2.5 lg:pb-10 bg-[#2D4620] transition-all duration-300 ease-out ${
+                    className={`absolute inset-0 flex h-full w-full flex-col justify-between px-3 py-2 sm:p-5 lg:px-7 lg:pt-2.5 lg:pb-10 bg-[#2D4620] transition-all duration-300 ease-out ${
                         isHovered
                             ? "opacity-100 pointer-events-auto translate-y-0 scale-100"
                             : "opacity-0 pointer-events-none translate-y-2 scale-[0.98]"
                     }`}
                 >
-                    <div className="flex h-full w-full flex-col justify-between -translate-y-1">
+                    <div className="flex h-full w-full flex-col justify-between overflow-hidden">
                         {services.map((service, idx) => (
                             <div
                                 key={service.id || idx}
-                                className={`flex flex-1 items-center gap-2.5 sm:gap-3.5 lg:gap-4.5 py-1.5 sm:py-2 ${
-                                    idx !== services.length - 1 ? "border-b border-[#3E5634]" : ""
-                                }`}
+                                style={{
+                                    transitionDelay: isHovered ? `${idx * 55 + 40}ms` : "0ms",
+                                }}
+                                className={`flex flex-1 items-center gap-1.5 sm:gap-3 lg:gap-4.5 py-0.5 sm:py-1.5 lg:py-2 transition-all duration-300 ease-out ${
+                                    isHovered
+                                        ? "opacity-100 translate-x-0"
+                                        : "opacity-0 -translate-x-3.5"
+                                } ${idx !== services.length - 1 ? "border-b border-[#3E5634]" : ""}`}
                             >
                                 <svg
-                                    className="w-2 sm:w-[9px] lg:w-[10px] h-3.5 sm:h-[15px] lg:h-[17px] shrink-0 text-white"
+                                    className="w-1.5 sm:w-[9px] lg:w-[10px] h-2.5 sm:h-[15px] lg:h-[17px] shrink-0 text-white"
                                     viewBox="0 0 10 18"
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
@@ -349,7 +364,7 @@ function ProcessCard({
                                         strokeLinejoin="round"
                                     />
                                 </svg>
-                                <span className="font-satoshi text-[11.5px] sm:text-[13px] lg:text-[15px] font-normal leading-tight text-white">
+                                <span className="font-satoshi text-[10px] xs:text-[10.5px] sm:text-[13px] lg:text-[15px] font-normal leading-[1.2] text-white">
                                     {service.text}
                                 </span>
                             </div>
