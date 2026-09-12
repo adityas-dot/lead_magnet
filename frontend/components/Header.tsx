@@ -147,64 +147,66 @@ export default function Header({
     return (
         <>
             {/* Header bar */}
-            <header className="fixed top-0 left-0 right-0 z-[110] flex justify-between items-center h-[72px] sm:h-[88px] pt-2 sm:pt-2.5 lg:pt-0 px-5 sm:px-6 lg:px-[60px] xl:px-[80px] pointer-events-none">
-                <a
-                    href="/"
-                    onClick={() => setIsOpen(false)}
-                    className={`font-nohemi font-medium text-[clamp(23px,2vw,25.5px)] lg:text-[26px] tracking-[-0.02em] leading-none pointer-events-auto select-none transition-colors duration-300 flex items-center translate-y-[2px] sm:translate-y-[1px] lg:translate-y-0 ${
-                        isOpen
-                            ? "text-white"
-                            : isLight
-                            ? "text-[#0F1D07]"
-                            : "text-white"
-                    }`}
-                >
-                    {isOpen && brandName.endsWith(".") ? (
-                        <>
-                            {brandName.slice(0, -1)}<span className="text-[#38E29D]">.</span>
-                        </>
-                    ) : (
-                        brandName
-                    )}
-                </a>
+            <header className="fixed top-0 left-0 right-0 z-[110] px-5 sm:px-6 lg:px-[60px] xl:px-[80px] pointer-events-none">
+                <div className="mx-auto max-w-[1720px] w-full flex justify-between items-center h-[72px] sm:h-[88px] pt-2 sm:pt-2.5 lg:pt-0">
+                    <a
+                        href="/"
+                        onClick={() => setIsOpen(false)}
+                        className={`font-nohemi font-medium text-[clamp(23px,2vw,25.5px)] lg:text-[26px] tracking-[-0.02em] leading-none pointer-events-auto select-none transition-colors duration-300 flex items-center translate-y-[2px] sm:translate-y-[1px] lg:translate-y-0 ${
+                            isOpen
+                                ? "text-white"
+                                : isLight
+                                ? "text-[#0F1D07]"
+                                : "text-white"
+                        }`}
+                    >
+                        {isOpen && brandName.endsWith(".") ? (
+                            <>
+                                {brandName.slice(0, -1)}<span className="text-[#38E29D]">.</span>
+                            </>
+                        ) : (
+                            brandName
+                        )}
+                    </a>
 
-                {/* Menu toggle button */}
-                <button
-                    type="button"
-                    onClick={() => setIsOpen((prev) => !prev)}
-                    aria-label={isOpen ? "Close menu" : "Open menu"}
-                    className={`group flex w-[48px] h-[48px] sm:w-[56px] sm:h-[56px] rounded-full items-center justify-center transition-all duration-300 ease-out pointer-events-auto cursor-pointer active:scale-95 ${
-                        isOpen
-                            ? "bg-transparent text-white hover:text-[#38E29D]"
-                            : isLight
-                            ? "bg-[#D4F8EE] hover:bg-[#C2F3E5] shadow-sm"
-                            : "bg-transparent hover:opacity-80"
-                    }`}
-                >
-                    <div className="relative w-6 h-5 flex items-center justify-center drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
-                        <span
-                            className={`absolute left-0 w-6 h-[2px] ${lineColor} rounded-full transition-all duration-300 ease-in-out origin-center ${
-                                isOpen
-                                    ? "rotate-45 translate-y-0 translate-x-0"
-                                    : "-translate-y-[7px] group-hover:translate-x-[3.5px]"
-                            }`}
-                        />
-                        <span
-                            className={`absolute left-0 w-[17px] h-[2px] ${lineColor} rounded-full transition-all duration-300 ease-in-out origin-left ${
-                                isOpen
-                                    ? "opacity-0 scale-x-0 translate-x-0"
-                                    : "opacity-100 group-hover:-translate-x-[3.5px]"
-                            }`}
-                        />
-                        <span
-                            className={`absolute left-0 w-6 h-[2px] ${lineColor} rounded-full transition-all duration-300 ease-in-out origin-center ${
-                                isOpen
-                                    ? "-rotate-45 translate-y-0 translate-x-0"
-                                    : "translate-y-[7px] group-hover:translate-x-[3.5px]"
+                    {/* Menu toggle button */}
+                    <button
+                        type="button"
+                        onClick={() => setIsOpen((prev) => !prev)}
+                        aria-label={isOpen ? "Close menu" : "Open menu"}
+                        className={`group flex w-[48px] h-[48px] sm:w-[56px] sm:h-[56px] rounded-full items-center justify-center transition-all duration-300 ease-out pointer-events-auto cursor-pointer active:scale-95 ${
+                            isOpen
+                                ? "bg-transparent text-white hover:text-[#38E29D]"
+                                : isLight
+                                ? "bg-[#D4F8EE] hover:bg-[#C2F3E5] shadow-sm"
+                                : "bg-transparent hover:opacity-80"
+                        }`}
+                    >
+                        <div className="relative w-6 h-5 flex items-center justify-center drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
+                            <span
+                                className={`absolute left-0 w-6 h-[2px] ${lineColor} rounded-full transition-all duration-300 ease-in-out origin-center ${
+                                    isOpen
+                                        ? "rotate-45 translate-y-0 translate-x-0"
+                                        : "-translate-y-[7px] group-hover:translate-x-[3.5px]"
                                 }`}
-                        />
-                    </div>
-                </button>
+                            />
+                            <span
+                                className={`absolute left-0 w-[17px] h-[2px] ${lineColor} rounded-full transition-all duration-300 ease-in-out origin-left ${
+                                    isOpen
+                                        ? "opacity-0 scale-x-0 translate-x-0"
+                                        : "opacity-100 group-hover:-translate-x-[3.5px]"
+                                }`}
+                            />
+                            <span
+                                className={`absolute left-0 w-6 h-[2px] ${lineColor} rounded-full transition-all duration-300 ease-in-out origin-center ${
+                                    isOpen
+                                        ? "-rotate-45 translate-y-0 translate-x-0"
+                                        : "translate-y-[7px] group-hover:translate-x-[3.5px]"
+                                    }`}
+                            />
+                        </div>
+                    </button>
+                </div>
             </header>
 
             {/* Menu overlay */}

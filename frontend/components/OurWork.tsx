@@ -81,7 +81,7 @@ export default function OurWork({ data }: { data: OurWorkData }) {
     };
 
     return (
-        <section className="w-full py-10 sm:py-20 overflow-hidden bg-[#F5F5F5]">
+        <section className="w-full pt-10 sm:pt-20 pb-0 overflow-hidden bg-[#F5F5F5]">
                 <div className="mx-auto flex w-full max-w-[1880px] flex-col px-6 lg:px-[60px] xl:px-[80px]">
                 <div className="flex w-full justify-between items-end gap-6">
                     <div className="max-w-[960px]">
@@ -282,6 +282,9 @@ export default function OurWork({ data }: { data: OurWorkData }) {
                     </div>
                 )}
             </div>
+
+            {/* Div under the image */}
+            <div className="w-full h-8 sm:h-12 lg:h-16 bg-[#FFFFFF]" />
         </section>
     );
 }

@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { getMediaUrl } from "@/lib/strapi";
-import CallbackModal from "./CallbackModal";
 
 type Brand = {
     id: number;
@@ -99,7 +98,6 @@ export default function Hero({ data }: { data: HeroData }) {
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [isCallbackOpen, setIsCallbackOpen] = useState(false);
 
     // Validation & warning states
     const [step1Warning, setStep1Warning] = useState("");
@@ -108,12 +106,6 @@ export default function Hero({ data }: { data: HeroData }) {
     const [issuesTouched, setIssuesTouched] = useState(false);
     const [budgetTouched, setBudgetTouched] = useState(false);
     const [phoneTouched, setPhoneTouched] = useState(false);
-
-    useEffect(() => {
-        const handleOpenCallback = () => setIsCallbackOpen(true);
-        window.addEventListener("open-callback-modal", handleOpenCallback);
-        return () => window.removeEventListener("open-callback-modal", handleOpenCallback);
-    }, []);
 
     const defaultBudgets: BudgetRange[] = [
         { label: "Essential", range: "₹1,00,000 - ₹2,00,000", value: "essential" },
@@ -194,21 +186,29 @@ export default function Hero({ data }: { data: HeroData }) {
 
     const handleStep2Continue = () => {
         const hasNoIssues = selectedIssues.length === 0;
+        const hasNoBudget = !selectedBudget;
 
+        if (hasNoIssues && hasNoBudget) {
+            setIssuesTouched(true);
+            setBudgetTouched(true);
+            setStep2Warning(form?.selectionWarning || "Please select what needs improvement and your budget range");
+            return;
+        }
         if (hasNoIssues) {
             setIssuesTouched(true);
             setStep2Warning(form?.issuesWarning || "Please select at least one issue that needs improvement");
+            return;
+        }
+        if (hasNoBudget) {
+            setBudgetTouched(true);
+            setStep2Warning(form?.budgetWarning || "Please select your preferred budget range");
             return;
         }
 
         setIssuesTouched(false);
         setBudgetTouched(false);
         setStep2Warning("");
-        if (selectedBudget) {
-            setActiveStep3Budget(selectedBudget);
-        } else if (!activeStep3Budget) {
-            setActiveStep3Budget(budgetList[1]?.value || budgetList[1]?.label || "balanced");
-        }
+        setActiveStep3Budget(selectedBudget);
         setStep(3);
     };
 
@@ -299,7 +299,6 @@ export default function Hero({ data }: { data: HeroData }) {
                                     if (h === "#quote" || (h.includes("quote") && !l.includes("call"))) {
                                         window.dispatchEvent(new CustomEvent("open-quote-modal"));
                                     } else {
-                                        setIsCallbackOpen(true);
                                         window.dispatchEvent(new CustomEvent("open-callback-modal"));
                                     }
                                 }}
@@ -647,15 +646,38 @@ export default function Hero({ data }: { data: HeroData }) {
                                             const isActive =
                                                 currentActive === tier.value ||
                                                 currentActive === tier.label;
+                                            const isStep2Selection =
+                                                Boolean(selectedBudget) &&
+                                                (selectedBudget === tier.value || selectedBudget === tier.label);
+
                                             return isActive ? (
                                                 <div key={tier.id || tierVal} className="py-0.5">
                                                     <p className="font-satoshi text-[14.5px] sm:text-[15px] font-medium text-[#3145DD] leading-tight">
-                                                        {tier.label}
+                                                        {tier.label} (Chosen Plan)
                                                     </p>
                                                     <div className="flex items-center gap-2 mt-0">
                                                         <div className="font-satoshi text-[26px] sm:text-[28px] md:text-[30px] font-medium text-[#3145DD] tracking-tight flex items-center leading-none">
                                                             {formatCurrency(tier.range)}
                                                         </div>
+                                                        {isStep2Selection && (
+                                                            <span className="inline-flex items-center justify-center shrink-0 -translate-y-[1px] sm:-translate-y-[1.5px]">
+                                                                <svg
+                                                                    className="w-[22px] h-[22px] sm:w-[24px] sm:h-[24px] md:w-[25px] md:h-[25px]"
+                                                                    viewBox="0 0 24 24"
+                                                                    fill="none"
+                                                                    aria-label="Chosen Plan"
+                                                                >
+                                                                    <circle cx="12" cy="12" r="10" fill="#B8DFC8" stroke="#168050" strokeWidth="1.8" />
+                                                                    <path
+                                                                        d="M8.2 12.2L10.8 14.8L15.8 9.5"
+                                                                        stroke="#168050"
+                                                                        strokeWidth="2.2"
+                                                                        strokeLinecap="round"
+                                                                        strokeLinejoin="round"
+                                                                    />
+                                                                </svg>
+                                                            </span>
+                                                        )}
                                                     </div>
                                                 </div>
                                             ) : (
@@ -664,8 +686,17 @@ export default function Hero({ data }: { data: HeroData }) {
                                                     onClick={() => setActiveStep3Budget(tierVal)}
                                                     className="text-[#6B6B6B] cursor-pointer hover:text-[#333333] transition-colors py-0.5"
                                                 >
-                                                    <p className="font-satoshi text-[12px] sm:text-[12.5px] text-[#4A4A4A] leading-tight">
-                                                        {tier.label}
+                                                    <p className="font-satoshi text-[12px] sm:text-[12.5px] text-[#4A4A4A] leading-tight flex items-center gap-1.5">
+                                                        <span>{tier.label}</span>
+                                                        {isStep2Selection && (
+                                                            <span className="text-[#168050] font-medium text-[11px] sm:text-[11.5px] inline-flex items-center gap-1">
+                                                                (Chosen Plan)
+                                                                <svg className="w-3.5 h-3.5 inline shrink-0" viewBox="0 0 24 24" fill="none">
+                                                                    <circle cx="12" cy="12" r="10" fill="#B8DFC8" stroke="#168050" strokeWidth="1.8" />
+                                                                    <path d="M8.2 12.2L10.8 14.8L15.8 9.5" stroke="#168050" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                                                                </svg>
+                                                            </span>
+                                                        )}
                                                     </p>
                                                     <p className="font-satoshi text-[12.5px] sm:text-[13px] text-[#4A4A4A] font-normal mt-0 leading-tight flex items-center">
                                                         {formatCurrency(tier.range)}
@@ -748,11 +779,6 @@ export default function Hero({ data }: { data: HeroData }) {
                     </div>
                 </div>
             </div>
-
-            <CallbackModal
-                isOpen={isCallbackOpen}
-                onClose={() => setIsCallbackOpen(false)}
-            />
         </section>
     );
 }

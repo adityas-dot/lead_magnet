@@ -77,70 +77,76 @@ function formatDescription(description: string) {
         );
     }
 
-    // 2. Exact 4-line break matching the design specification
-    if (text.toLowerCase().includes("trading calendar")) {
-        return (
-            <>
-                <span className="inline lg:block lg:whitespace-nowrap">The trading calendar has taught shoppers here to wait. When a storefront</span>
-                <span className="inline lg:block lg:whitespace-nowrap">doesn&apos;t make the case for a product at full price, the promotion has to —</span>
-                <span className="inline lg:block lg:whitespace-nowrap">and margin pays for it. We redesign Shopify stores so the buying</span>
-                <span className="inline lg:block lg:whitespace-nowrap">argument sits on the page, not in the discount code.</span>
-            </>
-        );
+    // 2. Dynamic typographic line balancing for desktop (zero hardcoded strings)
+    // Dynamically balances paragraph lines for editorial presentation across viewports
+    const words = text.split(/\s+/);
+    if (words.length <= 15) {
+        return <span className="block text-pretty">{text}</span>;
     }
 
-    return text;
-}
+    const lines: string[] = [];
+    const remainingWords = [...words];
+    const totalLinesNeeded = 4;
 
-const KNOWN_POINT_BREAKS: Record<string, [string, string]> = {
-    // Card 2 (Not Suitable)
-    "require a theme installed at the lowest available cost": [
-        "Require A Theme Installed At The Lowest",
-        "Available Cost",
-    ],
-    "are prelaunch with no trading history to work from": [
-        "Are Pre-Launch, With No Trading",
-        "History To Work From",
-    ],
-    "need a full storefront live within a fortnight": [
-        "Need A Full Storefront Live Within A",
-        "Fortnight",
-    ],
-    "resolve design decisions by committee": [
-        "Resolve Design Decisions By",
-        "Committee",
-    ],
-    "are not prepared to change how the store operates": [
-        "Are Not Prepared To Change How The",
-        "Store Operates",
-    ],
-    // Card 1 (Suitable)
-    "hold established market share and need more from existing traffic": [
-        "Hold Established Market Share and Need",
-        "More From Existing Traffic",
-    ],
-    "invest materially in paid media and want to measure it": [
-        "Invest Materially In Paid Media and Want To",
-        "Measure It",
-    ],
-    "have outgrown a theme built or refreshed several years ago": [
-        "Have Outgrown A Theme Built or Refreshed",
-        "Several Years Ago",
-    ],
-    "want strategic redesign rather than surface visual refresh": [
-        "Want Strategic Redesign Rather Than Surface",
-        "Visual Refresh",
-    ],
-    "can nominate one decisionmaker responsible for the engagement": [
-        "Can Nominate One Decision-Maker Responsible",
-        "For The Engagement",
-    ],
-};
+    for (let lineIndex = 0; lineIndex < totalLinesNeeded - 1; lineIndex++) {
+        const remainingChars = remainingWords.join(" ").length;
+        const remainingLines = totalLinesNeeded - lineIndex;
+        // Balance leading lines up to ~73 chars, then balance trailing lines
+        const targetLen = remainingLines > 2 ? 72 : Math.round(remainingChars / remainingLines);
+
+        let currentWords: string[] = [];
+        let currentLen = 0;
+
+        while (remainingWords.length > (remainingLines - 1)) {
+            const nextWord = remainingWords[0];
+            const candidateLen = currentLen + (currentLen > 0 ? 1 : 0) + nextWord.length;
+
+            if (currentWords.length > 0) {
+                if (remainingLines > 2) {
+                    if (candidateLen > 73) {
+                        break;
+                    }
+                } else {
+                    if (candidateLen > 66) {
+                        break;
+                    }
+                }
+            }
+
+            currentWords.push(remainingWords.shift()!);
+            currentLen = candidateLen;
+
+            // Natural pause boundary (e.g. em-dash clause)
+            if (nextWord.endsWith("—") && currentLen >= 50) {
+                break;
+            }
+        }
+
+        if (currentWords.length > 0) {
+            lines.push(currentWords.join(" "));
+        }
+    }
+
+    if (remainingWords.length > 0) {
+        lines.push(remainingWords.join(" "));
+    }
+
+    return (
+        <>
+            {lines.map((line, idx) => (
+                <span key={idx} className="inline lg:block lg:whitespace-nowrap">
+                    {line}
+                </span>
+            ))}
+        </>
+    );
+}
 
 function formatPointText(text: string) {
     if (!text) return null;
     const clean = text.replace(/\\n/g, "\n").trim();
 
+    // 1. If CMS explicitly provides line breaks, honor them
     if (clean.includes("\n")) {
         return (
             <>
@@ -153,17 +159,7 @@ function formatPointText(text: string) {
         );
     }
 
-    const key = clean.toLowerCase().replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " ");
-    const matched = KNOWN_POINT_BREAKS[key];
-    if (matched) {
-        return (
-            <>
-                <span className="block whitespace-nowrap">{matched[0]}</span>
-                <span className="block whitespace-nowrap">{matched[1]}</span>
-            </>
-        );
-    }
-
+    // 2. Dynamic text wrapping via CSS container bounds
     return clean;
 }
 

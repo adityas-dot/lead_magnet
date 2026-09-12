@@ -162,7 +162,7 @@ export default function FinalCTA({
                                 </span>
                                 <span className="inline-flex items-center whitespace-nowrap mt-1">
                                     <span>{headingParts.likeWord}</span>
-                                    <span className="mx-2 inline-flex h-[clamp(26px,7.8vw,42px)] w-[clamp(26px,7.8vw,42px)] align-middle -mt-1 rounded-[10px] border border-[#00000025] bg-white relative overflow-hidden select-none shrink-0 shadow-xs">
+                                    <span className="mx-2 inline-flex h-[clamp(36px,7.8vw,42px)] w-[clamp(36px,7.8vw,42px)] align-middle -mt-1 rounded-[10px] border border-[#00000025] bg-white relative overflow-hidden select-none shrink-0 shadow-xs">
                                         <AnimatePresence mode="wait">
                                             {currentLogo?.logo && (
                                                 <motion.img

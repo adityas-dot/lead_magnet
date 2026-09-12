@@ -78,7 +78,7 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
     const [hasStore, setHasStore] = useState<boolean | null>(null);
     const [storeUrl, setStoreUrl] = useState("");
     const [selectedIssues, setSelectedIssues] = useState<string[]>([]);
-    const [selectedBudget, setSelectedBudget] = useState<string>("balanced");
+    const [selectedBudget, setSelectedBudget] = useState<string>("");
     const [activeStep3Budget, setActiveStep3Budget] = useState<string>("");
     const [otherIssues, setOtherIssues] = useState("");
     const [phone, setPhone] = useState("");
@@ -174,7 +174,7 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
     };
 
     const handleSelectBudget = (value: string) => {
-        setSelectedBudget(value);
+        setSelectedBudget((prev) => (prev === value ? "" : value));
         setBudgetTouched(false);
         if (selectedIssues.length > 0) {
             setStep2Warning("");
@@ -699,7 +699,7 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
                                             return isActive ? (
                                                 <div key={tier.id || tierVal} className="py-0.5">
                                                     <p className="font-satoshi text-[14.5px] sm:text-[15px] font-medium text-[#3145DD] leading-tight">
-                                                        {tier.label} {isStep2Selection ? "(Chosen Plan)" : ""}
+                                                        {tier.label} (Chosen Plan)
                                                     </p>
                                                     <div className="flex items-center gap-2 mt-0">
                                                         <div className="font-satoshi text-[24px] min-[360px]:text-[26px] sm:text-[28px] md:text-[30px] font-medium text-[#3145DD] tracking-tight flex items-center leading-none">
@@ -732,8 +732,17 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
                                                     onClick={() => setActiveStep3Budget(tierVal)}
                                                     className="text-[#6B6B6B] cursor-pointer hover:text-[#333333] transition-colors py-0.5"
                                                 >
-                                                    <p className="font-satoshi text-[12px] sm:text-[12.5px] text-[#4A4A4A] leading-tight">
-                                                        {tier.label}
+                                                    <p className="font-satoshi text-[12px] sm:text-[12.5px] text-[#4A4A4A] leading-tight flex items-center gap-1.5">
+                                                        <span>{tier.label}</span>
+                                                        {isStep2Selection && (
+                                                            <span className="text-[#168050] font-medium text-[11px] sm:text-[11.5px] inline-flex items-center gap-1">
+                                                                (Chosen Plan)
+                                                                <svg className="w-3.5 h-3.5 inline shrink-0" viewBox="0 0 24 24" fill="none">
+                                                                    <circle cx="12" cy="12" r="10" fill="#B8DFC8" stroke="#168050" strokeWidth="1.8" />
+                                                                    <path d="M8.2 12.2L10.8 14.8L15.8 9.5" stroke="#168050" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                                                                </svg>
+                                                            </span>
+                                                        )}
                                                     </p>
                                                     <p className="font-satoshi text-[12.5px] sm:text-[13px] text-[#4A4A4A] font-normal mt-0 leading-tight flex items-center">
                                                         {formatCurrency(tier.range)}
