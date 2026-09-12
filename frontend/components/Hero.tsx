@@ -253,28 +253,36 @@ export default function Hero({ data }: { data: HeroData }) {
         return "h-5 sm:h-5.5 lg:h-6";
     };
 
-    const formattedHeading = (() => {
-        if (!data.heading) return "";
-        if (data.heading.includes("\n")) return data.heading;
-        const words = data.heading.split(" ");
+    const formatHeading = (text: string) => {
+        if (!text) return null;
+        if (text.includes("\n")) {
+            return text.split("\n").map((line, idx) => (
+                <span key={idx} className="block whitespace-normal 2xl:whitespace-nowrap">
+                    {line}
+                </span>
+            ));
+        }
+
+        const words = text.split(" ");
         const mid = Math.ceil(words.length / 2);
-        return words.slice(0, mid).join(" ") + "\n" + words.slice(mid).join(" ");
-    })();
+        return (
+            <>
+                <span className="inline xl:block whitespace-normal 2xl:whitespace-nowrap">{words.slice(0, mid).join(" ")}</span>{" "}
+                <span className="inline xl:block whitespace-normal 2xl:whitespace-nowrap">{words.slice(mid).join(" ")}</span>
+            </>
+        );
+    };
 
     return (
         <section data-theme="dark" className="relative min-h-0 xl:min-h-screen bg-[#37386B] text-white flex flex-col font-sans overflow-x-hidden">
-            <div className="flex-grow flex items-start xl:items-center pt-[88px] sm:pt-[100px] pb-0 xl:pb-12 px-5 sm:px-6 lg:px-[40px] xl:px-[48px] 2xl:px-[80px]">
+            <div className="flex-grow flex items-start xl:items-center pt-[112px] sm:pt-[128px] xl:pt-[100px] pb-0 xl:pb-12 px-5 sm:px-6 lg:px-[40px] xl:px-[48px] 2xl:px-[80px]">
                 <div className="max-w-[1720px] mx-auto w-full grid grid-cols-1 xl:grid-cols-[1fr_490px] 2xl:grid-cols-[1fr_620px] gap-8 xl:gap-8 2xl:gap-16 items-start">
 
                     {/* Left Column: Hero copy and client brands */}
                     <div className="max-w-full flex flex-col justify-between self-stretch min-w-0">
                         <div>
-                            <h1 className="font-nohemi font-normal text-white text-[clamp(28px,7vw,42px)] xl:text-[clamp(36px,4.2vw,65px)] 2xl:text-[clamp(44px,4.2vw,80px)] tracking-[-0.01em] mb-4 sm:mb-6 leading-[1.18] sm:leading-[1.25] xl:leading-[1.15] 2xl:leading-[82px]">
-                                {formattedHeading.split("\n").map((line, idx) => (
-                                    <span key={idx} className="block whitespace-normal 2xl:whitespace-nowrap">
-                                        {line}
-                                    </span>
-                                ))}
+                            <h1 className="font-nohemi font-normal text-white text-[clamp(32px,8.6vw,46px)] xl:text-[clamp(36px,4.2vw,65px)] 2xl:text-[clamp(44px,4.2vw,80px)] tracking-[-0.01em] mb-5 sm:mb-6 leading-[1.18] sm:leading-[1.22] xl:leading-[1.15] 2xl:leading-[82px] max-w-[620px] xl:max-w-none">
+                                {formatHeading(data.heading)}
                             </h1>
 
                             <p className="font-satoshi text-white/80 lg:text-white text-[15px] sm:text-[16px] lg:text-[18px] mb-6 max-w-[778px] leading-[1.6] lg:leading-[35.4px] tracking-normal">
@@ -306,7 +314,7 @@ export default function Hero({ data }: { data: HeroData }) {
                         {/* Client logo marquee */}
                         <div className="mt-10 sm:mt-16 lg:mt-28 xl:mt-auto pt-4 sm:pt-8">
                             {data.brandsHeading && (
-                                <p className="font-satoshi font-normal text-[#F6F6F6] text-[13.5px] sm:text-[15px] lg:text-[16px] mb-3 lg:mb-4 w-full whitespace-normal xl:whitespace-nowrap leading-snug tracking-[-0.2px]">
+                                <p className="font-satoshi font-normal text-[#F6F6F6] text-[13.5px] sm:text-[15px] lg:text-[16px] mb-3 lg:mb-4 w-full whitespace-normal xl:whitespace-nowrap leading-snug tracking-[-0.2px] text-center sm:text-left">
                                     {data.brandsHeading}
                                 </p>
                             )}
