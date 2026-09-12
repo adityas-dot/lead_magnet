@@ -60,40 +60,64 @@ type OurProcessData = {
     mobileSecondaryCta?: CtaLink;
 };
 
-const DURATION = 55;
-
 export default function OurProcess({
     data,
 }: {
     data: OurProcessData;
 }) {
     if (!data) return null;
-    const items = data?.marqueeItems?.length
-        ? [...data.marqueeItems, ...data.marqueeItems]
-        : [];
+    const items = data?.marqueeItems || [];
 
     const containerRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
+    const [repeatCount, setRepeatCount] = useState(1);
     const [scrollDistance, setScrollDistance] = useState(0);
 
     useEffect(() => {
         const updateDistance = () => {
             if (containerRef.current && contentRef.current) {
-                const distance = contentRef.current.scrollWidth - containerRef.current.clientWidth;
+                const containerWidth = containerRef.current.clientWidth;
+                const contentWidth = contentRef.current.scrollWidth;
+
+                // If viewport is ultra-wide (e.g. 4029px / 4K) and wider than single-track content,
+                // dynamically repeat the items so it fills the screen and has room to scroll
+                const singleTrackWidth = contentWidth / repeatCount;
+                if (singleTrackWidth > 0 && containerWidth >= contentWidth - 40) {
+                    const needed = Math.max(2, Math.ceil((containerWidth * 1.35) / singleTrackWidth));
+                    if (needed !== repeatCount) {
+                        setRepeatCount(needed);
+                        return;
+                    }
+                } else if (singleTrackWidth > 0 && repeatCount > 1 && containerWidth < singleTrackWidth) {
+                    setRepeatCount(1);
+                    return;
+                }
+
+                const distance = contentWidth - containerWidth;
                 setScrollDistance(distance > 0 ? distance : 0);
             }
         };
 
         updateDistance();
+        const resizeObserver = new ResizeObserver(updateDistance);
+        if (containerRef.current) resizeObserver.observe(containerRef.current);
+        if (contentRef.current) resizeObserver.observe(contentRef.current);
+
         window.addEventListener("resize", updateDistance);
-        return () => window.removeEventListener("resize", updateDistance);
-    }, [items]);
+        return () => {
+            resizeObserver.disconnect();
+            window.removeEventListener("resize", updateDistance);
+        };
+    }, [items, repeatCount]);
+
+    const displayItems = Array.from({ length: repeatCount }, () => items).flat();
 
     const rawCtaLabel = data.cta?.label || "Explore Our Services";
     const cleanCtaLabel = rawCtaLabel.replace(/[↗→]/g, "").replace(/->/g, "").trim();
 
-    // Balanced speed (~45-50px/s): comfortably readable yet active
-    const marqueeDuration = scrollDistance > 0 ? Math.max(40, Math.round(scrollDistance / 45)) : DURATION;
+    // Faster, responsive speed (~85px/s) with a crisp ~1s pause at each corner
+    const travelTime = scrollDistance > 0 ? Math.max(5, Math.round(scrollDistance / 85)) : 6;
+    const totalDuration = Math.round(travelTime / 0.45);
 
     return (
         <section data-theme="dark" className="w-full overflow-hidden">
@@ -102,22 +126,33 @@ export default function OurProcess({
                 ref={containerRef}
                 className="w-full overflow-hidden bg-[#4A71A5] py-2.5 sm:py-3 lg:py-3.5 select-none"
             >
-                <motion.div
-                    key={`${scrollDistance}-${marqueeDuration}`}
+                {scrollDistance > 0 && (
+                    <style>{`
+                        @keyframes ourProcessMarqueePingPong {
+                            0%, 2.5% {
+                                transform: translate3d(0, 0, 0);
+                            }
+                            47.5%, 52.5% {
+                                transform: translate3d(-${scrollDistance}px, 0, 0);
+                            }
+                            97.5%, 100% {
+                                transform: translate3d(0, 0, 0);
+                            }
+                        }
+                    `}</style>
+                )}
+                <div
                     ref={contentRef}
-                    className="flex w-max shrink-0 items-center px-4 lg:px-6"
-                    initial={{ x: -scrollDistance }}
-                    animate={{ x: 0 }}
-                    transition={{
-                        duration: marqueeDuration,
-                        ease: "linear",
-                        repeat: Infinity,
-                        repeatType: "reverse",
-                        repeatDelay: 0.5,
+                    className="flex w-max shrink-0 items-center px-4 lg:px-6 will-change-transform"
+                    style={{
+                        animation:
+                            scrollDistance > 0
+                                ? `ourProcessMarqueePingPong ${totalDuration}s cubic-bezier(0.4, 0, 0.2, 1) infinite`
+                                : "none",
                     }}
                 >
-                    {items.map((item, index) => (
-                        <div key={`${item.id}-${index}`} className="flex shrink-0 items-center">
+                    {displayItems.map((item, index) => (
+                        <div key={`marquee-${item.id || index}-${index}`} className="flex shrink-0 items-center">
                             {/* Mobile / Tablet */}
                             <div className="flex lg:hidden items-center">
                                 <span className="text-white text-[clamp(11.5px,0.95vw,13px)] font-satoshi font-normal font-[400] uppercase tracking-[0.04em] whitespace-nowrap">
@@ -135,12 +170,12 @@ export default function OurProcess({
                             </div>
                         </div>
                     ))}
-                </motion.div>
+                </div>
             </div>
 
             {/* Main Content Area */}
-            <div className="w-full bg-[#0F1D07] px-4 py-12 sm:px-8 lg:px-16 lg:py-24 text-white">
-                <div className="mx-auto max-w-[1300px] w-full">
+            <div className="w-full bg-[#0F1D07] px-6 py-12 sm:px-8 lg:px-16 lg:py-24 text-white">
+                <div className="mx-auto max-w-[1180px] w-full">
                     {/* Header */}
                     <div className="mb-8 sm:mb-10 lg:mb-14">
                         <span className="font-satoshi text-[clamp(13px,1vw,15px)] text-white/70 block">
@@ -183,13 +218,13 @@ export default function OurProcess({
                     {/* Responsive Grid: 2 columns on mobile/tablet, 4 columns on desktop */}
                     <div className="mt-8 sm:mt-10 lg:mt-12 grid grid-cols-2 lg:grid-cols-4 lg:auto-rows-fr gap-4 sm:gap-5 lg:gap-7 xl:gap-8">
                         {/* 1. Image Diagram Card */}
-                        <div className="col-span-2 order-1 lg:order-none lg:col-start-1 lg:col-span-2 lg:row-start-1 w-full h-full aspect-[2896/1614] overflow-hidden rounded-[14px] bg-white flex items-center justify-center p-2 sm:p-2.5 md:p-3 lg:p-3.5 border border-white/10">
+                        <div className="col-span-2 order-1 lg:order-none lg:col-start-1 lg:col-span-2 lg:row-start-1 w-full h-full aspect-[2896/1614] overflow-hidden rounded-[10px] bg-white flex items-center justify-center p-2 sm:p-2.5 md:p-3 lg:p-3.5">
                             {getMediaUrl(data.image) && (
-                                <div className="h-full w-full overflow-hidden rounded-[8px] flex items-center justify-center">
+                                <div className="h-full w-full overflow-hidden rounded-[6px] flex items-center justify-center">
                                     <img
                                         src={getMediaUrl(data.image)}
                                         alt={data.heading || "Our Process"}
-                                        className="w-full h-full object-contain rounded-[8px]"
+                                        className="w-full h-full object-contain rounded-[6px]"
                                     />
                                 </div>
                             )}
@@ -212,7 +247,7 @@ export default function OurProcess({
                         )}
 
                         {/* 4. Video Showcase Card */}
-                        <div className="order-4 col-span-2 lg:order-none lg:col-start-2 lg:col-span-2 lg:row-start-2 w-full h-full aspect-[2896/1614] relative rounded-[14px] overflow-hidden border border-white/10">
+                        <div className="order-4 col-span-2 lg:order-none lg:col-start-2 lg:col-span-2 lg:row-start-2 w-full h-full aspect-[2896/1614] relative rounded-[10px] overflow-hidden">
                             {getMediaUrl(data.video) && (
                                 <video
                                     src={getMediaUrl(data.video)}
@@ -220,7 +255,7 @@ export default function OurProcess({
                                     muted
                                     loop
                                     playsInline
-                                    className="w-full h-full object-cover rounded-[14px]"
+                                    className="w-full h-full object-cover rounded-[10px]"
                                 />
                             )}
                         </div>
@@ -267,7 +302,7 @@ function ProcessCard({
 
     return (
         <div
-            className={`group relative flex h-full min-h-[240px] sm:min-h-[250px] lg:min-h-0 w-full flex-col rounded-[14px] text-white overflow-hidden cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] select-none border border-white/[0.07] hover:border-white/20 ${
+            className={`group relative flex h-full min-h-[240px] sm:min-h-[250px] lg:min-h-0 w-full flex-col rounded-[10px] text-white overflow-hidden cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] select-none ${
                 hasServices && isHovered ? "bg-[#2D4620]" : "bg-[#1A2F11]"
             } ${className}`}
             onMouseEnter={() => setIsHovered(true)}

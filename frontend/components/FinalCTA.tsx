@@ -79,10 +79,8 @@ export default function FinalCTA({
     };
 
     return (
-        <section
-            className="w-full px-4 sm:px-8 py-20 sm:py-28 lg:py-32 bg-[#95e7d30d]"
-            style={{ backgroundColor: "#95E7D30D" }}
-        >
+        <>
+        <section className="w-full px-4 sm:px-8 py-20 sm:py-28 lg:py-32 bg-[#F9FEFD]">
             <div className="w-full mx-auto max-w-[1180px]">
                 {/* 1. DESKTOP / TABLET VIEW (Centered, badge, side-by-side buttons, scaling with 4.2vw text clamp) */}
                 <div className="hidden sm:flex flex-col items-center text-center">
@@ -129,7 +127,7 @@ export default function FinalCTA({
                         )}
                     </h2>
 
-                    <p className="font-inter font-normal text-[clamp(14.5px,1.15vw,16px)] text-black w-full max-w-[600px] mt-4 leading-[1.5] text-center mx-auto">
+                    <p className="font-inter font-medium text-[clamp(14.5px,1.15vw,16px)] text-black w-full max-w-[630px] mt-4 leading-[1.5] text-center mx-auto">
                         {data.description}
                     </p>
 
@@ -137,19 +135,19 @@ export default function FinalCTA({
                         <a
                             href={data.primaryCta.href}
                             onClick={(e) => handleCtaClick(e, data.primaryCta.href, data.primaryCta.label)}
-                            className="w-auto min-w-[210px] lg:min-w-[235px] inline-flex items-center justify-center whitespace-nowrap rounded-full px-8 lg:px-11 py-4 font-satoshi text-[clamp(14.5px,1.15vw,16.5px)] font-medium transition-all duration-200 cursor-pointer shadow-sm active:scale-[0.99] bg-black text-white hover:opacity-85"
+                            className="w-auto min-w-[210px] lg:min-w-[245px] inline-flex items-center justify-center whitespace-nowrap rounded-full px-8 lg:px-11 py-4 font-satoshi text-[clamp(16px,1.25vw,18px)] font-medium transition-all duration-200 cursor-pointer shadow-sm active:scale-[0.99] bg-black text-white hover:opacity-85"
                         >
                             {data.primaryCta.label}
-                            <span className="ml-2 text-[18px]">→</span>
+                            <span className="ml-2 text-[19px]">→</span>
                         </a>
 
                         <a
                             href={data.secondaryCta.href}
                             onClick={(e) => handleCtaClick(e, data.secondaryCta.href, data.secondaryCta.label)}
-                            className="w-auto min-w-[210px] lg:min-w-[235px] inline-flex items-center justify-center whitespace-nowrap rounded-full px-8 lg:px-11 py-4 font-satoshi text-[clamp(14.5px,1.15vw,16.5px)] font-medium transition-all duration-200 cursor-pointer shadow-sm active:scale-[0.99] border border-black/80 bg-transparent text-black hover:bg-black/5 hover:border-black"
+                            className="w-auto min-w-[210px] lg:min-w-[245px] inline-flex items-center justify-center whitespace-nowrap rounded-full px-8 lg:px-11 py-4 font-satoshi text-[clamp(16px,1.25vw,18px)] font-medium transition-all duration-200 cursor-pointer shadow-sm active:scale-[0.99] border border-black/80 bg-transparent text-black hover:bg-black/5 hover:border-black"
                         >
                             {data.secondaryCta.label}
-                            <span className="ml-2 text-[18px]">→</span>
+                            <span className="ml-2 text-[19px]">→</span>
                         </a>
                     </div>
                 </div>
@@ -193,7 +191,7 @@ export default function FinalCTA({
                         )}
                     </h2>
 
-                    <p className="font-inter font-normal text-[clamp(14.5px,1.15vw,16px)] text-[#4A4A4A] w-full mt-4 leading-[1.5] text-left">
+                    <p className="font-inter font-medium text-[clamp(14.5px,1.15vw,16px)] text-[#4A4A4A] w-full mt-4 leading-[1.5] text-left">
                         {data.description}
                     </p>
 
@@ -201,23 +199,26 @@ export default function FinalCTA({
                         <a
                             href={data.primaryCta.href}
                             onClick={(e) => handleCtaClick(e, data.primaryCta.href, data.primaryCta.label)}
-                            className="w-full inline-flex items-center justify-center whitespace-nowrap rounded-full px-6 py-4 font-satoshi text-[clamp(14.5px,1.1vw,16px)] font-medium transition-all duration-200 cursor-pointer shadow-sm active:scale-[0.99] bg-black text-white hover:opacity-85"
+                            className="w-full inline-flex items-center justify-center whitespace-nowrap rounded-full px-6 py-4 font-satoshi text-[clamp(15.5px,1.15vw,17px)] font-medium transition-all duration-200 cursor-pointer shadow-sm active:scale-[0.99] bg-black text-white hover:opacity-85"
                         >
                             {data.primaryCta.label}
-                            <span className="ml-2 text-[17px]">→</span>
+                            <span className="ml-2 text-[18px]">→</span>
                         </a>
 
                         <a
                             href={data.secondaryCta.href}
                             onClick={(e) => handleCtaClick(e, data.secondaryCta.href, data.secondaryCta.label)}
-                            className="w-full inline-flex items-center justify-center whitespace-nowrap rounded-full px-6 py-4 font-satoshi text-[clamp(14.5px,1.1vw,16px)] font-medium transition-all duration-200 cursor-pointer shadow-sm active:scale-[0.99] border border-[#D0D5DD] bg-white text-black hover:bg-black/5"
+                            className="w-full inline-flex items-center justify-center whitespace-nowrap rounded-full px-6 py-4 font-satoshi text-[clamp(15.5px,1.15vw,17px)] font-medium transition-all duration-200 cursor-pointer shadow-sm active:scale-[0.99] border border-[#D0D5DD] bg-white text-black hover:bg-black/5"
                         >
                             {data.secondaryCta.label}
-                            <span className="ml-2 text-[17px]">→</span>
+                            <span className="ml-2 text-[18px]">→</span>
                         </a>
                     </div>
                 </div>
             </div>
         </section>
+        {/* Symmetrical bottom white space matching the space above Final CTA (OurWork pb-10 sm:pb-20) */}
+        <div className="w-full h-10 sm:h-20 bg-white" />
+        </>
     );
 }

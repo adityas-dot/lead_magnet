@@ -79,6 +79,7 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
     const [storeUrl, setStoreUrl] = useState("");
     const [selectedIssues, setSelectedIssues] = useState<string[]>([]);
     const [selectedBudget, setSelectedBudget] = useState<string>("balanced");
+    const [activeStep3Budget, setActiveStep3Budget] = useState<string>("");
     const [otherIssues, setOtherIssues] = useState("");
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
@@ -133,9 +134,12 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
 
     // Reset step or form state on open if previously completed
     useEffect(() => {
-        if (isOpen && isSubmitted) {
-            setIsSubmitted(false);
-            setStep(1);
+        if (isOpen) {
+            setActiveStep3Budget("");
+            if (isSubmitted) {
+                setIsSubmitted(false);
+                setStep(1);
+            }
         }
     }, [isOpen]);
 
@@ -223,24 +227,18 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
         }
     };
 
-    const handleBookCallSubmit = (e?: React.MouseEvent | React.FormEvent) => {
-        if (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
+    const handleBookCallSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
         setPhoneTouched(true);
-
-        const cleanDigits = phone.trim().replace(/\D/g, "");
-        if (!phone.trim() || cleanDigits.length < 7) {
+        if (!phone.trim() || phone.trim().replace(/\D/g, "").length < 7) {
             setStep3Warning(form?.phoneWarning || "Please enter a valid phone number");
             return;
         }
-
         setStep3Warning("");
         setIsSubmitted(true);
     };
 
-    const noOptionLabel = form?.noLabel?.replace("No, But I want", "No, I want") || form?.noLabel || "No, I want to build one";
+    const noOptionLabel = form?.noLabel || "No";
 
     // Helper to render currency (specifically Indian Rupee ₹) with clean Inter sans-serif styling
     const formatCurrency = (text?: string) => {
@@ -253,7 +251,7 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
                         <span className="font-inter font-normal text-[0.92em] mr-[1.5px] select-none" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>₹</span>
                         <span>{numbers[0]}</span>
                     </span>
-                    <span className="mx-1.5 text-current opacity-70 font-normal select-none">–</span>
+                    <span className="ml-1 sm:ml-1.5 text-current select-none">-</span>
                     <span className="inline-flex items-baseline">
                         <span className="font-inter font-normal text-[0.92em] mr-[1.5px] select-none" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>₹</span>
                         <span>{numbers[1]}</span>
@@ -384,14 +382,28 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
                                                 className={`flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-[#C5C5CA] text-[13px] sm:text-[14.5px] font-nohemi font-normal transition-all duration-200 cursor-pointer bg-[#F7F7F7] text-[#111827] hover:border-[#9CA3AF] ${hasStore === true ? "shadow-xs" : "hover:bg-[#EFEFEF]"
                                                     }`}
                                             >
-                                                <span
-                                                    className={`w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] rounded-full border-[1.25px] flex items-center justify-center transition-colors shrink-0 ${hasStore === true ? "border-[#18181B]" : "border-[#18181B]"
-                                                        }`}
+                                                <svg
+                                                    className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] shrink-0 text-[#18181B]"
+                                                    viewBox="0 0 18 18"
+                                                    fill="none"
+                                                    aria-hidden="true"
                                                 >
+                                                    <circle
+                                                        cx="9"
+                                                        cy="9"
+                                                        r="7.75"
+                                                        stroke="currentColor"
+                                                        strokeWidth="1.25"
+                                                    />
                                                     {hasStore === true && (
-                                                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#18181B]" />
+                                                        <circle
+                                                            cx="9"
+                                                            cy="9"
+                                                            r="3.75"
+                                                            fill="currentColor"
+                                                        />
                                                     )}
-                                                </span>
+                                                </svg>
                                                 <span className="font-nohemi font-normal text-[#111827]">{form?.yesLabel || "Yes, I do"}</span>
                                             </button>
 
@@ -404,14 +416,28 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
                                                 className={`flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-[#C5C5CA] text-[13px] sm:text-[14.5px] font-nohemi font-normal transition-all duration-200 cursor-pointer bg-[#F7F7F7] text-[#111827] hover:border-[#9CA3AF] ${hasStore === false ? "shadow-xs" : "hover:bg-[#EFEFEF]"
                                                     }`}
                                             >
-                                                <span
-                                                    className={`w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] rounded-full border-[1.25px] flex items-center justify-center transition-colors shrink-0 ${hasStore === false ? "border-[#18181B]" : "border-[#18181B]"
-                                                        }`}
+                                                <svg
+                                                    className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] shrink-0 text-[#18181B]"
+                                                    viewBox="0 0 18 18"
+                                                    fill="none"
+                                                    aria-hidden="true"
                                                 >
+                                                    <circle
+                                                        cx="9"
+                                                        cy="9"
+                                                        r="7.75"
+                                                        stroke="currentColor"
+                                                        strokeWidth="1.25"
+                                                    />
                                                     {hasStore === false && (
-                                                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#18181B]" />
+                                                        <circle
+                                                            cx="9"
+                                                            cy="9"
+                                                            r="3.75"
+                                                            fill="currentColor"
+                                                        />
                                                     )}
-                                                </span>
+                                                </svg>
                                                 <span className="font-nohemi font-normal text-[#111827]">{noOptionLabel}</span>
                                             </button>
                                         </div>
@@ -545,13 +571,28 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
                                                                 </span>
                                                             )}
                                                         </div>
-                                                        <span
-                                                            className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] rounded-full border-[1.25px] border-[#18181B] flex items-center justify-center shrink-0 transition-colors order-2 min-[460px]:order-1"
+                                                        <svg
+                                                            className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] shrink-0 text-[#18181B] order-2 min-[460px]:order-1"
+                                                            viewBox="0 0 18 18"
+                                                            fill="none"
+                                                            aria-hidden="true"
                                                         >
+                                                            <circle
+                                                                cx="9"
+                                                                cy="9"
+                                                                r="7.75"
+                                                                stroke="currentColor"
+                                                                strokeWidth="1.25"
+                                                            />
                                                             {isSelected && (
-                                                                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#18181B]" />
+                                                                <circle
+                                                                    cx="9"
+                                                                    cy="9"
+                                                                    r="3.75"
+                                                                    fill="currentColor"
+                                                                />
                                                             )}
-                                                        </span>
+                                                        </svg>
                                                     </button>
                                                 );
                                             })}
@@ -638,34 +679,63 @@ export default function QuoteModal({ isOpen, onClose, form: rawForm }: QuoteModa
                                         )}
                                     </p>
 
-                                    {/* 3 Budget Tiers */}
-                                    <div className="space-y-1 sm:space-y-2 mb-2">
+                                    {/* 3 Budget Tiers matching Desktop Hero */}
+                                    <div className="space-y-1 sm:space-y-1.5 mb-4">
                                         {budgetList.map((tier) => {
-                                            const isChosen =
-                                                selectedBudget === tier.value ||
-                                                selectedBudget === tier.label ||
-                                                (!selectedBudget && (tier.value === "balanced" || tier.label === "Balanced"));
-                                            return isChosen ? (
-                                                <div key={tier.id || tier.value} className="py-0.5">
-                                                    <p className="font-satoshi text-[13px] sm:text-[14.5px] md:text-[15px] font-medium text-[#3145DD]">
-                                                        {tier.label} (Chosen Plan)
+                                            const tierVal = tier.value || tier.label;
+                                            const currentActive =
+                                                activeStep3Budget ||
+                                                selectedBudget ||
+                                                budgetList[1]?.value ||
+                                                budgetList[1]?.label ||
+                                                "balanced";
+                                            const isActive =
+                                                currentActive === tier.value ||
+                                                currentActive === tier.label;
+                                            const isStep2Selection =
+                                                Boolean(selectedBudget) &&
+                                                (selectedBudget === tier.value || selectedBudget === tier.label);
+
+                                            return isActive ? (
+                                                <div key={tier.id || tierVal} className="py-0.5">
+                                                    <p className="font-satoshi text-[14.5px] sm:text-[15px] font-medium text-[#3145DD] leading-tight">
+                                                        {tier.label} {isStep2Selection ? "(Chosen Plan)" : ""}
                                                     </p>
-                                                    <div className="flex items-center gap-2 mt-0.5">
-                                                        <div className="font-satoshi text-[21px] min-[360px]:text-[23px] min-[420px]:text-[26px] sm:text-[28px] md:text-[29px] font-medium text-[#3145DD] tracking-tight flex items-center leading-none whitespace-nowrap">
+                                                    <div className="flex items-center gap-2 mt-0">
+                                                        <div className="font-satoshi text-[24px] min-[360px]:text-[26px] sm:text-[28px] md:text-[30px] font-medium text-[#3145DD] tracking-tight flex items-center leading-none">
                                                             {formatCurrency(tier.range)}
                                                         </div>
+                                                        {isStep2Selection && (
+                                                            <span className="inline-flex items-center justify-center shrink-0 -translate-y-[1px] sm:-translate-y-[1.5px]">
+                                                                <svg
+                                                                    className="w-[22px] h-[22px] sm:w-[24px] sm:h-[24px] md:w-[25px] md:h-[25px]"
+                                                                    viewBox="0 0 24 24"
+                                                                    fill="none"
+                                                                    aria-label="Chosen Plan"
+                                                                >
+                                                                    <circle cx="12" cy="12" r="10" fill="#B8DFC8" stroke="#168050" strokeWidth="1.8" />
+                                                                    <path
+                                                                        d="M8.2 12.2L10.8 14.8L15.8 9.5"
+                                                                        stroke="#168050"
+                                                                        strokeWidth="2.2"
+                                                                        strokeLinecap="round"
+                                                                        strokeLinejoin="round"
+                                                                    />
+                                                                </svg>
+                                                            </span>
+                                                        )}
                                                     </div>
                                                 </div>
                                             ) : (
                                                 <div
-                                                    key={tier.id || tier.value}
-                                                    onClick={() => setSelectedBudget(tier.value)}
-                                                    className="cursor-pointer hover:opacity-80 transition-opacity py-0.5"
+                                                    key={tier.id || tierVal}
+                                                    onClick={() => setActiveStep3Budget(tierVal)}
+                                                    className="text-[#6B6B6B] cursor-pointer hover:text-[#333333] transition-colors py-0.5"
                                                 >
-                                                    <p className="font-satoshi text-[11px] sm:text-[12px] text-[#6B7280]">
+                                                    <p className="font-satoshi text-[12px] sm:text-[12.5px] text-[#4A4A4A] leading-tight">
                                                         {tier.label}
                                                     </p>
-                                                    <p className="font-satoshi text-[12px] sm:text-[13px] text-[#374151] font-medium mt-0.5 flex items-center">
+                                                    <p className="font-satoshi text-[12.5px] sm:text-[13px] text-[#4A4A4A] font-normal mt-0 leading-tight flex items-center">
                                                         {formatCurrency(tier.range)}
                                                     </p>
                                                 </div>

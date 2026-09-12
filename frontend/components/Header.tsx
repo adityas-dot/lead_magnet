@@ -147,11 +147,11 @@ export default function Header({
     return (
         <>
             {/* Header bar */}
-            <header className="fixed top-0 left-0 right-0 z-[110] flex justify-between items-center h-[72px] sm:h-[88px] px-6 lg:px-[60px] xl:px-[80px] pointer-events-none">
+            <header className="fixed top-0 left-0 right-0 z-[110] flex justify-between items-center h-[72px] sm:h-[88px] pt-2 sm:pt-2.5 lg:pt-0 px-5 sm:px-6 lg:px-[60px] xl:px-[80px] pointer-events-none">
                 <a
                     href="/"
                     onClick={() => setIsOpen(false)}
-                    className={`font-nohemi font-medium text-[clamp(20px,1.8vw,24px)] tracking-[-0.02em] leading-none pointer-events-auto select-none transition-colors duration-300 ${
+                    className={`font-nohemi font-medium text-[clamp(23px,2vw,25.5px)] lg:text-[26px] tracking-[-0.02em] leading-none pointer-events-auto select-none transition-colors duration-300 flex items-center translate-y-[2px] sm:translate-y-[1px] lg:translate-y-0 ${
                         isOpen
                             ? "text-white"
                             : isLight

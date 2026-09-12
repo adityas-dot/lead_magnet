@@ -94,6 +94,7 @@ export default function Hero({ data }: { data: HeroData }) {
     const [storeUrl, setStoreUrl] = useState("");
     const [selectedIssues, setSelectedIssues] = useState<string[]>([]);
     const [selectedBudget, setSelectedBudget] = useState<string>("");
+    const [activeStep3Budget, setActiveStep3Budget] = useState<string>("");
     const [otherIssues, setOtherIssues] = useState("");
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
@@ -115,42 +116,42 @@ export default function Hero({ data }: { data: HeroData }) {
     }, []);
 
     const defaultBudgets: BudgetRange[] = [
-        { label: "Essential", range: "₹1,00,000 -₹2,00,000", value: "essential" },
-        { label: "Balanced", range: "₹2,00,000 -₹5,00,000", value: "balanced" },
-        { label: "Premium", range: "₹5,00,000 -₹10,00,000", value: "premium" },
+        { label: "Essential", range: "₹1,00,000 - ₹2,00,000", value: "essential" },
+        { label: "Balanced", range: "₹2,00,000 - ₹5,00,000", value: "balanced" },
+        { label: "Premium", range: "₹5,00,000 - ₹10,00,000", value: "premium" },
     ];
 
     const issuesList = form?.issueOptions || [];
     const budgetList = form?.budgetRanges && form.budgetRanges.length > 0 ? form.budgetRanges : defaultBudgets;
 
-    // Helper to render currency (specifically Indian Rupee ₹) clearly with proper font and alignment
-    // Helper to render currency (specifically Indian Rupee ₹) with Satoshi font
+    // Helper to render currency (specifically Indian Rupee ₹) with clean Inter sans-serif styling
     const formatCurrency = (text?: string) => {
         if (!text) return "";
-        const cleanText = text.replace(/\s*-\s*₹?/g, " -₹").replace(/^₹?\s*/, "₹");
-        const parts = cleanText.split(/(₹)/g);
-        if (parts.length === 1) return text;
-        return (
-            <span className="inline-flex items-center self-center">
-                {parts.map((part, idx) => {
-                    if (!part) return null;
-                    if (part === "₹") {
-                        return (
-                            <span
-                                key={idx}
-                                className="font-satoshi font-normal text-[1.12em] inline-block select-none leading-none"
-                                style={{
-                                    verticalAlign: "-0.02em",
-                                }}
-                            >
-                                ₹
-                            </span>
-                        );
-                    }
-                    return <span key={idx} className="self-center">{part}</span>;
-                })}
-            </span>
-        );
+        const numbers = text.match(/[\d,]+/g);
+        if (numbers && numbers.length >= 2) {
+            return (
+                <span className="inline-flex items-baseline whitespace-nowrap">
+                    <span className="inline-flex items-baseline">
+                        <span className="font-inter font-normal text-[0.92em] mr-[1.5px] select-none" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>₹</span>
+                        <span>{numbers[0]}</span>
+                    </span>
+                    <span className="ml-1 sm:ml-1.5 text-current select-none">-</span>
+                    <span className="inline-flex items-baseline">
+                        <span className="font-inter font-normal text-[0.92em] mr-[1.5px] select-none" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>₹</span>
+                        <span>{numbers[1]}</span>
+                    </span>
+                </span>
+            );
+        }
+        if (numbers && numbers.length === 1) {
+            return (
+                <span className="inline-flex items-baseline whitespace-nowrap">
+                    <span className="font-inter font-normal text-[0.92em] mr-[1.5px] select-none" style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>₹</span>
+                    <span>{numbers[0]}</span>
+                </span>
+            );
+        }
+        return text;
     };
 
     const toggleIssue = (label: string) => {
@@ -169,7 +170,11 @@ export default function Hero({ data }: { data: HeroData }) {
     };
 
     const handleSelectBudget = (value: string) => {
-        setSelectedBudget(value);
+        setSelectedBudget((prev) => {
+            const next = prev === value ? "" : value;
+            setActiveStep3Budget(next);
+            return next;
+        });
         setBudgetTouched(false);
         if (selectedIssues.length > 0) {
             setStep2Warning("");
@@ -189,28 +194,21 @@ export default function Hero({ data }: { data: HeroData }) {
 
     const handleStep2Continue = () => {
         const hasNoIssues = selectedIssues.length === 0;
-        const hasNoBudget = !selectedBudget;
 
-        if (hasNoIssues && hasNoBudget) {
-            setIssuesTouched(true);
-            setBudgetTouched(true);
-            setStep2Warning(form?.selectionWarning || "Please select what needs improvement and your budget range");
-            return;
-        }
         if (hasNoIssues) {
             setIssuesTouched(true);
             setStep2Warning(form?.issuesWarning || "Please select at least one issue that needs improvement");
-            return;
-        }
-        if (hasNoBudget) {
-            setBudgetTouched(true);
-            setStep2Warning(form?.budgetWarning || "Please select your preferred budget range");
             return;
         }
 
         setIssuesTouched(false);
         setBudgetTouched(false);
         setStep2Warning("");
+        if (selectedBudget) {
+            setActiveStep3Budget(selectedBudget);
+        } else if (!activeStep3Budget) {
+            setActiveStep3Budget(budgetList[1]?.value || budgetList[1]?.label || "balanced");
+        }
         setStep(3);
     };
 
@@ -246,18 +244,21 @@ export default function Hero({ data }: { data: HeroData }) {
 
     const getBrandSize = (brand: Brand) => {
         const name = ((brand.name || "") + (brand.logo?.url || "")).toLowerCase();
-        if (name.includes("figo")) return "h-6 sm:h-7 lg:h-7.5";
-        if (name.includes("westside")) return "h-5.5 sm:h-6.5 lg:h-7";
-        if (name.includes("stiff")) return "h-5.5 sm:h-6.5 lg:h-7";
-        if (name.includes("paloma")) return "h-5 sm:h-5.5 lg:h-6";
-        return "h-5 sm:h-5.5 lg:h-6";
+        if (name.includes("figo")) return "h-[24px] sm:h-8 lg:h-9";
+        if (name.includes("westside")) return "h-[21px] sm:h-[30px] lg:h-[34px]";
+        if (name.includes("stiff")) return "h-[21px] sm:h-[30px] lg:h-[34px]";
+        if (name.includes("paloma")) return "h-[19px] sm:h-7 lg:h-7.5";
+        return "h-[20px] sm:h-7 lg:h-7.5";
     };
 
     const formatHeading = (text: string) => {
         if (!text) return null;
         if (text.includes("\n")) {
-            return text.split("\n").map((line, idx) => (
-                <span key={idx} className="block whitespace-normal 2xl:whitespace-nowrap">
+            return text.split("\n").map((line, idx, arr) => (
+                <span
+                    key={idx}
+                    className={`block whitespace-normal 2xl:whitespace-nowrap ${idx < arr.length - 1 ? "mb-2 sm:mb-2.5 xl:mb-[2px] 2xl:mb-[3px]" : ""}`}
+                >
                     {line}
                 </span>
             ));
@@ -267,25 +268,25 @@ export default function Hero({ data }: { data: HeroData }) {
         const mid = Math.ceil(words.length / 2);
         return (
             <>
-                <span className="inline xl:block whitespace-normal 2xl:whitespace-nowrap">{words.slice(0, mid).join(" ")}</span>{" "}
-                <span className="inline xl:block whitespace-normal 2xl:whitespace-nowrap">{words.slice(mid).join(" ")}</span>
+                <span className="block xl:block whitespace-normal 2xl:whitespace-nowrap mb-2 sm:mb-2.5 xl:mb-[2px] 2xl:mb-[3px]">{words.slice(0, mid).join(" ")}</span>
+                <span className="block xl:block whitespace-normal 2xl:whitespace-nowrap">{words.slice(mid).join(" ")}</span>
             </>
         );
     };
 
     return (
-        <section data-theme="dark" className="relative min-h-0 xl:min-h-screen bg-[#37386B] text-white flex flex-col font-sans overflow-x-hidden">
-            <div className="flex-grow flex items-start xl:items-center pt-[112px] sm:pt-[128px] xl:pt-[100px] pb-0 xl:pb-12 px-5 sm:px-6 lg:px-[40px] xl:px-[48px] 2xl:px-[80px]">
-                <div className="max-w-[1720px] mx-auto w-full grid grid-cols-1 xl:grid-cols-[1fr_490px] 2xl:grid-cols-[1fr_620px] gap-8 xl:gap-8 2xl:gap-16 items-start">
+        <section data-theme="dark" className="relative min-h-0 xl:min-h-screen bg-[#37386B] text-white flex flex-col font-sans overflow-x-hidden border-none outline-none">
+            <div className="flex-grow flex items-start xl:items-center pt-[118px] sm:pt-[132px] xl:pt-[112px] 2xl:pt-[124px] pb-0 xl:pb-14 2xl:pb-16 px-5 sm:px-6 lg:px-[40px] xl:px-[48px] 2xl:px-[80px]">
+                <div className="max-w-[1720px] mx-auto w-full grid grid-cols-1 xl:grid-cols-[1fr_495px] 2xl:grid-cols-[1fr_600px] gap-8 xl:gap-8 2xl:gap-16 items-start">
 
                     {/* Left Column: Hero copy and client brands */}
                     <div className="max-w-full flex flex-col justify-between self-stretch min-w-0">
                         <div>
-                            <h1 className="font-nohemi font-normal text-white text-[clamp(32px,8.6vw,46px)] xl:text-[clamp(36px,4.2vw,65px)] 2xl:text-[clamp(44px,4.2vw,80px)] tracking-[-0.01em] mb-5 sm:mb-6 leading-[1.18] sm:leading-[1.22] xl:leading-[1.15] 2xl:leading-[82px] max-w-[620px] xl:max-w-none">
+                            <h1 className="font-nohemi font-normal text-white text-[clamp(32px,8.6vw,46px)] xl:text-[clamp(36px,4.2vw,65px)] 2xl:text-[clamp(44px,4.2vw,80px)] tracking-[-0.01em] mb-5 sm:mb-6 leading-[1.38] sm:leading-[1.32] xl:leading-[1.15] 2xl:leading-[82px] max-w-[620px] xl:max-w-none">
                                 {formatHeading(data.heading)}
                             </h1>
 
-                            <p className="font-satoshi text-white/80 lg:text-white text-[15px] sm:text-[16px] lg:text-[18px] mb-6 max-w-[778px] leading-[1.6] lg:leading-[35.4px] tracking-normal">
+                            <p className="font-satoshi text-white/80 lg:text-white text-[12.5px] sm:text-[14px] lg:text-[16.5px] mb-5 sm:mb-6 max-w-[625px] leading-[1.7] sm:leading-[1.75] lg:leading-[30px] tracking-normal">
                                 {data.description}
                             </p>
 
@@ -302,19 +303,19 @@ export default function Hero({ data }: { data: HeroData }) {
                                         window.dispatchEvent(new CustomEvent("open-callback-modal"));
                                     }
                                 }}
-                                className="w-full sm:w-auto inline-flex items-center justify-center bg-white text-black px-8 py-4 sm:py-3.5 rounded-full font-satoshi font-medium text-[16px] sm:text-[15px] hover:bg-gray-100 transition-all duration-300 ease-out gap-2.5 shadow-sm hover:shadow-md cursor-pointer"
+                                className="w-full sm:w-auto inline-flex items-center justify-center bg-white text-black px-4 sm:px-6 py-2 sm:py-3.5 rounded-full font-satoshi font-medium text-[14.5px] sm:text-[18.5px] hover:bg-gray-100 transition-all duration-300 ease-out gap-2 sm:gap-2.5 shadow-sm hover:shadow-md cursor-pointer"
                             >
                                 {data.primaryCta?.label || "Book a Free Call"}
-                                <svg className="w-4.5 h-4.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                 </svg>
                             </a>
                         </div>
 
                         {/* Client logo marquee */}
-                        <div className="mt-10 sm:mt-16 lg:mt-28 xl:mt-auto pt-4 sm:pt-8">
+                        <div className="mt-16 sm:mt-20 lg:mt-28 xl:mt-auto pt-4 sm:pt-8 translate-y-7 sm:translate-y-8 xl:translate-y-0">
                             {data.brandsHeading && (
-                                <p className="font-satoshi font-normal text-[#F6F6F6] text-[13.5px] sm:text-[15px] lg:text-[16px] mb-3 lg:mb-4 w-full whitespace-normal xl:whitespace-nowrap leading-snug tracking-[-0.2px] text-center sm:text-left">
+                                <p className="font-satoshi font-normal text-white/88 text-[clamp(12px,3.3vw,16px)] sm:text-[17.5px] lg:text-[19px] mb-3 lg:mb-4 w-full whitespace-nowrap leading-snug tracking-[-0.2px] text-center sm:text-left">
                                     {data.brandsHeading}
                                 </p>
                             )}
@@ -329,11 +330,11 @@ export default function Hero({ data }: { data: HeroData }) {
                                     <div className="flex w-max items-center animate-marquee hover:[animation-play-state:paused]">
                                         <div className="flex shrink-0 items-center gap-6 sm:gap-8 lg:gap-12 pr-6 sm:pr-8 lg:pr-12">
                                             {trackBrands.map((brand, idx) => (
-                                                <div key={`brand-track1-${idx}`} className="flex items-center justify-center h-9 sm:h-10 shrink-0">
+                                                <div key={`brand-track1-${idx}`} className="flex items-center justify-center h-9 sm:h-11 shrink-0">
                                                     <img
                                                         src={getMediaUrl(brand.logo)}
                                                         alt={brand.name || "Brand logo"}
-                                                        className={`${getBrandSize(brand)} w-auto object-contain transition-all duration-300 opacity-90 hover:opacity-100`}
+                                                        className={`${getBrandSize(brand)} w-auto object-contain transition-all duration-300 opacity-100`}
                                                         style={{ filter: 'brightness(0) invert(1)' }}
                                                     />
                                                 </div>
@@ -341,11 +342,11 @@ export default function Hero({ data }: { data: HeroData }) {
                                         </div>
                                         <div className="flex shrink-0 items-center gap-6 sm:gap-8 lg:gap-12 pr-6 sm:pr-8 lg:pr-12" aria-hidden="true">
                                             {trackBrands.map((brand, idx) => (
-                                                <div key={`brand-track2-${idx}`} className="flex items-center justify-center h-9 sm:h-10 shrink-0">
+                                                <div key={`brand-track2-${idx}`} className="flex items-center justify-center h-9 sm:h-11 shrink-0">
                                                     <img
                                                         src={getMediaUrl(brand.logo)}
                                                         alt={brand.name || "Brand logo"}
-                                                        className={`${getBrandSize(brand)} w-auto object-contain transition-all duration-300 opacity-90 hover:opacity-100`}
+                                                        className={`${getBrandSize(brand)} w-auto object-contain transition-all duration-300 opacity-100`}
                                                         style={{ filter: 'brightness(0) invert(1)' }}
                                                     />
                                                 </div>
@@ -358,50 +359,61 @@ export default function Hero({ data }: { data: HeroData }) {
                     </div>
 
                     {/* Interactive Shopify Quote Estimator */}
-                    <div id="quote" data-quote-form="true" data-theme="light" className="-mx-5 sm:-mx-6 lg:-mx-[60px] xl:mx-0 w-[calc(100%+40px)] sm:w-[calc(100%+48px)] lg:w-[calc(100%+120px)] xl:w-full bg-[#F9F9F9] text-black px-5 py-8 sm:p-8 lg:p-[40px] xl:p-8 2xl:p-[48px] pb-10 sm:pb-12 xl:pb-8 2xl:pb-[48px] shadow-2xl relative mt-8 xl:mt-0 rounded-t-[20px] rounded-b-none xl:rounded-none transition-all duration-300 scroll-mt-24">
-                        <h2 className="font-nohemi text-[clamp(26px,4.2vw,36px)] font-normal text-[#1A1A1A] mb-2 leading-tight">
-                            {step === 1 && (form?.title || "Get an instant quote")}
-                            {step === 2 && (form?.step2Title || "Choose your budget range")}
-                            {step === 3 && (form?.resultTitle || "Your Instant Quote Is Ready!")}
-                        </h2>
-                        <p className="font-satoshi text-[#6B6B6B] text-[14px] leading-relaxed mb-6">
-                            {step === 1 && (form?.description || "Book a free consultation with us. We'll discuss materials, your vision, and provide an estimate.")}
-                            {step === 2 && (form?.step2Description || "Select what’s not working and your preferred budget.")}
-                            {step === 3 && (form?.resultDescription || "Based on your inputs, here’s your estimated range")}
-                        </p>
+                    <div id="quote" data-quote-form="true" data-theme="light" className="-mx-5 sm:-mx-6 lg:-mx-[40px] xl:mx-0 w-[calc(100%+40px)] sm:w-[calc(100%+48px)] lg:w-[calc(100%+80px)] xl:w-full bg-[#F6F6F6] text-black px-5 sm:px-6 lg:px-[40px] xl:px-6 2xl:px-8 py-6 sm:py-6 lg:py-7 xl:py-6 2xl:py-8 pb-5 sm:pb-6 xl:pb-4 2xl:pb-5 shadow-none xl:shadow-2xl relative mt-8 xl:mt-0 rounded-t-[20px] rounded-b-none xl:rounded-none transition-all duration-300 scroll-mt-24 border-none">
+                        <div className="w-full max-w-[620px] xl:max-w-none">
+                            <h2 className="font-nohemi text-[clamp(20px,2.7vw,28px)] font-normal text-[#1A1A1A] mt-1 sm:mt-1.5 mb-0.5 sm:mb-1 leading-tight whitespace-normal xl:whitespace-nowrap">
+                                {step === 1 && (form?.title || "Get an instant quote")}
+                                {step === 2 && (form?.step2Title || "Choose your budget range")}
+                                {step === 3 && (form?.resultTitle || "Your Instant Quote Is Ready!")}
+                            </h2>
+                            <p className="font-satoshi text-[#444444] text-[12px] sm:text-[12.5px] xl:text-[13px] 2xl:text-[13.5px] tracking-tight leading-relaxed mb-3 sm:mb-4 whitespace-normal">
+                                {step === 1 && (form?.description || "Book a free consultation with us. We'll discuss materials, your vision, and provide an estimate.")}
+                                {step === 2 && (form?.step2Description || "Select what’s not working and your preferred budget.")}
+                                {step === 3 && (form?.resultDescription || "Based on your inputs, here’s your estimated range")}
+                            </p>
+                        </div>
 
                         {/* Step Bar */}
-                        <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
-                            <div className="flex flex-col cursor-pointer" onClick={() => setStep(1)}>
-                                <p className={`font-satoshi text-[14px] font-medium mb-2 ${step === 1 ? "text-[#3145DD]" : "text-transparent"}`}>
-                                    {form?.stepLabel || "Store Info"}
-                                </p>
-                                <div className={`h-[3px] w-full rounded-full transition-colors duration-300 ${step >= 1 ? "bg-[#1A1A1A]" : "bg-[#E0E0E0]"}`}></div>
+                        <div className="mb-6 sm:mb-8 select-none">
+                            <div className="mb-2">
+                                <span className="font-satoshi text-[15px] sm:text-[16px] font-medium text-[#3145DD]">
+                                    {step === 1 && (form?.stepLabel || "Store Info")}
+                                    {step === 2 && (form?.step2Label || "Budget range")}
+                                    {step === 3 && (form?.step3Label || "Your Estimate")}
+                                </span>
                             </div>
-                            <div className="flex flex-col cursor-pointer" onClick={() => {
-                                if (hasStore !== null) {
-                                    setStep(2);
-                                } else {
-                                    setStep1Warning(form?.storeWarning || "Please select whether you own a Shopify website");
-                                }
-                            }}>
-                                <p className={`font-satoshi text-[14px] font-medium mb-2 ${step === 2 ? "text-[#3145DD]" : "text-transparent"}`}>
-                                    {form?.step2Label || "Budget range"}
-                                </p>
-                                <div className={`h-[3px] w-full rounded-full transition-colors duration-300 ${step >= 2 ? "bg-[#1A1A1A]" : "bg-[#E0E0E0]"}`}></div>
-                            </div>
-                            <div className="flex flex-col cursor-pointer" onClick={() => {
-                                if (hasStore === null) {
-                                    setStep(1);
-                                    setStep1Warning(form?.storeWarning || "Please select whether you own a Shopify website");
-                                    return;
-                                }
-                                handleStep2Continue();
-                            }}>
-                                <p className={`font-satoshi text-[14px] font-medium mb-2 ${step === 3 ? "text-[#3145DD]" : "text-transparent"}`}>
-                                    {form?.step3Label || "Your Estimate"}
-                                </p>
-                                <div className={`h-[3px] w-full rounded-full transition-colors duration-300 ${step >= 3 ? "bg-[#1A1A1A]" : "bg-[#E0E0E0]"}`}></div>
+                            <div className="grid grid-cols-3 gap-3 sm:gap-4">
+                                <div
+                                    onClick={() => setStep(1)}
+                                    className={`h-[3.2px] w-full rounded-full transition-colors duration-300 cursor-pointer ${
+                                        step >= 1 ? "bg-[#1A1A1A]" : "bg-[#C8CBC6]"
+                                    }`}
+                                />
+                                <div
+                                    onClick={() => {
+                                        if (hasStore !== null) {
+                                            setStep(2);
+                                        } else {
+                                            setStep1Warning(form?.storeWarning || "Please select whether you own a Shopify website");
+                                        }
+                                    }}
+                                    className={`h-[3.2px] w-full rounded-full transition-colors duration-300 cursor-pointer ${
+                                        step >= 2 ? "bg-[#1A1A1A]" : "bg-[#C8CBC6]"
+                                    }`}
+                                />
+                                <div
+                                    onClick={() => {
+                                        if (hasStore === null) {
+                                            setStep(1);
+                                            setStep1Warning(form?.storeWarning || "Please select whether you own a Shopify website");
+                                            return;
+                                        }
+                                        handleStep2Continue();
+                                    }}
+                                    className={`h-[3.2px] w-full rounded-full transition-colors duration-300 cursor-pointer ${
+                                        step >= 3 ? "bg-[#1A1A1A]" : "bg-[#C8CBC6]"
+                                    }`}
+                                />
                             </div>
                         </div>
 
@@ -412,17 +424,17 @@ export default function Hero({ data }: { data: HeroData }) {
                                     <label className="font-nohemi block text-[17px] font-normal text-[#1A1A1A] mb-2">
                                         {form?.shopifyQuestion}
                                     </label>
-                                    <div className="flex flex-wrap gap-2.5">
+                                    <div className="flex flex-nowrap overflow-x-auto no-scrollbar scroll-smooth gap-2 sm:gap-3 pb-1 sm:pb-0 sm:flex-wrap -mx-1 px-1">
                                         <button
                                             type="button"
                                             onClick={() => {
                                                 setHasStore(true);
                                                 setStep1Warning("");
                                             }}
-                                            className={`font-satoshi px-5 py-2.5 rounded-full border text-[14px] transition-all duration-300 ease-out cursor-pointer ${
+                                            className={`font-satoshi px-3.5 sm:px-6 py-2 sm:py-2.5 rounded-full border text-[13.5px] sm:text-[16.5px] transition-all duration-300 ease-out cursor-pointer shrink-0 whitespace-nowrap ${
                                                 hasStore === true
-                                                    ? "border-[#2B44E7] bg-[#EEF2FF] text-[#2B44E7] font-medium"
-                                                    : "border-[#CAC4D0] text-[#000000] bg-white hover:border-gray-400"
+                                                    ? "border-[#307D6D] bg-[#DBEFE9] text-[#24332D] font-normal"
+                                                    : "border-[#CAC4D0] text-[#222222] font-normal bg-[#F6F6F6] hover:border-gray-400 hover:text-black"
                                             }`}
                                         >
                                             {form?.yesLabel}
@@ -433,18 +445,18 @@ export default function Hero({ data }: { data: HeroData }) {
                                                 setHasStore(false);
                                                 setStep1Warning("");
                                             }}
-                                            className={`font-satoshi px-5 py-2.5 rounded-full border text-[14px] transition-all duration-300 ease-out cursor-pointer ${
+                                            className={`font-satoshi px-3.5 sm:px-6 py-2 sm:py-2.5 rounded-full border text-[13.5px] sm:text-[16.5px] transition-all duration-300 ease-out cursor-pointer shrink-0 whitespace-nowrap ${
                                                 hasStore === false
-                                                    ? "border-[#2B44E7] bg-[#EEF2FF] text-[#2B44E7] font-medium"
-                                                    : "border-[#CAC4D0] text-[#000000] bg-white hover:border-gray-400"
+                                                    ? "border-[#307D6D] bg-[#DBEFE9] text-[#24332D] font-normal"
+                                                    : "border-[#CAC4D0] text-[#222222] font-normal bg-[#F6F6F6] hover:border-gray-400 hover:text-black"
                                             }`}
                                         >
-                                            {form?.noLabel?.replace("No, But I want", "No, I want") || form?.noLabel || "No, I want to build one"}
+                                            {form?.noLabel}
                                         </button>
                                     </div>
                                 </div>
 
-                                <div className="pt-1">
+                                <div className="pt-1 mb-4 sm:mb-0">
                                     <label className="font-nohemi block text-[17px] font-normal text-[#1A1A1A] mb-2">
                                         {form?.shopifyLinkLabel}
                                     </label>
@@ -453,7 +465,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                         value={storeUrl}
                                         onChange={(e) => setStoreUrl(e.target.value)}
                                         placeholder={form?.shopifyLinkPlaceholder}
-                                        className="font-satoshi w-full px-5 py-2 sm:py-2.5 rounded-full border border-[#CAC4D0] focus:outline-none focus:border-[#2B44E7] focus:ring-1 focus:ring-[#2B44E7] text-[14px] text-[#3C3C3C] bg-[#F7F7F9] placeholder-[#8E8E93] transition-all duration-300 ease-out"
+                                        className="font-satoshi w-full px-5 py-2 sm:py-2.5 rounded-full border border-[#CAC4D0] focus:outline-none focus:border-[#2B44E7] focus:ring-1 focus:ring-[#2B44E7] text-[13px] sm:text-[13.5px] text-black bg-[#F2F2F2] placeholder-black placeholder:text-[11.5px] sm:placeholder:text-[12.5px] transition-all duration-300 ease-out"
                                     />
                                 </div>
 
@@ -473,7 +485,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                 <button
                                     type="button"
                                     onClick={handleStep1Continue}
-                                    className="font-satoshi w-full bg-[#2B44E7] hover:bg-[#2037CA] text-white font-medium py-2 sm:py-2.5 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 mt-8 sm:mt-12 xl:mt-[90px] 2xl:mt-[120px] text-[15px] sm:text-[16px] shadow-none cursor-pointer"
+                                    className="font-satoshi w-full bg-[#2B44E7] hover:bg-[#2037CA] text-white font-medium py-2.5 sm:py-3 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 mt-[195px] sm:mt-24 lg:mt-[90px] xl:mt-[90px] 2xl:mt-[120px] mb-6 sm:mb-7 lg:mb-6 xl:mb-8 text-[15px] sm:text-[16px] shadow-none cursor-pointer"
                                 >
                                     {form?.continueLabel}
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -492,7 +504,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                             {form?.issuesLabel}
                                         </label>
                                     </div>
-                                    <div className="flex flex-wrap gap-2.5">
+                                    <div className="flex overflow-x-auto no-scrollbar scroll-smooth gap-2 sm:gap-2.5 pb-1 sm:pb-0 sm:flex-wrap sm:overflow-visible -mx-1 px-1">
                                         {issuesList.map((item) => {
                                             const isSelected = selectedIssues.includes(item.label);
                                             return (
@@ -500,13 +512,18 @@ export default function Hero({ data }: { data: HeroData }) {
                                                     key={item.id || item.value}
                                                     type="button"
                                                     onClick={() => toggleIssue(item.label)}
-                                                    className={`font-satoshi px-5 py-2.5 rounded-full border text-[14px] transition-all duration-300 ease-out cursor-pointer ${
+                                                    className={`font-satoshi inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 sm:px-7 py-1.5 sm:py-2.5 rounded-full border text-[13px] sm:text-[16px] transition-all duration-300 ease-out cursor-pointer shrink-0 whitespace-nowrap ${
                                                         isSelected
-                                                            ? "border-[#2B44E7] bg-[#EEF2FF] text-[#2B44E7] font-medium"
-                                                            : "border-[#CAC4D0] text-[#000000] bg-white hover:border-gray-400"
+                                                            ? "border-[#307D6D] bg-[#DBEFE9] text-[#24332D] font-medium"
+                                                            : "border-[#CAC4D0] text-[#4A4A4A] font-medium bg-[#F6F6F6] hover:border-gray-400 hover:text-black"
                                                     }`}
                                                 >
-                                                    {item.label}
+                                                    {isSelected && (
+                                                        <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 text-[#24332D]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+                                                            <polyline points="20 6 9 17 4 12" />
+                                                        </svg>
+                                                    )}
+                                                    <span>{item.label}</span>
                                                 </button>
                                             );
                                         })}
@@ -515,22 +532,23 @@ export default function Hero({ data }: { data: HeroData }) {
 
                                 <div>
                                     <div className="flex items-center justify-between mb-2">
-                                        <label className="font-nohemi block text-[17px] font-normal text-[#1A1A1A]">
+                                        <label className="font-nohemi block text-[15px] sm:text-[17px] font-normal text-[#1A1A1A]">
                                             {form?.budgetLabel}
                                         </label>
                                     </div>
-                                    <div className="flex flex-wrap gap-2.5">
+                                    <div className="flex overflow-x-auto no-scrollbar scroll-smooth gap-2 sm:gap-2.5 pb-1 sm:pb-0 sm:flex-wrap sm:overflow-visible -mx-1 px-1">
                                         {budgetList.map((tier) => {
-                                            const isSelected = selectedBudget === tier.value;
+                                            const tierVal = tier.value || tier.label;
+                                            const isSelected = selectedBudget === tier.value || (tier.label && selectedBudget === tier.label);
                                             return (
                                                 <button
-                                                    key={tier.id || tier.value}
+                                                    key={tier.id || tier.value || tier.label}
                                                     type="button"
-                                                    onClick={() => handleSelectBudget(tier.value)}
-                                                    className={`font-satoshi px-5 py-2.5 rounded-full border text-[14px] transition-all duration-300 ease-out cursor-pointer ${
+                                                    onClick={() => handleSelectBudget(tierVal)}
+                                                    className={`font-satoshi px-3.5 sm:px-7 py-1.5 sm:py-2.5 rounded-full border text-[13px] sm:text-[16px] transition-all duration-300 ease-out cursor-pointer shrink-0 whitespace-nowrap ${
                                                         isSelected
-                                                            ? "border-[#2B44E7] bg-[#EEF2FF] text-[#2B44E7] font-medium"
-                                                            : "border-[#CAC4D0] text-[#000000] bg-white hover:border-gray-400"
+                                                            ? "border-[#307D6D] bg-[#DBEFE9] text-[#24332D] font-medium"
+                                                            : "border-[#CAC4D0] text-[#4A4A4A] font-medium bg-[#F6F6F6] hover:border-gray-400 hover:text-black"
                                                     }`}
                                                 >
                                                     {tier.label}
@@ -549,7 +567,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                         value={otherIssues}
                                         onChange={(e) => setOtherIssues(e.target.value)}
                                         placeholder={form?.otherIssuesPlaceholder}
-                                        className="font-satoshi w-full px-5 py-2 sm:py-2.5 rounded-full border border-[#CAC4D0] focus:outline-none focus:border-[#2B44E7] focus:ring-1 focus:ring-[#2B44E7] text-[14px] text-[#3C3C3C] bg-[#F7F7F9] placeholder-[#8E8E93] transition-all duration-300 ease-out"
+                                        className="font-satoshi w-full px-5 py-2 sm:py-2.5 rounded-full border border-[#CAC4D0] focus:outline-none focus:border-[#2B44E7] focus:ring-1 focus:ring-[#2B44E7] text-[13px] sm:text-[13.5px] text-black bg-[#F2F2F2] placeholder-black placeholder:text-[11.5px] sm:placeholder:text-[12.5px] transition-all duration-300 ease-out"
                                     />
                                 </div>
 
@@ -569,7 +587,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                 <button
                                     type="button"
                                     onClick={handleStep2Continue}
-                                    className="font-satoshi w-full bg-[#2B44E7] hover:bg-[#2037CA] text-white font-medium py-2 sm:py-2.5 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 mt-6 text-[15px] sm:text-[16px] shadow-none cursor-pointer"
+                                    className="font-satoshi w-full bg-[#2B44E7] hover:bg-[#2037CA] text-white font-medium py-2.5 sm:py-3 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 mt-6 mb-6 sm:mb-7 lg:mb-6 xl:mb-8 text-[15px] sm:text-[16px] shadow-none cursor-pointer"
                                 >
                                     {form?.estimateButtonLabel}
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -586,7 +604,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                     <h3 className="font-nohemi text-[17px] sm:text-[18px] font-normal text-[#1A1A1A]">
                                         {form?.estimateLabel || "Your Estimated Budget"}
                                     </h3>
-                                    <p className="font-satoshi text-[13px] sm:text-[13.5px] text-[#6B6B6B] mt-1 mb-4">
+                                    <p className="font-satoshi text-[13px] sm:text-[13.5px] text-[#6B6B6B] mt-0.5 sm:mt-1 mb-2 sm:mb-2.5">
                                         {form?.basedOnLabel || "Based on your selections:"}{" "}
                                         {selectedIssues.length > 0 ? (
                                             selectedIssues.map((issue, idx) => (
@@ -617,50 +635,39 @@ export default function Hero({ data }: { data: HeroData }) {
                                         )}
                                     </p>
 
-                                    <div className="space-y-3 sm:space-y-3.5 mb-5">
+                                    <div className="space-y-1 sm:space-y-1.5 mb-4">
                                         {budgetList.map((tier) => {
-                                            const isChosen =
-                                                selectedBudget === tier.value ||
-                                                selectedBudget === tier.label ||
-                                                (!selectedBudget && (tier.value === "balanced" || tier.label === "Balanced"));
-                                            return isChosen ? (
-                                                <div key={tier.id || tier.value} className="py-1">
-                                                    <p className="font-satoshi text-[14.5px] sm:text-[15px] font-medium text-[#3145DD]">
-                                                        {tier.label} (Chosen Plan)
+                                            const tierVal = tier.value || tier.label;
+                                            const currentActive =
+                                                activeStep3Budget ||
+                                                selectedBudget ||
+                                                budgetList[1]?.value ||
+                                                budgetList[1]?.label ||
+                                                "balanced";
+                                            const isActive =
+                                                currentActive === tier.value ||
+                                                currentActive === tier.label;
+                                            return isActive ? (
+                                                <div key={tier.id || tierVal} className="py-0.5">
+                                                    <p className="font-satoshi text-[14.5px] sm:text-[15px] font-medium text-[#3145DD] leading-tight">
+                                                        {tier.label}
                                                     </p>
-                                                    <div className="flex items-center gap-2 mt-0.5">
+                                                    <div className="flex items-center gap-2 mt-0">
                                                         <div className="font-satoshi text-[26px] sm:text-[28px] md:text-[30px] font-medium text-[#3145DD] tracking-tight flex items-center leading-none">
                                                             {formatCurrency(tier.range)}
                                                         </div>
-                                                        <span className="inline-flex items-center justify-center shrink-0 -translate-y-[1px] sm:-translate-y-[1.5px]">
-                                                            <svg
-                                                                className="w-[22px] h-[22px] sm:w-[24px] sm:h-[24px] md:w-[25px] md:h-[25px]"
-                                                                viewBox="0 0 24 24"
-                                                                fill="none"
-                                                                aria-label="Chosen Plan"
-                                                            >
-                                                                <circle cx="12" cy="12" r="10" fill="#B8DFC8" stroke="#168050" strokeWidth="1.8" />
-                                                                <path
-                                                                    d="M8.2 12.2L10.8 14.8L15.8 9.5"
-                                                                    stroke="#168050"
-                                                                    strokeWidth="2.2"
-                                                                    strokeLinecap="round"
-                                                                    strokeLinejoin="round"
-                                                                />
-                                                            </svg>
-                                                        </span>
                                                     </div>
                                                 </div>
                                             ) : (
                                                 <div
-                                                    key={tier.id || tier.value}
-                                                    onClick={() => setSelectedBudget(tier.value)}
+                                                    key={tier.id || tierVal}
+                                                    onClick={() => setActiveStep3Budget(tierVal)}
                                                     className="text-[#6B6B6B] cursor-pointer hover:text-[#333333] transition-colors py-0.5"
                                                 >
-                                                    <p className="font-satoshi text-[12px] sm:text-[12.5px] text-[#6B7280] leading-tight">
+                                                    <p className="font-satoshi text-[12px] sm:text-[12.5px] text-[#4A4A4A] leading-tight">
                                                         {tier.label}
                                                     </p>
-                                                    <p className="font-satoshi text-[13.5px] sm:text-[14px] text-[#374151] font-medium mt-0.5 flex items-center">
+                                                    <p className="font-satoshi text-[12.5px] sm:text-[13px] text-[#4A4A4A] font-normal mt-0 leading-tight flex items-center">
                                                         {formatCurrency(tier.range)}
                                                     </p>
                                                 </div>
@@ -679,7 +686,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                             value={phone}
                                             onChange={(e) => handlePhoneChange(e.target.value)}
                                             placeholder={form?.phonePlaceholder || "Enter Phone Number"}
-                                            className={`font-satoshi w-full px-5 py-3 sm:py-3.5 rounded-full border text-[13.5px] sm:text-[14px] text-[#3C3C3C] bg-[#F7F7F9] placeholder-[#8E8E93] transition-all duration-300 ease-out focus:outline-none ${
+                                            className={`font-satoshi w-full px-5 py-3 sm:py-3.5 rounded-full border text-[13px] sm:text-[13.5px] text-black bg-[#F2F2F2] placeholder-black placeholder:text-[11.5px] sm:placeholder:text-[12.5px] transition-all duration-300 ease-out focus:outline-none ${
                                                 phoneTouched && (!phone.trim() || phone.trim().replace(/\D/g, "").length < 7)
                                                     ? "border-rose-400 focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
                                                     : "border-[#CAC4D0] focus:border-[#3145DD] focus:ring-1 focus:ring-[#3145DD]"
@@ -695,7 +702,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             placeholder={form?.emailPlaceholder || "Enter Email"}
-                                            className="font-satoshi w-full px-5 py-3 sm:py-3.5 rounded-full border border-[#CAC4D0] focus:outline-none focus:border-[#3145DD] focus:ring-1 focus:ring-[#3145DD] text-[13.5px] sm:text-[14px] text-[#3C3C3C] bg-[#F7F7F9] placeholder-[#8E8E93] transition-all duration-300 ease-out"
+                                            className="font-satoshi w-full px-5 py-3 sm:py-3.5 rounded-full border border-[#CAC4D0] focus:outline-none focus:border-[#3145DD] focus:ring-1 focus:ring-[#3145DD] text-[13px] sm:text-[13.5px] text-black bg-[#F2F2F2] placeholder-black placeholder:text-[11.5px] sm:placeholder:text-[12.5px] transition-all duration-300 ease-out"
                                         />
                                     </div>
                                 </div>
@@ -726,7 +733,7 @@ export default function Hero({ data }: { data: HeroData }) {
                                             type="button"
                                             data-no-callback="true"
                                             onClick={handleBookCallSubmit}
-                                            className="font-satoshi w-full bg-[#3145DD] hover:bg-[#2637b8] text-white font-medium py-3.5 sm:py-4 px-6 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 text-[15.5px] sm:text-[16px] shadow-sm hover:shadow-md cursor-pointer"
+                                            className="font-satoshi w-full bg-[#3145DD] hover:bg-[#2637b8] text-white font-medium py-2.5 sm:py-3 px-6 rounded-full transition-all duration-300 ease-out flex justify-center items-center gap-2 text-[15.5px] sm:text-[16px] shadow-sm hover:shadow-md cursor-pointer"
                                         >
                                             <span>{form?.bookCallButtonLabel || "Book My Free Call"}</span>
                                             <span className="text-[17px]">→</span>

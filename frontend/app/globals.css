@@ -112,12 +112,22 @@ body {
 
 .heading-engagement-fit {
     font-size: clamp(28px, 8.4vw, 42px);
-    line-height: 1.12;
+    line-height: 1.18;
 }
 
 @media (min-width: 640px) {
     .heading-engagement-fit {
-        font-size: clamp(38px, 4.2vw, 65px);
-        line-height: 1.15;
+        font-size: clamp(36px, 3.7vw, 58px);
+        line-height: 1.22;
+    }
+
+    .sync-engagement-cards {
+        grid-template-rows: auto repeat(var(--point-rows, 5), auto);
+    }
+
+    .sync-engagement-card {
+        display: grid !important;
+        grid-template-rows: subgrid !important;
+        grid-row: span calc(var(--point-rows, 5) + 1) !important;
     }
 }

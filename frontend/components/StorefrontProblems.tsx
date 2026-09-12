@@ -32,7 +32,7 @@ export default function StorefrontProblems({
     };
 
     return (
-        <section id="storefront-problems" className="w-full bg-white px-6 pt-15 pb-10 text-[#0D2108] lg:px-[60px] xl:px-[80px] lg:pt-[90px] lg:pb-[30px]">
+        <section id="storefront-problems" className="w-full bg-white px-6 pt-15 pb-10 text-[#0D2108] lg:px-[60px] xl:px-[80px] lg:pt-[90px] lg:pb-[30px] border-none outline-none">
             <div className="mx-auto max-w-[1720px] w-full">
                 <div className="w-full">
                     <h2 className="font-delight text-[clamp(32px,4.2vw,65px)] font-medium leading-[1.15] tracking-[-0.015em] xl:whitespace-nowrap text-[#0F1D07]">
@@ -67,45 +67,45 @@ export default function StorefrontProblems({
                                     }`}
                             >
                                 <div className="pr-7">
-                                    <h3 className="font-delight text-[clamp(17px,4.2vw,18.5px)] font-medium leading-[1.25] text-[#0F1D07] text-balance whitespace-pre-line">
+                                    <h3 className="font-delight text-[16px] sm:text-[17.5px] lg:text-[18.5px] font-medium leading-[1.3] text-[#0F1D07] text-balance whitespace-pre-line">
                                         {item.title}
                                     </h3>
 
-                                    <p className="font-satoshi mt-3 text-[clamp(13px,1.05vw,14px)] leading-[1.6] text-[#0F1D07]">
+                                    <p className="font-satoshi mt-2 sm:mt-3 text-[13px] sm:text-[13.5px] lg:text-[14px] leading-[1.55] text-[#0F1D07]">
                                         {item.description}
                                     </p>
                                 </div>
 
                                 <div
-                                    className={`absolute right-3.5 top-3.5 flex h-6 w-6 items-center justify-center rounded-[5px] transition-colors duration-200 ${isSelected ? "bg-[#3145DD]" : "bg-white"
+                                    className={`absolute right-3.5 top-3.5 sm:right-4 sm:top-4 flex h-6 w-6 sm:h-6.5 sm:w-6.5 items-center justify-center rounded-[6px] shrink-0 transition-all duration-200 ${isSelected ? "bg-[#3145DD] text-white" : "bg-white text-[#1A1A1A] shadow-xs"
                                         }`}
                                 >
                                     {isSelected ? (
                                         <svg
-                                            className="w-3.5 h-3.5 text-white"
-                                            viewBox="0 0 14 14"
+                                            className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white"
+                                            viewBox="0 0 16 16"
                                             fill="none"
                                             xmlns="http://www.w3.org/2000/svg"
                                         >
                                             <path
-                                                d="M2.5 7.5L5.5 10.5L11.5 3.5"
+                                                d="M3.5 8.5L6.5 11.5L12.5 4.5"
                                                 stroke="currentColor"
-                                                strokeWidth="2"
+                                                strokeWidth="1.6"
                                                 strokeLinecap="round"
                                                 strokeLinejoin="round"
                                             />
                                         </svg>
                                     ) : (
                                         <svg
-                                            className="w-3.5 h-3.5 text-[#1A1A1A]"
-                                            viewBox="0 0 14 14"
+                                            className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1A1A1A]"
+                                            viewBox="0 0 16 16"
                                             fill="none"
                                             xmlns="http://www.w3.org/2000/svg"
                                         >
                                             <path
-                                                d="M7 3V11M3 7H11"
+                                                d="M8 3.5V12.5M3.5 8H12.5"
                                                 stroke="currentColor"
-                                                strokeWidth="1.8"
+                                                strokeWidth="1.4"
                                                 strokeLinecap="round"
                                                 strokeLinejoin="round"
                                             />
